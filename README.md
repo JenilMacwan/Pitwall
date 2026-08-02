@@ -1,82 +1,172 @@
-# PitWall (F1Comp) 🏁
+<p align="center">
+  <img src="assets/app_icon.svg" width="120" alt="App Icon" />
+</p>
 
-PitWall is a modern, high-performance Formula 1 companion application for Android. It provides fans with real-time race information, comprehensive schedules, live standings, and the latest news from the world of F1, all wrapped in a sleek Material 3 interface.
 
----
+# PitWall — A Modern F1 Companion for Android 🏁
 
-## ✨ Features
-
-- **🏎️ Real-time Home Dashboard**: 
-    - **Next Race Countdown**: Stay ahead with a precise countdown to the next Grand Prix.
-    - **Live Session Status**: Real-time tracking of ongoing sessions (FP1, FP2, Qualifying, Sprint, Race).
-    - **Weather Integration**: Get track-side weather updates directly on your home screen.
-    - **Recent Results**: Quick view of the podium from the most recent race.
-    - **Standings Overview**: Instant access to the top drivers and constructors.
-- **📅 Full Season Schedule**: Detailed breakdown of every Grand Prix weekend, including session times and circuit information.
-- **🏆 Live Standings**: Complete Driver and Constructor championship tables with detailed points and positions.
-- **📰 F1 News Hub**: Stay informed with the latest headlines and articles parsed directly from top F1 sources.
-- **🛠️ Personalization**: Custom settings for theme (Light/Dark mode) and event alerts to ensure you never miss a green light.
+PitWall is a sleek, high-performance Android app for Formula 1 fans that delivers real-time session status, season schedules, live standings, curated news, and configurable alerts — all in a lightweight, offline-friendly package.
 
 ---
 
-## 🛠️ Tech Stack
+## Key features ✨
 
-- **UI**: [Jetpack Compose](https://developer.android.com/jetpack/compose) for a fully declarative and modern UI.
-- **Architecture**: MVVM (Model-View-ViewModel) with the Repository pattern for clean separation of concerns.
-- **Dependency Injection**: [Hilt](https://developer.android.com/training/dependency-injection/hilt-android) for robust and scalable DI.
-- **Local Database**: [Room](https://developer.android.com/training/data-storage/room) for offline caching and lightning-fast data retrieval.
-- **Networking**: [Retrofit](https://square.github.io/retrofit/) & [OkHttp](https://square.github.io/okhttp/) for efficient API communication.
-- **Image Loading**: [Coil](https://coil-kt.github.io/coil/) for optimized image fetching and caching.
-- **Data Parsing**: [Jsoup](https://jsoup.org/) for robust HTML scraping and news content extraction.
-- **Testing**: [MockK](https://mockk.io/), [Turbine](https://github.com/cashapp/turbine), and [JUnit 4] for comprehensive unit and state flow testing.
+- Real-time Home Dashboard
+  - Next race countdown and quick glance of current session (FP, Qualifying, Sprint, Race)
+  - Recent race results (podium)
+  - Live session status and standings overview
+  - Track weather snapshot
+- Full Season Schedule
+  - Complete Grand Prix weekends with session times and circuit info
+- Live Standings
+  - Drivers & Constructors leaderboards with points and position history
+- F1 News Hub
+  - Aggregated and parsed headlines from top F1 sources
+- Personalization & Accessibility
+  - Light/Dark theme support and event alerts
+- Offline-first
+  - Local caching for essential data so the app remains useful without connectivity
 
 ---
 
-## 🏗️ Project Structure
+## Stack
 
-```text
+- Language: Kotlin (100%)
+- Framework / runtime: Android (Jetpack Compose, Material3)
+- Notable libraries:
+  - Hilt for dependency injection
+  - Room for local persistence
+  - Retrofit + OkHttp for networking
+  - Coil for image loading
+  - Jsoup for news parsing
+
+---
+
+## Project structure
+
 app/src/main/java/com/jenil/f1comp/
-├── data/
-│   ├── local/        # Room Database, DAOs, and Entities (Offline Cache)
-│   ├── model/        # Domain Data Models
-│   ├── remote/       # Retrofit API Service definitions
-│   └── repository/   # Single source of truth for data orchestration
-├── di/               # Hilt Dependency Injection Modules
-├── ui/
-│   ├── components/   # Reusable Compose UI components
-│   ├── navigation/   # App Navigation logic and Bottom Bar
-│   ├── screen/       # Feature-specific screens (Home, Schedule, Standings, etc.)
-│   ├── theme/        # Material 3 Theme definitions
-│   └── state/        # UI State holders
-├── viewmodel/        # Business logic and UI state management
-└── util/             # Helper classes and Mappers
-```
+  - data/
+    - local/        — Room database, DAOs, entities (offline cache)
+    - model/        — domain data models
+    - remote/       — Retrofit API service definitions
+    - repository/   — single source of truth and data orchestration
+  - di/             — Hilt modules
+  - ui/
+    - components/   — reusable Compose UI components
+    - navigation/   — app navigation and bottom bar
+    - screen/       — feature screens (Home, Schedule, Standings, News, Settings)
+    - theme/        — Material 3 theme definitions
+    - state/        — UI state holders
+  - viewmodel/      — ViewModels and business logic
+  - util/           — helpers and mappers
+F1Application.kt    — Application class (Hilt-enabled)
+MainActivity.kt     — Compose entry point and navigation host
+
+How it fits together:
+- MainActivity sets up the Compose host and AppNavigation.
+- ViewModels (viewmodel/) coordinate UI state and call repository methods.
+- Repositories orchestrate data from remote (Retrofit) and local (Room) sources and expose flows for the UI.
+- DI is handled with Hilt modules in di/ to provide Retrofit, Room, and other dependencies.
 
 ---
 
-## 🚀 Getting Started
+## Requirements
 
-### Prerequisites
-- Android Studio Ladybug (or newer)
-- JDK 11+
-- Android SDK 26+
+- Android Studio (2024.2 "Ladybug" or newer) or the latest stable release
+- JDK 11 (configured for Kotlin JVM toolchain)
+- Android SDK 26+ (compile/target: 36)
 
-### Setup
-1. **Clone the repository**:
+---
+
+## Quick start (clone, build, run)
+
+1. Clone the repository
    ```bash
-   git clone https://github.com/yourusername/F1Comp.git
+   git clone https://github.com/JenilMacwan/Pitwall.git
+   cd Pitwall
    ```
-2. **Open in Android Studio**:
-   Import the project and let Gradle sync complete.
-3. **Run the app**:
-   Connect an Android device or start an emulator and click **Run**.
+
+2. Open the project in Android Studio and let Gradle sync. Or build from the command line:
+
+   - Assemble debug APK
+     ```bash
+     ./gradlew :app:assembleDebug
+     ```
+
+   - Install to a connected device/emulator
+     ```bash
+     ./gradlew :app:installDebug
+     ```
+
+3. Run the app from Android Studio (Run ▸ Run 'app') or launch the installed APK on your device.
+
+4. Tests
+   - Unit tests:
+     ```bash
+     ./gradlew test
+     ```
+   - Instrumentation / connected tests:
+     ```bash
+     ./gradlew connectedAndroidTest
+     ```
 
 ---
 
-## 👨‍💻 Developer
-Developed by **Jenil Macwan**.
+## Configuration
+
+- There are no special environment variables required by default.
+- API endpoints and parsing behavior are defined in the remote/ and data/ modules; check those if you need to point the app at a different data source or mock server for development.
 
 ---
 
-## 📄 License
-*Specify your license here (e.g., MIT, Apache 2.0)*
+## Development notes
+
+- Architecture: MVVM + Repository pattern (ViewModels expose StateFlows observed by Compose UI).
+- Compose-first UI (Material3).
+- DI: Hilt; generated code uses KSP.
+- Local persistence: Room (ksp compiler for entities/DAOs).
+- Testing: MockK for mocking, Turbine for StateFlow testing, kotlinx-coroutines-test for coroutine-based code.
+
+---
+
+## Contributing
+
+Contributions, improvements and bug reports are welcome.
+
+- Open an issue describing the bug/feature with steps to reproduce.
+- Create a feature branch from main: `git checkout -b feat/your-feature`
+- Keep changes focused and add tests where applicable.
+- Open a pull request with a clear description of changes.
+
+Code style:
+- Follow Kotlin coding conventions and prefer idiomatic Compose patterns.
+- Keep UI logic in Composables and business logic in ViewModels/repositories.
+
+---
+
+## Roadmap / Ideas
+
+- Push notifications for session start/end and results
+- Widget for home screen with next race and countdown
+- Improved offline caching and background sync
+- Locale & timezone improvements for session times
+
+---
+
+## Credits & author
+
+Developed and maintained by Jenil Macwan — com.jenil.f1comp
+
+---
+
+## License
+
+This project is licensed under the MIT License — see the LICENSE file for details.
+
+---
+
+## Questions you might want to ask next
+
+- Where are the Retrofit interfaces and base endpoints defined (which file path) and what auth/headers do they require?
+- Which classes in data/local implement Room entities and where are the migrations handled?
+- Can you add a CONTRIBUTING.md and a sample GitHub Actions workflow that builds and runs unit tests on push?

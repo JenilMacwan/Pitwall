@@ -1,0 +1,6 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="240" height="240" viewBox="0 0 240 240">
+  <rect width="100%" height="100%" fill="#0b1226" rx="24"/>
+  <circle cx="120" cy="80" r="36" fill="#d32f2f" />
+  <text x="120" y="150" font-family="Segoe UI, Roboto, Arial" font-size="20" fill="#ffffff" text-anchor="middle">PitWall</text>
+  <text x="120" y="176" font-family="Segoe UI, Roboto, Arial" font-size="12" fill="#bfc7d6" text-anchor="middle">App Icon (placeholder)</text>
+</svg>

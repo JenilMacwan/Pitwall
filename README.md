@@ -1,5 +1,5 @@
 <p align="center">
-  <img src="assets/app_icon.svg" width="120" alt="App Icon" />
+  <img src="assets/app_icon.png" width="120" alt="App Icon" />
 </p>
 
 
@@ -12,12 +12,11 @@ PitWall is a sleek, high-performance Android app for Formula 1 fans that deliver
 ## Screenshots
 
 <p align="center">
-  <img src="assets/screenshots/screenshot-01-home.svg" width="280" alt="Home — next race countdown and live session" />
-  <img src="assets/screenshots/screenshot-02-schedule.svg" width="280" alt="Full season schedule with session times" />
-  <img src="assets/screenshots/screenshot-03-standings.svg" width="280" alt="Driver and Constructor standings" />
+  <img src="assets/screenshots/screenshot-01-home.png" width="280" alt="Home — next race countdown and live session" />
+  <img src="assets/screenshots/screenshot-02-schedule.png" width="280" alt="Full season schedule with session times" />
+  <img src="assets/screenshots/screenshot-03-standings.png" width="280" alt="Driver and Constructor standings" />
 </p>
 
-*Placeholders — replace these files in assets/screenshots/ with actual PNG/WebP screenshots later.*
 
 ---
 

@@ -12,14 +12,42 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
+import androidx.compose.ui.BiasAlignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
-import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.Dp
 import coil.compose.AsyncImage
+import coil.request.ImageRequest
+import coil.size.Size
+import coil.transform.Transformation
+import android.graphics.Bitmap
+import android.graphics.Canvas
+import android.graphics.Rect
 
+class TopCropTransformation(
+    private val topFraction: Float = 0.22f // % of full body height where head sits — tune per photo set
+) : Transformation {
+
+    override val cacheKey: String = "${TopCropTransformation::class.java.name}-$topFraction"
+
+    override suspend fun transform(input: Bitmap, size: Size): Bitmap {
+        val cropHeight = (input.height * topFraction).toInt().coerceAtLeast(1)
+        val cropSize = minOf(input.width, cropHeight) // square region
+        val xOffset = (input.width - cropSize) / 2
+
+        val output = Bitmap.createBitmap(cropSize, cropSize, input.config ?: Bitmap.Config.ARGB_8888)
+        Canvas(output).drawBitmap(
+            input,
+            Rect(xOffset, 0, xOffset + cropSize, cropSize),
+            Rect(0, 0, cropSize, cropSize),
+            null
+        )
+        return output
+    }
+}
 @Composable
 fun DriverProfileCircle(
     imageUrl: String?,
@@ -27,23 +55,24 @@ fun DriverProfileCircle(
     size: Dp,
     modifier: Modifier = Modifier
 ) {
+    val context = LocalContext.current
     Box(
         modifier = modifier
             .size(size)
             .clip(CircleShape)
             .background(MaterialTheme.colorScheme.surfaceVariant),
-        contentAlignment = Alignment.TopCenter
+        contentAlignment = Alignment.Center
     ) {
         if (!imageUrl.isNullOrBlank()) {
             AsyncImage(
-                model = imageUrl,
+                model = ImageRequest.Builder(context)
+                    .data(imageUrl)
+                    .transformations(TopCropTransformation(topFraction = 0.22f))
+                    .crossfade(true)
+                    .build(),
                 contentDescription = driverName,
-                contentScale = ContentScale.Crop,
-                alignment = Alignment.TopCenter,
-                modifier = Modifier
-                    .requiredSize(size * 2.4f)   // force a bigger box than the circle → Crop zooms in
-                    .align(Alignment.TopCenter)
-                    .offset(y = -size * 0.35f)   // nudge up slightly to center on the face
+                contentScale = ContentScale.Crop, // now safe — src already square headshot
+                modifier = Modifier.fillMaxSize()
             )
         } else {
             Text(

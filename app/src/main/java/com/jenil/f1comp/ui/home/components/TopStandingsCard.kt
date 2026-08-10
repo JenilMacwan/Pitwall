@@ -75,7 +75,8 @@ fun TopStandingsCard(
                         team = driver.team,
                         nationality = driver.nationality,
                         points = driver.points.toInt(),
-                        imageUrl = driver.driverImage
+                        imageUrl = driver.driverImage,
+                        isConstructor = false
                     )
                 }
             } else {
@@ -86,6 +87,7 @@ fun TopStandingsCard(
                         nationality = constructor.nationality,
                         points = constructor.points.toInt(),
                         team = constructor.drivers,
+                        isConstructor = true,
                         imageUrl = constructor.constructorLogo
                     )
                 }

@@ -1,6 +1,10 @@
 package com.jenil.f1comp.ui.schedule.screen
 
+import android.Manifest
+import android.content.pm.PackageManager
 import android.widget.Toast
+import androidx.activity.compose.rememberLauncherForActivityResult
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -26,12 +30,14 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.unit.dp
+import androidx.core.content.ContextCompat
 import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.example.test.calendar_add_on
 import com.jenil.f1comp.ui.F1ScreenPadding
 import com.jenil.f1comp.ui.schedule.components.ScheduleCard
 import com.jenil.f1comp.ui.schedule.components.TabPill
+import com.jenil.f1comp.util.syncRacesToCalendar
 import com.jenil.f1comp.viewmodel.ScheduleViewModel
 
 @Composable
@@ -60,6 +66,19 @@ fun ScheduleScreen(
         raceSchedule.sortedBy { it.round.toIntOrNull() ?: 0 }
     }
 
+    val calendarPermissionLauncher = rememberLauncherForActivityResult(
+        contract = ActivityResultContracts.RequestMultiplePermissions()
+    ) { permissions ->
+        val readGranted = permissions[Manifest.permission.READ_CALENDAR] ?: false
+        val writeGranted = permissions[Manifest.permission.WRITE_CALENDAR] ?: false
+
+        if (readGranted && writeGranted) {
+            syncRacesToCalendar(context, allRaces)
+        } else {
+            Toast.makeText(context, "Calendar permissions are required to sync.", Toast.LENGTH_SHORT).show()
+        }
+    }
+
     Column(
         modifier = modifier
             .fillMaxSize()
@@ -80,8 +99,18 @@ fun ScheduleScreen(
             )
             IconButton(
                 onClick = {
-                    Toast.makeText( context, "button clicked", Toast.LENGTH_SHORT).show()
+                    val hasReadPerm = ContextCompat.checkSelfPermission(context, Manifest.permission.READ_CALENDAR) == PackageManager.PERMISSION_GRANTED
+                    val hasWritePerm = ContextCompat.checkSelfPermission(context, Manifest.permission.WRITE_CALENDAR) == PackageManager.PERMISSION_GRANTED
 
+                    if (hasReadPerm && hasWritePerm) {
+                        // Permissions already exist, execute sync
+                        syncRacesToCalendar(context, allRaces)
+                    } else {
+                        // Launch permission request
+                        calendarPermissionLauncher.launch(
+                            arrayOf(Manifest.permission.READ_CALENDAR, Manifest.permission.WRITE_CALENDAR)
+                        )
+                    }
                 }
             ) {
                 Icon(

@@ -1,5 +1,6 @@
 package com.jenil.f1comp.ui.home.components
 
+import android.util.Log
 import androidx.compose.foundation.layout.*
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
@@ -17,6 +18,7 @@ fun StandingRowItem(
     nationality: String,
     points: Int,
     imageUrl: String? = null,
+    isConstructor: Boolean = false,
     modifier: Modifier = Modifier
 ) {
     Row(
@@ -30,12 +32,20 @@ fun StandingRowItem(
 
         Spacer(modifier = Modifier.width(12.dp))
 
-        // Driver Image Circle (with initial fallback) — matches PodiumRowItem
-        TeamLogoCircle(
-            logoUrl = imageUrl,
-            teamName = name,
-            size = 25.dp
-        )
+        if (isConstructor) {
+            TeamLogoCircle(
+                logoUrl = imageUrl,
+                teamName = name,
+                size = 32.dp
+            )
+        } else {
+            DriverProfileCircle(
+                imageUrl = imageUrl,
+                driverName = name,
+                size = 40.dp
+            )
+            Log.d("StandingRowItem", "Image URL: $imageUrl , Driver Name: $name")
+        }
 
         Spacer(modifier = Modifier.width(12.dp))
 

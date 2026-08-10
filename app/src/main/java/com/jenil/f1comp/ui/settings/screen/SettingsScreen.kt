@@ -1,5 +1,10 @@
 package com.jenil.f1comp.ui.settings.screen
 
+import android.Manifest
+import android.content.pm.PackageManager
+import android.widget.Toast
+import androidx.activity.compose.rememberLauncherForActivityResult
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
@@ -11,11 +16,14 @@ import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.rounded.ArrowBack
+import androidx.compose.material.icons.outlined.CalendarMonth
 import androidx.compose.material.icons.outlined.Code
 import androidx.compose.material.icons.outlined.DarkMode
+import androidx.compose.material.icons.outlined.DeleteOutline
 import androidx.compose.material.icons.outlined.Info
 import androidx.compose.material.icons.outlined.Notifications
 import androidx.compose.material.icons.outlined.Palette
+import androidx.compose.material.icons.outlined.Sync
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
@@ -27,26 +35,66 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
+import androidx.core.content.ContextCompat
+import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavController
 import com.jenil.f1comp.R
 import com.jenil.f1comp.ui.F1ScreenPadding
 import com.jenil.f1comp.ui.settings.component.SettingsItem
 import com.jenil.f1comp.ui.settings.component.SettingsSection
 import com.jenil.f1comp.ui.settings.component.SettingsSwitchItem
+import com.jenil.f1comp.util.removeRacesFromCalendar
+import com.jenil.f1comp.util.syncRacesToCalendar
+import com.jenil.f1comp.viewmodel.ScheduleViewModel
 
 @Composable
 fun SettingsScreen(
     navController: NavController,
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
+    viewModel: ScheduleViewModel = hiltViewModel()
 ) {
     val scrollState = rememberScrollState()
     var isDarkMode by remember { mutableStateOf(false) }
+    val context = LocalContext.current
+    val raceSchedule by viewModel.schedule.collectAsStateWithLifecycle()
+
+    var pendingAction by remember { mutableStateOf<(() -> Unit)?>(null) }
+
+    val calendarPermissionLauncher = rememberLauncherForActivityResult(
+        contract = ActivityResultContracts.RequestMultiplePermissions()
+    ) { permissions ->
+        val readGranted = permissions[Manifest.permission.READ_CALENDAR] ?: false
+        val writeGranted = permissions[Manifest.permission.WRITE_CALENDAR] ?: false
+
+        if (readGranted && writeGranted) {
+            pendingAction?.invoke()
+        } else {
+            Toast.makeText(context, "Calendar permissions are required.", Toast.LENGTH_SHORT).show()
+        }
+        pendingAction = null
+    }
+
+    val runWithPermission = { action: () -> Unit ->
+        val hasReadPerm = ContextCompat.checkSelfPermission(context, Manifest.permission.READ_CALENDAR) == PackageManager.PERMISSION_GRANTED
+        val hasWritePerm = ContextCompat.checkSelfPermission(context, Manifest.permission.WRITE_CALENDAR) == PackageManager.PERMISSION_GRANTED
+
+        if (hasReadPerm && hasWritePerm) {
+            action()
+        } else {
+            pendingAction = action
+            calendarPermissionLauncher.launch(
+                arrayOf(Manifest.permission.READ_CALENDAR, Manifest.permission.WRITE_CALENDAR)
+            )
+        }
+    }
 
     val dynamicSubtitle = if (isDarkMode) {
         "Dark theme is currently active"
-    }else{
+    } else {
         "Light theme is currently active"
     }
 
@@ -88,17 +136,53 @@ fun SettingsScreen(
             SettingsSection(title = "Appearance") {
                 SettingsItem(
                     icon = Icons.Outlined.Palette,
-                    title =stringResource(id = R.string.title_theme),
+                    title = stringResource(id = R.string.title_theme),
                     subtitle = stringResource(id = R.string.sub_title_theme),
                     onClick = { /* TODO */ }
                 )
                 SettingsSwitchItem(
                     icon = Icons.Outlined.DarkMode,
-                    title =stringResource(id = R.string.title_mode),
+                    title = stringResource(id = R.string.title_mode),
                     subtitle = dynamicSubtitle,
                     isChecked = isDarkMode,
                     onCheckedChange = { newValue ->
                         isDarkMode = newValue
+                    }
+                )
+            }
+
+            Spacer(modifier = Modifier.height(24.dp))
+
+            SettingsSection(title = "Calendar Sync") {
+                SettingsItem(
+                    icon = Icons.Outlined.Sync,
+                    title = "Sync All Races",
+                    subtitle = "Add all season races to your calendar",
+                    onClick = {
+                        runWithPermission {
+                            syncRacesToCalendar(context, raceSchedule)
+                        }
+                    }
+                )
+                SettingsItem(
+                    icon = Icons.Outlined.CalendarMonth,
+                    title = "Sync Upcoming Races",
+                    subtitle = "Add only future races to your calendar",
+                    onClick = {
+                        runWithPermission {
+                            val upcoming = raceSchedule.filter { !it.isCompleted }
+                            syncRacesToCalendar(context, upcoming)
+                        }
+                    }
+                )
+                SettingsItem(
+                    icon = Icons.Outlined.DeleteOutline,
+                    title = "Clear F1 Events",
+                    subtitle = "Remove all F1 races from your calendar",
+                    onClick = {
+                        runWithPermission {
+                            removeRacesFromCalendar(context)
+                        }
                     }
                 )
             }

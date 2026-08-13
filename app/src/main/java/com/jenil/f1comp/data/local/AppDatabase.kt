@@ -41,7 +41,7 @@ import com.jenil.f1comp.data.local.entity.ConstructorsStatsEntity
         ConstructorsStatsEntity::class
 
     ],
-    version = 18,
+    version = 20,
     exportSchema = false
 )
 @TypeConverters(Converters::class)

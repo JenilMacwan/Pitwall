@@ -62,8 +62,13 @@ fun SettingsSwitchItem(
 
         Switch(
             checked = isChecked,
-            // Passing null here because the Row's clickable already handles the toggle action
-            onCheckedChange = null
+            onCheckedChange = null,
+            colors = SwitchDefaults.colors(
+                checkedThumbColor = MaterialTheme.colorScheme.primary,
+                checkedTrackColor = MaterialTheme.colorScheme.primaryContainer,
+                uncheckedThumbColor = MaterialTheme.colorScheme.onSurfaceVariant,
+                uncheckedTrackColor = MaterialTheme.colorScheme.surfaceVariant
+            )
         )
     }
 }
@@ -75,6 +80,7 @@ fun SettingsItem(
     title: String,
     subtitle: String? = null,
     showChevron: Boolean = true,
+    trailing: (@Composable () -> Unit)? = null,
     onClick: () -> Unit
 ) {
     Row(
@@ -106,8 +112,9 @@ fun SettingsItem(
                 )
             }
         }
-        if (showChevron) {
-            Icon(
+        when {
+            trailing != null -> trailing()
+            showChevron -> Icon(
                 imageVector = Icons.Rounded.ChevronRight,
                 contentDescription = null,
                 tint = MaterialTheme.colorScheme.onSurfaceVariant.copy(alpha = 0.5f),

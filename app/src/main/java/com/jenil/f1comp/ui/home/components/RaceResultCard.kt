@@ -2,6 +2,7 @@ package com.jenil.f1comp.ui.home.components
 
 import android.util.Log
 import androidx.compose.foundation.BorderStroke
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -19,6 +20,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.unit.dp
 import com.jenil.f1comp.data.local.entity.RaceResultEntity
@@ -28,6 +30,7 @@ private const val TAG = "RaceResultCard"
 @Composable
 fun RaceResultCard(
     podium: List<RaceResultEntity>,
+    onViewFullResult: () -> Unit,
     modifier: Modifier = Modifier
 ){
 
@@ -88,7 +91,11 @@ fun RaceResultCard(
                 )
             }
             Box(
-                modifier = Modifier.fillMaxWidth(),
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .clip(RoundedCornerShape(8.dp))
+                    .clickable { onViewFullResult() }
+                    .padding(vertical = 8.dp),
                 contentAlignment = Alignment.Center
             ) {
                 Text(

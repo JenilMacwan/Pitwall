@@ -28,20 +28,24 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
-import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.unit.dp
 import androidx.core.content.ContextCompat
 import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import androidx.navigation.NavController
 import com.example.test.calendar_add_on
+import com.jenil.f1comp.data.local.entity.ScheduleEntity
 import com.jenil.f1comp.ui.F1ScreenPadding
 import com.jenil.f1comp.ui.schedule.components.ScheduleCard
+import com.jenil.f1comp.ui.schedule.components.SectionLabel
 import com.jenil.f1comp.ui.schedule.components.TabPill
 import com.jenil.f1comp.util.syncRacesToCalendar
 import com.jenil.f1comp.viewmodel.ScheduleViewModel
+import java.time.LocalDate
 
 @Composable
 fun ScheduleScreen(
+    navController: NavController,
     modifier: Modifier = Modifier,
     viewModel: ScheduleViewModel = hiltViewModel()
 ) {
@@ -64,6 +68,12 @@ fun ScheduleScreen(
 
     val allRaces = remember(raceSchedule) {
         raceSchedule.sortedBy { it.round.toIntOrNull() ?: 0 }
+    }
+
+    fun navigateToResults(race: ScheduleEntity) {
+        val year = runCatching { LocalDate.parse(race.grandPrix).year }
+            .getOrDefault(LocalDate.now().year)
+        navController.navigate("race_result/${race.round}/$year")
     }
 
     val calendarPermissionLauncher = rememberLauncherForActivityResult(
@@ -156,7 +166,11 @@ fun ScheduleScreen(
             when (selectedTab) {
                 "All" -> {
                     allRaces.forEach { race ->
-                        ScheduleCard(schedule = race, isNextRace = false)
+                        ScheduleCard(
+                            schedule = race,
+                            isNextRace = false,
+                            onResultsClick = { navigateToResults(race) }
+                        )
                     }
                 }
 
@@ -167,14 +181,22 @@ fun ScheduleScreen(
                             ScheduleCard(schedule = race, isNextRace = true)
                             Spacer(modifier = Modifier.height(20.dp))
                         } else {
-                            ScheduleCard(schedule = race, isNextRace = false)
+                            ScheduleCard(
+                                schedule = race,
+                                isNextRace = false,
+                                onResultsClick = { navigateToResults(race) }
+                            )
                         }
                     }
                 }
 
                 "Completed" -> {
                     completedRaces.forEach { race ->
-                        ScheduleCard(schedule = race, isNextRace = false)
+                        ScheduleCard(
+                            schedule = race,
+                            isNextRace = false,
+                            onResultsClick = { navigateToResults(race) }
+                        )
                     }
                 }
             }
@@ -184,13 +206,3 @@ fun ScheduleScreen(
     }
 }
 
-@Composable
-private fun SectionLabel(text: String) {
-    Text(
-        text = text,
-        fontFamily = FontFamily.Monospace,
-        style = MaterialTheme.typography.labelSmall,
-        color = MaterialTheme.colorScheme.onSurfaceVariant,
-        modifier = Modifier.padding(horizontal = 16.dp, vertical = 8.dp)
-    )
-}

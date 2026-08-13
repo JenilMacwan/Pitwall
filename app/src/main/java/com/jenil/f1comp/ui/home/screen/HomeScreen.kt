@@ -13,7 +13,6 @@ import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.outlined.Settings
-import androidx.compose.material.icons.rounded.Refresh
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
@@ -146,7 +145,12 @@ fun HomeScreen(
 
                         Spacer(modifier = Modifier.height(8.dp))
 
-                        RaceResultCard(podium = podium)
+                        RaceResultCard(
+                            podium = podium,
+                            onViewFullResult = {
+                                navController.navigate("race_result/$lastRaceId/2026")
+                            }
+                        )
 
                         Spacer(modifier = Modifier.height(8.dp))
 

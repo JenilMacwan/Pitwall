@@ -6,8 +6,8 @@ import com.jenil.f1comp.data.model.RaceSession
 
 @Entity(tableName = "schedule_table")
 data class ScheduleEntity(
-    val round: String,
     @PrimaryKey
+    val round: String,
     val flag: String,
     val raceName: String,
     val circuitId: String,

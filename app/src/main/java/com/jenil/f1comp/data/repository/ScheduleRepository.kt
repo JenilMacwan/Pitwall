@@ -41,6 +41,7 @@ class ScheduleRepository @Inject constructor(
         }
         Log.d("ScheduleRepository", "Fetched ${scheduleEntities.size} races. Updating database...")
         scheduleDao.refreshSchedule(scheduleEntities)
+        Log.d("ScheduleRepository", "$scheduleEntities")
         Log.d("ScheduleRepository", "Database updated successfully.")
     }
 }

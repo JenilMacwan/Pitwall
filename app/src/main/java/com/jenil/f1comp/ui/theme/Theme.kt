@@ -53,6 +53,13 @@ private val LightColorScheme = lightColorScheme(
     onError = Color(0xFFFFFFFF),
 )
 
+enum class F1ThemeStyle {
+    CLASSIC_RED,
+    MIDNIGHT_TEAL,
+    PADDOCK_ORANGE,
+    RACING_BLUE
+}
+
 @Composable
 fun F1CompTheme(
     darkTheme: Boolean = isSystemInDarkTheme(),

@@ -1,11 +1,9 @@
 package com.jenil.f1comp.data.repository
 
-import com.jenil.f1comp.data.local.dao.DriverDao
 import com.jenil.f1comp.data.local.dao.RaceResultDao
 import com.jenil.f1comp.data.local.entity.RaceResultEntity
 import com.jenil.f1comp.data.remote.F1ApiService
 import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.firstOrNull
 import javax.inject.Inject
 
 class RaceResultRepository @Inject constructor(
@@ -36,6 +34,7 @@ class RaceResultRepository @Inject constructor(
                 fastestLap = networkModel.fastestLap ?: ""
             )
         }
-        resultDao.refreshRaceResult(raceResultEntities)
+        // raceId now passed through so only this race's rows get cleared.
+        resultDao.refreshRaceResult(raceId, raceResultEntities)
     }
 }

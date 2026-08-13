@@ -17,12 +17,12 @@ interface RaceResultDao {
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun insertRaceResults(raceResults: List<RaceResultEntity>)
 
-    @Query("DELETE FROM raceresult_table")
-    suspend fun clearRaceResult()
+    @Query("DELETE FROM raceresult_table WHERE raceId = :raceId")
+    suspend fun clearRaceResult(raceId: String)
 
     @Transaction
-    suspend fun refreshRaceResult(raceResults: List<RaceResultEntity>) {
-        clearRaceResult()
+    suspend fun refreshRaceResult(raceId: String, raceResults: List<RaceResultEntity>) {
+        clearRaceResult(raceId)
         insertRaceResults(raceResults)
     }
 }

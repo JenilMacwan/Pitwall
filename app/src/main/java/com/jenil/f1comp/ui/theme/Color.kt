@@ -34,3 +34,22 @@ val P3Text = Color(0xFF703D24)
 
 val F1NeutralLight = Color(0xFF9E9E9E)
 val F1NeutralDark = Color(0xFF757575)
+
+// --- Preset Theme Primaries ---
+val ClassicRedPrimary = Color(0xFFE10600)
+val MidnightTealPrimary = Color(0xFF004D40)
+val PaddockOrangePrimary = Color(0xFFFF9800)
+val RacingBluePrimary = Color(0xFF1976D2)
+
+// --- Team Colors ---
+val TeamRedBull = Color(0xFF0600EF)
+val TeamFerrari = Color(0xFFDC0000)
+val TeamMercedes = Color(0xFF00D2BE)
+val TeamMcLaren = Color(0xFFFF8700)
+val TeamAstonMartin = Color(0xFF006F62)
+val TeamAlpine = Color(0xFF0090FF)
+val TeamWilliams = Color(0xFF005AFF)
+val TeamRB = Color(0xFF6692FF)
+val TeamAudi = Color(0xFF52E252)
+val TeamHaas = Color(0xFFFFFFFF)
+val TeamCadillac = Color(0xFF000000)

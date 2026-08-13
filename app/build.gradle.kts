@@ -17,9 +17,9 @@ android {
     defaultConfig {
         applicationId = "com.jenil.f1comp"
         minSdk = 26
-        targetSdk = 36
+        targetSdk = 37
         versionCode = 1
-        versionName = "1.0"
+        versionName = "1.0.0"
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
     }
@@ -42,6 +42,8 @@ android {
     }
     buildFeatures {
         compose = true
+        buildConfig = true
+
     }
 }
 
@@ -81,6 +83,13 @@ dependencies {
     // Navigation
     implementation(libs.androidx.navigation.compose)
     implementation(libs.androidx.lifecycle.runtime.compose)
+
+    //Haze
+    implementation(libs.haze)
+    implementation(libs.haze.materials)
+
+    // DataStore
+    implementation(libs.androidx.datastore.preferences)
 
     // Parsing
     implementation(libs.jsoup)

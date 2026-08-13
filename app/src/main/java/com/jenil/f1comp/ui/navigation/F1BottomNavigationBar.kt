@@ -15,52 +15,68 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.navigationBarsPadding
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.draw.scale
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.hapticfeedback.HapticFeedbackType
+import androidx.compose.ui.platform.LocalHapticFeedback
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
+import dev.chrisbanes.haze.HazeState
+import dev.chrisbanes.haze.hazeEffect
+import dev.chrisbanes.haze.materials.ExperimentalHazeMaterialsApi
+import dev.chrisbanes.haze.materials.HazeMaterials
 
+@OptIn(ExperimentalHazeMaterialsApi::class)
 @Composable
 fun F1BottomNavigationBar(
     currentRoute: String?,
+    hazeState: HazeState,
     onNavigate: (String) -> Unit,
     modifier: Modifier = Modifier
 ) {
-    Surface(
-        color = MaterialTheme.colorScheme.surface,
-        shape = RoundedCornerShape(20.dp),
-        shadowElevation = 8.dp,
+    val haptic = LocalHapticFeedback.current
+
+    Row(
         modifier = modifier
-            .fillMaxWidth()
             .navigationBarsPadding()
-            .padding(horizontal = 24.dp, vertical = 10.dp)
-    ) {
-        Row(
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(horizontal = 8.dp, vertical = 6.dp),
-            horizontalArrangement = Arrangement.SpaceEvenly,
-            verticalAlignment = Alignment.CenterVertically
-        ) {
-            BottomNavItem.items.forEach { item ->
-                val isSelected = currentRoute == item.route
-                CustomBottomNavItem(
-                    item = item,
-                    isSelected = isSelected,
-                    onClick = { onNavigate(item.route) },
-                    modifier = Modifier.weight(1f)
+            .padding(horizontal = 20.dp, vertical = 12.dp)
+            .fillMaxWidth()
+            .clip(RoundedCornerShape(28.dp))
+            .hazeEffect(
+                state = hazeState,
+                style = HazeMaterials.thin(
+                    containerColor = MaterialTheme.colorScheme.surface
                 )
-            }
+            )
+            .background(Color.Transparent)
+            .padding(horizontal = 8.dp, vertical = 8.dp),
+        horizontalArrangement = Arrangement.SpaceEvenly,
+        verticalAlignment = Alignment.CenterVertically
+    ) {
+        BottomNavItem.items.forEach { item ->
+            val isSelected = currentRoute == item.route
+            CustomBottomNavItem(
+                item = item,
+                isSelected = isSelected,
+                onClick = {
+                    if (!isSelected) {
+                        haptic.performHapticFeedback(HapticFeedbackType.TextHandleMove)
+                        onNavigate(item.route)
+                    }
+                },
+                modifier = Modifier.weight(1f)
+            )
         }
     }
 }
@@ -74,22 +90,22 @@ fun CustomBottomNavItem(
 ) {
     val animatedColor by animateColorAsState(
         targetValue = if (isSelected) MaterialTheme.colorScheme.primary else MaterialTheme.colorScheme.onSurfaceVariant,
-        animationSpec = tween(durationMillis = 300),
+        animationSpec = tween(durationMillis = 250),
         label = "color"
     )
 
     val animatedScale by animateFloatAsState(
         targetValue = if (isSelected) 1.1f else 1.0f,
-        animationSpec = tween(durationMillis = 300),
+        animationSpec = tween(durationMillis = 250),
         label = "scale"
     )
-    val textScale by animateFloatAsState(
-        targetValue = if (isSelected) 1.05f else 1f,
-        animationSpec = tween(durationMillis = 300),
-        label = "textScale"
+
+    val pillWidth by animateFloatAsState(
+        targetValue = if (isSelected) 1f else 0f,
+        animationSpec = tween(durationMillis = 250),
+        label = "pillWidth"
     )
 
-    //THE CUSTOM LAYOUT
     Column(
         modifier = modifier
             .clickable(
@@ -97,30 +113,34 @@ fun CustomBottomNavItem(
                 indication = null,
                 onClick = onClick
             )
-            .background(
-                if (isSelected)
-                    MaterialTheme.colorScheme.primary.copy(alpha = 0.12f)
-                else
-                    Color.Transparent,
-                shape = RoundedCornerShape(16.dp)
-            )
             .padding(vertical = 6.dp),
         horizontalAlignment = Alignment.CenterHorizontally,
         verticalArrangement = Arrangement.Center
     ) {
-        Icon(
-            imageVector = item.icon,
-            contentDescription = item.title,
-            tint = animatedColor,
+        // Selection indicator: a soft filled pill behind the icon,
+        // scaling in/out instead of hard-cutting visibility.
+        Column(
+            horizontalAlignment = Alignment.CenterHorizontally,
             modifier = Modifier
-                .size(18.dp)
-                .scale(animatedScale)
-        )
+                .clip(CircleShape)
+                .background(
+                    MaterialTheme.colorScheme.primary.copy(alpha = 0.14f * pillWidth)
+                )
+                .padding(horizontal = 14.dp, vertical = 6.dp)
+        ) {
+            Icon(
+                imageVector = item.icon,
+                contentDescription = item.title,
+                tint = animatedColor,
+                modifier = Modifier
+                    .size(20.dp)
+                    .scale(animatedScale)
+            )
+        }
 
-        Spacer(modifier = Modifier.height(2.dp))
+        Spacer(modifier = Modifier.height(3.dp))
 
         Text(
-            modifier = Modifier.scale(textScale),
             text = item.title,
             color = animatedColor,
             style = MaterialTheme.typography.labelSmall,

@@ -1,0 +1,41 @@
+PitWall v1.0.0 Release Notes 🏁
+
+We are thrilled to announce the official v1.0.0 release of PitWall! This version represents a complete overhaul and the "Gold" standard of our F1 companion experience, combining real-time data, premium aesthetics, and professional-grade reliability.
+
+🚀 Key Features
+
+👤 Dynamic Driver & Team Profiles
+Dive deep into the grid with our new profile system:
+- Live 2026 Stats: Real-time points, podiums, and wins for the current season.
+- Teammate Head-to-Head: Visual comparisons of team pairings.
+- Technical Specs: Explore chassis details (RB21, SF-25), power units, and team leadership.
+- The Challenger: High-quality visuals of the 2026 F1 cars.
+
+🎨 Premium UI/UX & Customization
+- Dynamic Theming: Real-time switching between Light and Dark modes.
+- Glassmorphism: Modern blur effects on the navigation bar and UI components.
+- Refined Standings: Completely redesigned Driver and Constructor leaderboards.
+- Smooth Navigation: Persistent controls and optimized scrolling for deep data views.
+
+📅 Smart Calendar Sync
+- Device Integration: Sync the entire 2026 schedule directly to your system calendar.
+- Intelligent Updates: Options to sync only future races or clear all synced events with one tap.
+
+--------------------------------------------------------------------------------
+
+🛠️ Under the Hood (Technical)
+- Offline-First: Robust local caching using Room (v25) ensures the app works without a connection.
+- Quality Assurance: Integrated a comprehensive test suite (Unit & Instrumented) covering ViewModels, Repositories, and DAOs.
+- CI/CD Pipeline: Configured GitHub Actions for automated quality checks and artifact generation.
+- Architecture: 100% Kotlin with Jetpack Compose, Material 3, and Hilt dependency injection.
+
+--------------------------------------------------------------------------------
+
+📲 How to Install
+1. Download the PitWall-v1.0.0.apk.
+2. Open the file on your Android device.
+3. If prompted, allow "Installation from Unknown Sources".
+4. Open PitWall and enjoy the season!
+
+--------------------------------------------------------------------------------
+Developed with ❤️ for F1 fans by Jenil Macwan.

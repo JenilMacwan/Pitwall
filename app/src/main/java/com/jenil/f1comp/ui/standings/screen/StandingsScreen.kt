@@ -16,6 +16,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import androidx.navigation.NavController
 import com.jenil.f1comp.ui.F1ScreenPadding
 import com.jenil.f1comp.ui.standings.components.StandingsCard
 import com.jenil.f1comp.viewmodel.ConstructorStandingsViewModel
@@ -25,6 +26,7 @@ import com.jenil.f1comp.viewmodel.DriverStandingsViewModel
 @Composable
 fun StandingsScreen(
     modifier: Modifier = Modifier,
+    navController: NavController,
     driverViewModel: DriverStandingsViewModel = hiltViewModel(),
     constructorViewModel: ConstructorStandingsViewModel = hiltViewModel()
 ) {
@@ -55,8 +57,9 @@ fun StandingsScreen(
             )
             Spacer(modifier = Modifier.height(16.dp))
             StandingsCard(
+                navController = navController,
                 driverStandings = driverStandings,
-                constructorStandings = constructorStandings
+                constructorStandings = constructorStandings,
             )
         }
     }

@@ -39,14 +39,6 @@ object DatabaseModule {
 
     @Provides
     @Singleton
-    fun provideDriverDao(db: AppDatabase) = db.driverDao
-
-    @Provides
-    @Singleton
-    fun provideConstructorDao(db: AppDatabase) = db.constructorDao
-
-    @Provides
-    @Singleton
     fun provideNextRaceDao(db: AppDatabase) = db.nextRaceDao
 
     @Provides
@@ -63,9 +55,9 @@ object DatabaseModule {
 
     @Provides
     @Singleton
-    fun provideConstructorStatsDao(db: AppDatabase) = db.constructorStatsDao
+    fun provideDriverProfileDao(db: AppDatabase) = db.driverProfileDao
 
     @Provides
     @Singleton
-    fun provideDriverStatsDao(db: AppDatabase) = db.driverStatsDao
+    fun provideConstructorProfileDao(db: AppDatabase) = db.constructorProfileDao
 }

@@ -24,10 +24,10 @@ data class Driver(
     val image: String?,
     val team: String?,
     @SerializedName("career_stats")
-    val careerStats: CareerStats? = null
+    val careerStats: DriverCareerStats? = null
 )
 
-data class CareerStats(
+data class DriverCareerStats(
     @SerializedName("world_championships")
     val worldChampionships: Int,
     @SerializedName("total_races")
@@ -43,11 +43,24 @@ data class CareerStats(
     @SerializedName("total_seasons")
     val totalSeasons: Int,
     @SerializedName("current_season")
-    val currentSeason: CurrentSeason? = null
+    val currentSeason: DriverCurrentSeason? = null
 )
 
-data class CurrentSeason(
+data class DriverCurrentSeason(
     val year: String,
     val position: String,
-    val points: String
+    val points: String,
+    val wins: Int,
+    val podiums: Int,
+    @SerializedName("points_progression")
+    val pointsProgression: List<DriverPointsProgression>
+)
+
+data class DriverPointsProgression(
+    val round: String,
+    @SerializedName("race_name")
+    val raceName: String,
+    val points: Double,
+    @SerializedName("cumulative_points")
+    val cumulativePoints: Double
 )

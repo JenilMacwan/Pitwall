@@ -1,6 +1,7 @@
 package com.jenil.f1comp.ui.results.component
 
 import androidx.compose.foundation.BorderStroke
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
@@ -22,7 +23,11 @@ import com.jenil.f1comp.data.local.entity.RaceResultEntity
 import com.jenil.f1comp.ui.home.components.DriverProfileCircle
 
 @Composable
-fun RaceResultRow(result: RaceResultEntity) {
+fun RaceResultRow(
+    result: RaceResultEntity,
+    onDriverClick: () -> Unit,
+    onConstructorClick: () -> Unit
+) {
     val position = result.position.toIntOrNull()
 
     val badgeTextColor = when (position) {
@@ -40,7 +45,9 @@ fun RaceResultRow(result: RaceResultEntity) {
     }
 
     Card(
-        modifier = Modifier.fillMaxWidth(),
+        modifier = Modifier
+            .fillMaxWidth()
+            .clickable { onDriverClick() },
         shape = RoundedCornerShape(14.dp),
         border = podiumBorder,
         elevation = CardDefaults.cardElevation(
@@ -87,7 +94,8 @@ fun RaceResultRow(result: RaceResultEntity) {
                     text = result.constructor,
                     fontFamily = FontFamily.Monospace,
                     style = MaterialTheme.typography.bodySmall,
-                    color = MaterialTheme.colorScheme.onSurfaceVariant
+                    color = MaterialTheme.colorScheme.onSurfaceVariant,
+                    modifier = Modifier.clickable { onConstructorClick() }
                 )
             }
 

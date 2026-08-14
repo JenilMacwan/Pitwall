@@ -155,6 +155,7 @@ fun HomeScreen(
                         Spacer(modifier = Modifier.height(8.dp))
 
                         TopStandingsCard(
+                            navController = navController,
                             driverStandings = driverStandings,
                             constructorStandings = constructorStandings,
                             onViewAllClicked = {

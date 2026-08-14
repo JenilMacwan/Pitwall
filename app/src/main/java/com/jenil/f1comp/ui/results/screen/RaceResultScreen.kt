@@ -237,7 +237,11 @@ fun RaceResultScreen(
                     verticalArrangement = Arrangement.spacedBy(8.dp)
                 ) {
                     items(sortedResults, key = { it.driver }) { result ->
-                        RaceResultRow(result = result)
+                        RaceResultRow(
+                            result = result,
+                            onDriverClick = { navController.navigate("profile/true/${result.driver}") },
+                            onConstructorClick = { navController.navigate("profile/false/${result.constructor}") }
+                        )
                     }
                     item { Spacer(modifier = Modifier.height(F1ScreenPadding.bottomPadding())) }
                 }

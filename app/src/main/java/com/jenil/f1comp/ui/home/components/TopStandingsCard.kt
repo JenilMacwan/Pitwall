@@ -17,7 +17,7 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
+import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -29,11 +29,12 @@ import com.jenil.f1comp.data.local.entity.DriverStandingsEntity
 @Composable
 fun TopStandingsCard(
     modifier: Modifier = Modifier,
+    navController: NavController,
     driverStandings: List<DriverStandingsEntity>,
     constructorStandings: List<ConstructorStandingsEntity>,
     onViewAllClicked: () -> Unit
 ) {
-    var isDriverSelected by remember { mutableStateOf(true) }
+    var isDriverSelected by rememberSaveable { mutableStateOf(true) }
 
     Card(
         modifier = modifier
@@ -73,10 +74,10 @@ fun TopStandingsCard(
                         position = driver.position,
                         name = driver.name,
                         team = driver.team,
-                        nationality = driver.nationality,
                         points = driver.points.toInt(),
                         imageUrl = driver.driverImage,
-                        isConstructor = false
+                        isConstructor = false,
+                        onClick = { navController.navigate("profile/true/${driver.name}") }
                     )
                 }
             } else {
@@ -84,11 +85,11 @@ fun TopStandingsCard(
                     StandingRowItem(
                         position = constructor.position,
                         name = constructor.name,
-                        nationality = constructor.nationality,
                         points = constructor.points.toInt(),
                         team = constructor.drivers,
                         isConstructor = true,
-                        imageUrl = constructor.constructorLogo
+                        imageUrl = constructor.constructorLogo,
+                        onClick = { navController.navigate("profile/false/${constructor.name}") }
                     )
                 }
             }

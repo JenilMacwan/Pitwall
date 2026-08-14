@@ -26,7 +26,7 @@ class ConstructorStandingsRepository @Inject constructor (
                 name = networkModel.name,
                 drivers = networkModel.drivers?.joinToString(" · ") ?: "",
                 nationality = networkModel.nationality,
-                constructorLogo = networkModel.constructorLogo
+                constructorLogo = networkModel.constructorLogo,
             )
         }
         Log.d("F1Debug", "3. Constructor Repository: Saving to Room Database...")

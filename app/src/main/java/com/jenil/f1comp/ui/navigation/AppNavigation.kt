@@ -21,6 +21,7 @@ import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navArgument
 import com.jenil.f1comp.ui.home.screen.HomeScreen
 import com.jenil.f1comp.ui.news.screen.NewsScreen
+import com.jenil.f1comp.ui.profile.screen.ProfileScreen
 import com.jenil.f1comp.ui.results.screen.RaceResultScreen
 import com.jenil.f1comp.ui.schedule.screen.ScheduleScreen
 import com.jenil.f1comp.ui.settings.screen.SettingsDetailPlaceholder
@@ -68,7 +69,7 @@ fun AppNavigation() {
                 )
             }
             composable(route = BottomNavItem.Standings.route) {
-                StandingsScreen()
+                StandingsScreen(navController = navController)
             }
             composable(route = BottomNavItem.Schedule.route) {
                 ScheduleScreen(navController = navController)
@@ -108,6 +109,17 @@ fun AppNavigation() {
             }
             composable(route = "data_attribution") {
                 SettingsDetailPlaceholder(title = "Data Attribution", navController = navController)
+            }
+            composable(
+                route = "profile/{isDriver}/{id}",
+                arguments = listOf(
+                    navArgument("isDriver") { type = NavType.BoolType },
+                    navArgument("id") { type = NavType.StringType }
+                )
+            ) { backStackEntry ->
+                val isDriver = backStackEntry.arguments?.getBoolean("isDriver") ?: true
+                val id = backStackEntry.arguments?.getString("id") ?: ""
+                ProfileScreen(navController = navController, isDriver = isDriver, profileId = id)
             }
         }
 

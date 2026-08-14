@@ -2,14 +2,12 @@ package com.jenil.f1comp.data.local
 
 import androidx.room.TypeConverter
 import com.google.gson.Gson
-import com.jenil.f1comp.data.model.CurrentStats
-import com.jenil.f1comp.data.model.CurrentTeamStats
+import com.google.gson.reflect.TypeToken
+import com.jenil.f1comp.data.model.DriverCareerStats
 import com.jenil.f1comp.data.model.RaceCountdown
-import com.jenil.f1comp.data.model.RaceResult
 import com.jenil.f1comp.data.model.RaceSession
 import com.jenil.f1comp.data.model.RaceWeather
-import com.jenil.f1comp.data.model.Stats
-import com.jenil.f1comp.data.model.TeamStats
+import com.jenil.f1comp.data.model.TeamCareerStats
 
 class Converters{
     private val gson = Gson()
@@ -45,42 +43,33 @@ class Converters{
     }
 
     @TypeConverter
-    fun fromMyStats(value:Stats?): String?{
+    fun fromDriverCareerStats(value: DriverCareerStats?): String? {
         return gson.toJson(value)
     }
 
     @TypeConverter
-    fun toMyStats(value: String?): Stats?{
-        return gson.fromJson(value, Stats::class.java)
+    fun toDriverCareerStats(value: String?): DriverCareerStats? {
+        return gson.fromJson(value, DriverCareerStats::class.java)
     }
 
     @TypeConverter
-    fun fromMyCurrentStats(value: CurrentStats?): String?{
+    fun fromTeamCareerStats(value: TeamCareerStats?): String? {
         return gson.toJson(value)
     }
 
     @TypeConverter
-    fun toMyCurrentStats(value: String?): CurrentStats?{
-        return gson.fromJson(value, CurrentStats::class.java)
+    fun toTeamCareerStats(value: String?): TeamCareerStats? {
+        return gson.fromJson(value, TeamCareerStats::class.java)
     }
 
     @TypeConverter
-    fun fromMyTeamStats(value: TeamStats?): String?{
+    fun fromStringList(value: List<String>?): String? {
         return gson.toJson(value)
     }
 
     @TypeConverter
-    fun toMyTeamStats(value: String?): TeamStats?{
-        return gson.fromJson(value, TeamStats::class.java)
-    }
-
-    @TypeConverter
-    fun fromMyCurrentTeamStats(value: CurrentTeamStats?): String?{
-        return gson.toJson(value)
-    }
-
-    @TypeConverter
-    fun toMyCurrentTeamStats(value: String?): CurrentTeamStats?{
-        return gson.fromJson(value, CurrentTeamStats::class.java)
+    fun toStringList(value: String?): List<String>? {
+        val type = object : TypeToken<List<String>>() {}.type
+        return gson.fromJson(value, type)
     }
 }

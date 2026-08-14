@@ -49,4 +49,4 @@ jobs:
           serviceCredentialsFileContent: ${{ secrets.FIREBASE_CREDENTIALS }}
           groups:  pitwall-testers
           file: app/build/outputs/apk/debug/app-debug.apk
-          releaseNotesFile: release-notes.txt
+          releaseNotesFile: RELEASE_NOTES.txt

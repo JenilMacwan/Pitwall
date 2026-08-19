@@ -7,11 +7,6 @@
 
 **PitWall — Modern Android F1 companion: live schedules, standings, news & offline-first caching (Kotlin + Jetpack Compose)**
 
-> About (copy this into the repository "About" description on GitHub):
->
-> PitWall is a Kotlin + Jetpack Compose Android app for Formula 1 fans: live session status, season schedules, driver/constructor standings, curated news parsing, and offline-first caching. Built with Hilt, Room, Retrofit and Kotlin Coroutines — ideal for contributors interested in modern Android architecture and sports-data apps.
-
-
 ---
 
 ## Screenshots
@@ -44,15 +39,6 @@
   - Local caching for essential data so the app remains useful without connectivity
 
 ---
-
-## Recommended topics (copy-paste into the repository "Manage topics" field)
-
-android, kotlin, jetpack-compose, material3, f1, formula-1, hilt, room, retrofit, coroutines, offline-first, news-aggregator
-
-Why these topics: platform/language (android, kotlin, jetpack-compose, material3), domain (f1, formula-1), core libraries and patterns (hilt, room, retrofit, coroutines), and feature/behavior (offline-first, news-aggregator) — these improve discoverability for both developers and users.
-
----
-
 ## Stack
 
 - Language: Kotlin (100%)
@@ -179,7 +165,7 @@ Code style:
 
 ## Credits & author
 
-Developed and maintained by Jenil Macwan — com.jenil.f1comp
+Developed and maintained by Jenil Macwan.
 
 ---
 
@@ -187,10 +173,3 @@ Developed and maintained by Jenil Macwan — com.jenil.f1comp
 
 This project is licensed under the MIT License — see the LICENSE file for details.
 
----
-
-## Questions you might want to ask next
-
-- Where are the Retrofit interfaces and base endpoints defined (which file path) and what auth/headers do they require?
-- Which classes in data/local implement Room entities and where are the migrations handled?
-- Can you add a CONTRIBUTING.md and a sample GitHub Actions workflow that builds and runs unit tests on push?

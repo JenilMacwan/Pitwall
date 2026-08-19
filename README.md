@@ -5,7 +5,12 @@
 
 # PitWall — A Modern F1 Companion for Android 🏁
 
-PitWall is a sleek, high-performance Android app for Formula 1 fans that delivers real-time session status, season schedules, live standings, curated news, and configurable alerts — all in a lightweight, offline-friendly package.
+**PitWall — Modern Android F1 companion: live schedules, standings, news & offline-first caching (Kotlin + Jetpack Compose)**
+
+> About (copy this into the repository "About" description on GitHub):
+>
+> PitWall is a Kotlin + Jetpack Compose Android app for Formula 1 fans: live session status, season schedules, driver/constructor standings, curated news parsing, and offline-first caching. Built with Hilt, Room, Retrofit and Kotlin Coroutines — ideal for contributors interested in modern Android architecture and sports-data apps.
+
 
 ---
 
@@ -37,6 +42,14 @@ PitWall is a sleek, high-performance Android app for Formula 1 fans that deliver
   - Light/Dark theme support and event alerts
 - Offline-first
   - Local caching for essential data so the app remains useful without connectivity
+
+---
+
+## Recommended topics (copy-paste into the repository "Manage topics" field)
+
+android, kotlin, jetpack-compose, material3, f1, formula-1, hilt, room, retrofit, coroutines, offline-first, news-aggregator
+
+Why these topics: platform/language (android, kotlin, jetpack-compose, material3), domain (f1, formula-1), core libraries and patterns (hilt, room, retrofit, coroutines), and feature/behavior (offline-first, news-aggregator) — these improve discoverability for both developers and users.
 
 ---
 

@@ -1,11 +1,13 @@
 <p align="center">
-  <img src="assets/app_icon.png" width="120" alt="App Icon" />
+  <img src="assets/app_icon.png" width="180" alt="PitWall App Icon" />
 </p>
 
+<h1 align="center">PitWall — A Modern F1 Companion for Android</h1>
 
-# PitWall — A Modern F1 Companion for Android 🏁
+<p align="center">
+  Modern Android F1 companion with live schedules, standings, news & offline-first caching.
+</p>
 
-**PitWall — Modern Android F1 companion: live schedules, standings, news & offline-first caching (Kotlin + Jetpack Compose)**
 
 ---
 

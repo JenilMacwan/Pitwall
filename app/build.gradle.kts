@@ -1,3 +1,40 @@
+val googleServicesFile = file("google-services.json")
+if (!googleServicesFile.exists()) {
+    googleServicesFile.writeText(
+        """
+        {
+          "project_info": {
+            "project_number": "120285047097",
+            "project_id": "pitwall-56afa",
+            "storage_bucket": "pitwall-56afa.firebasestorage.app"
+          },
+          "client": [
+            {
+              "client_info": {
+                "mobilesdk_app_id": "1:120285047097:android:ee2cd0cb2a21c4b44be0e8",
+                "android_client_info": {
+                  "package_name": "com.jenil.f1comp"
+                }
+              },
+              "oauth_client": [],
+              "api_key": [
+                {
+                  "current_key": "AIzaSyMockKeyForCIBuilds000000000000"
+                }
+              ],
+              "services": {
+                "appinvite_service": {
+                  "other_platform_oauth_client": []
+                }
+              }
+            }
+          ],
+          "configuration_version": "1"
+        }
+        """.trimIndent()
+    )
+}
+
 plugins {
     alias(libs.plugins.android.application)
     alias(libs.plugins.kotlin.android)

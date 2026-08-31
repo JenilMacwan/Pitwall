@@ -60,4 +60,8 @@ object DatabaseModule {
     @Provides
     @Singleton
     fun provideConstructorProfileDao(db: AppDatabase) = db.constructorProfileDao
+
+    @Provides
+    @Singleton
+    fun provideTeammateH2HDao(db: AppDatabase) = db.teammateH2HDao
 }

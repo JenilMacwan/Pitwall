@@ -9,6 +9,7 @@ import com.jenil.f1comp.data.model.NewsResponse
 import com.jenil.f1comp.data.model.NextRace
 import com.jenil.f1comp.data.model.RaceResultResponse
 import com.jenil.f1comp.data.model.ScheduleResponse
+import com.jenil.f1comp.data.model.TeammateHead2HeadResponse
 import retrofit2.http.GET
 import retrofit2.http.Path
 
@@ -44,6 +45,9 @@ interface F1ApiService {
 
     @GET("constructor_standings")
     suspend fun getConstructorStandings(): ConstructorStandingsResponse
+
+    @GET("teammate_h2h")
+    suspend fun getTeammateHead2Head(): TeammateHead2HeadResponse
 
     @GET("race_results/{race_id}/{year}")
     suspend fun getRaceResult(

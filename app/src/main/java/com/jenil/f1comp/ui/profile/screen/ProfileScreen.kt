@@ -1,6 +1,5 @@
 package com.jenil.f1comp.ui.profile.screen
 
-import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
@@ -22,16 +21,20 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavController
 import com.jenil.f1comp.ui.F1ScreenPadding
 import com.jenil.f1comp.ui.profile.components.DriverProfileCard
+import com.jenil.f1comp.ui.profile.components.ProfileLoadingState
+import com.jenil.f1comp.ui.profile.components.ProfileNotFoundState
 import com.jenil.f1comp.ui.profile.components.TeamProfileCard
 import com.jenil.f1comp.util.ProfileUtils
 import com.jenil.f1comp.viewmodel.ConstructorProfileViewModel
 import com.jenil.f1comp.viewmodel.DriverProfileViewModel
+import com.jenil.f1comp.viewmodel.TeammateHeadtoHeadViewModel
 
 @Composable
 fun ProfileScreen(
@@ -40,10 +43,12 @@ fun ProfileScreen(
     isDriver: Boolean,
     profileId: String,
     driverViewModel: DriverProfileViewModel = hiltViewModel(),
-    constructorViewModel: ConstructorProfileViewModel = hiltViewModel()
+    constructorViewModel: ConstructorProfileViewModel = hiltViewModel(),
+    h2hViewModel: TeammateHeadtoHeadViewModel = hiltViewModel(),
 ) {
     val driverProfiles by driverViewModel.driverProfiles.collectAsStateWithLifecycle()
     val constructorProfiles by constructorViewModel.constructorProfiles.collectAsStateWithLifecycle()
+    val h2hDataList by h2hViewModel.headToHeadData.collectAsStateWithLifecycle()
 
     val driverProfile = remember(driverProfiles, profileId) {
         driverProfiles.find { it.driverId == profileId || it.fullName == profileId || it.lastName == profileId }
@@ -59,11 +64,11 @@ fun ProfileScreen(
             .fillMaxSize()
             .padding(top = F1ScreenPadding.topPadding())
     ) {
-        // Top bar (Static)
+        // Dynamic Top Bar
         Row(
             modifier = Modifier
                 .fillMaxWidth()
-                .padding(horizontal = 8.dp),
+                .padding(horizontal = 8.dp, vertical = 4.dp),
             verticalAlignment = Alignment.CenterVertically
         ) {
             IconButton(onClick = { navController.popBackStack() }) {
@@ -73,10 +78,18 @@ fun ProfileScreen(
                     tint = MaterialTheme.colorScheme.onSurface
                 )
             }
-            Spacer(modifier = Modifier.width(5.dp))
+            Spacer(modifier = Modifier.width(4.dp))
+
+            val topBarTitle = if (isDriver) {
+                "Driver Profile"
+            } else {
+                "Team Profile"
+            }
+
             Text(
-                text = if (isDriver) "Driver Profile" else "Team Profile",
+                text = topBarTitle,
                 style = MaterialTheme.typography.titleLarge,
+                fontWeight = FontWeight.Bold,
                 color = MaterialTheme.colorScheme.onSurface,
                 maxLines = 1
             )
@@ -88,51 +101,69 @@ fun ProfileScreen(
                 .fillMaxSize()
                 .verticalScroll(scrollState)
         ) {
-            Spacer(modifier = Modifier.height(16.dp))
+            Spacer(modifier = Modifier.height(8.dp))
 
             if (isDriver) {
-                driverProfile?.let { profile ->
-                    DriverProfileCard(
-                        imageUrl = profile.image,
-                        driverName = profile.fullName,
-                        teamName = profile.team ?: "Unknown",
-                        driverNumber = profile.number,
-                        nationality = profile.nationality ?: "Unknown",
-                        wins = profile.careerStats?.currentSeason?.wins?.toString() ?: "0",
-                        podiums = profile.careerStats?.currentSeason?.podiums?.toString() ?: "0",
-                        points = profile.careerStats?.currentSeason?.points ?: "0"
-                    )
-                } ?: Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
-                    Text(text = "Driver profile not found ($profileId)")
-                }
-            } else {
-                constructorProfile?.let { profile ->
-                    val leaderPoints = constructorProfiles
-                        .mapNotNull { it.careerStats?.currentSeason?.points?.toDoubleOrNull()?.toInt() }
-                        .maxOrNull() ?: 0
-
-                    val teamDrivers = profile.drivers.mapNotNull { driverName ->
-                        driverProfiles.find { it.fullName == driverName || it.lastName == driverName }
+                when {
+                    driverProfiles.isEmpty() -> ProfileLoadingState()
+                    driverProfile != null -> {
+                        val h2hData = h2hDataList.find {
+                            it.driverA.driverId == driverProfile.driverId || it.driverB.driverId == driverProfile.driverId
+                        }
+                        DriverProfileCard(
+                            driverId = driverProfile.driverId,
+                            imageUrl = driverProfile.image,
+                            driverName = driverProfile.fullName,
+                            teamName = driverProfile.team ?: "Unknown",
+                            driverNumber = driverProfile.number,
+                            nationality = driverProfile.nationality ?: "Unknown",
+                            wins = driverProfile.careerStats?.currentSeason?.wins?.toString() ?: "0",
+                            podiums = driverProfile.careerStats?.currentSeason?.podiums?.toString() ?: "0",
+                            points = driverProfile.careerStats?.currentSeason?.points ?: "0",
+                            pointsProgression = driverProfile.careerStats?.currentSeason?.pointsProgression ?: emptyList(),
+                            h2hData = h2hData
+                        )
                     }
 
-                    TeamProfileCard(
-                        imageUrl = profile.logo,
-                        carUrl = profile.car,
-                        teamName = profile.name,
-                        nationality = profile.nationality,
-                        chassis = ProfileUtils.getChassis(profile.constructorId),
-                        powerUnit = ProfileUtils.getPowerUnit(profile.constructorId),
-                        teamBoss = ProfileUtils.getTeamPrincipal(profile.constructorId),
-                        standing = profile.careerStats?.currentSeason?.position ?: "0",
-                        points = profile.careerStats?.currentSeason?.points ?: "0",
-                        podiums = profile.careerStats?.currentSeason?.podiums?.toString() ?: "0",
-                        wdc = profile.careerStats?.driverChampionships?.toString() ?: "0",
-                        wcc = profile.careerStats?.constructorChampionships?.toString() ?: "0",
-                        leaderPoints = leaderPoints,
-                        drivers = teamDrivers
-                    )
-                } ?: Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
-                    Text(text = "Team profile not found ($profileId)")
+                    else -> ProfileNotFoundState(profileId)
+                }
+            } else {
+                when {
+                    constructorProfiles.isEmpty() -> ProfileLoadingState()
+                    constructorProfile != null -> {
+                        val leaderPoints = constructorProfiles
+                            .mapNotNull {
+                                it.careerStats?.currentSeason?.points?.toDoubleOrNull()?.toInt()
+                            }
+                            .maxOrNull() ?: 0
+
+                        val teamDrivers = constructorProfile.drivers.mapNotNull { driverName ->
+                            driverProfiles.find { it.fullName == driverName || it.lastName == driverName }
+                        }
+
+                        TeamProfileCard(
+                            imageUrl = constructorProfile.logo,
+                            carUrl = constructorProfile.car,
+                            teamName = constructorProfile.name,
+                            constructorId = constructorProfile.constructorId,
+                            nationality = constructorProfile.nationality,
+                            chassis = ProfileUtils.getChassis(constructorProfile.constructorId),
+                            powerUnit = ProfileUtils.getPowerUnit(constructorProfile.constructorId),
+                            teamBoss = ProfileUtils.getTeamPrincipal(constructorProfile.constructorId),
+                            standing = constructorProfile.careerStats?.currentSeason?.position ?: "0",
+                            points = constructorProfile.careerStats?.currentSeason?.points ?: "0",
+                            podiums = constructorProfile.careerStats?.currentSeason?.podiums?.toString() ?: "0",
+                            wdc = constructorProfile.careerStats?.driverChampionships?.toString() ?: "0",
+                            wcc = constructorProfile.careerStats?.constructorChampionships?.toString() ?: "0",
+                            leaderPoints = leaderPoints,
+                            drivers = teamDrivers,
+                            onDriverClick = { driverId ->
+                                navController.navigate("profile/true/$driverId")
+                            }
+                        )
+                    }
+
+                    else -> ProfileNotFoundState(profileId)
                 }
             }
             Spacer(modifier = Modifier.height(F1ScreenPadding.bottomPadding()))

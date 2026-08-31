@@ -12,6 +12,7 @@ import com.jenil.f1comp.data.local.dao.NewsDao
 import com.jenil.f1comp.data.local.dao.NextRaceDao
 import com.jenil.f1comp.data.local.dao.RaceResultDao
 import com.jenil.f1comp.data.local.dao.ScheduleDao
+import com.jenil.f1comp.data.local.dao.TeammateH2HDao
 import com.jenil.f1comp.data.local.entity.CircuitInfoEntity
 import com.jenil.f1comp.data.local.entity.ConstructorProfileEntity
 import com.jenil.f1comp.data.local.entity.ConstructorStandingsEntity
@@ -21,6 +22,7 @@ import com.jenil.f1comp.data.local.entity.NewsEntity
 import com.jenil.f1comp.data.local.entity.NextRaceEntity
 import com.jenil.f1comp.data.local.entity.RaceResultEntity
 import com.jenil.f1comp.data.local.entity.ScheduleEntity
+import com.jenil.f1comp.data.local.entity.TeammateHeadtoHeadEntity
 
 @Database(
     entities = [
@@ -32,9 +34,10 @@ import com.jenil.f1comp.data.local.entity.ScheduleEntity
         CircuitInfoEntity::class,
         RaceResultEntity::class,
         NextRaceEntity::class,
-        NewsEntity::class
+        NewsEntity::class,
+        TeammateHeadtoHeadEntity::class
     ],
-    version = 25,
+    version = 26,
     exportSchema = false
 )
 @TypeConverters(Converters::class)
@@ -48,4 +51,5 @@ abstract class AppDatabase : RoomDatabase() {
     abstract val driverStandingsDao: DriverStandingsDao
     abstract val constructorStandingsDao: ConstructorStandingsDao
     abstract val newsDao: NewsDao
+    abstract val teammateH2HDao: TeammateH2HDao
 }

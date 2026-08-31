@@ -15,14 +15,13 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 
 @Composable
 fun StandingToggle(
-    isDriverSelected: Boolean,
+    isConstructorSelected: Boolean,
     onToggle:(Boolean) -> Unit
 ){
     Surface(
@@ -37,13 +36,13 @@ fun StandingToggle(
                 .padding(4.dp),
             verticalAlignment = Alignment.CenterVertically
         ) {
-            //driver
+            //constructors
             Box(
                 modifier = Modifier
                     .weight(1f)
                     .clip(RoundedCornerShape(50))
                     .background(
-                        if (isDriverSelected) MaterialTheme.colorScheme.surface
+                        if (isConstructorSelected) MaterialTheme.colorScheme.surface
                         else Color.Transparent
                     )
                     .clickable { onToggle(true) }
@@ -51,35 +50,35 @@ fun StandingToggle(
                 contentAlignment = Alignment.Center
             ) {
                 Text(
-                    text = "Drivers",
-                    // Change text color based on state
-                    color = if (isDriverSelected) MaterialTheme.colorScheme.primary else MaterialTheme.colorScheme.onSurfaceVariant,
+                    text = "Constructors",
+                    color = if (isConstructorSelected) MaterialTheme.colorScheme.primary else MaterialTheme.colorScheme.onSurfaceVariant,
                     style = MaterialTheme.typography.labelMedium,
-                    fontWeight = if (isDriverSelected) FontWeight.Bold else FontWeight.Normal,
                     maxLines = 1,
-                    overflow = TextOverflow.Ellipsis
+                    overflow = TextOverflow.Ellipsis,
+                    fontWeight = if (isConstructorSelected) FontWeight.Bold else FontWeight.Normal
                 )
             }
-            //constructors
+            //Drivers
             Box(
                 modifier = Modifier
                     .weight(1f)
                     .clip(RoundedCornerShape(50))
                     .background(
-                        if (!isDriverSelected) MaterialTheme.colorScheme.surface
+                        if (!isConstructorSelected) MaterialTheme.colorScheme.surface
                         else Color.Transparent
                     )
                     .clickable { onToggle(false) }
                     .padding(vertical = 6.dp, horizontal = 12.dp),
                 contentAlignment = Alignment.Center
             ) {
+
                 Text(
-                    text = "Constructors",
-                    color = if (!isDriverSelected) MaterialTheme.colorScheme.primary else MaterialTheme.colorScheme.onSurfaceVariant,
+                    text = "Drivers",
+                    color = if (!isConstructorSelected) MaterialTheme.colorScheme.primary else MaterialTheme.colorScheme.onSurfaceVariant,
                     style = MaterialTheme.typography.labelMedium,
+                    fontWeight = if (!isConstructorSelected) FontWeight.Bold else FontWeight.Normal,
                     maxLines = 1,
-                    overflow = TextOverflow.Ellipsis,
-                    fontWeight = if (!isDriverSelected) FontWeight.Bold else FontWeight.Normal
+                    overflow = TextOverflow.Ellipsis
                 )
             }
         }

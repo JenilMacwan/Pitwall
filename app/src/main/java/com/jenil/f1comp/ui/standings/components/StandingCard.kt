@@ -32,7 +32,7 @@ fun StandingsCard(
     driverStandings: List<DriverStandingsEntity>,
     constructorStandings: List<ConstructorStandingsEntity>
 ) {
-    var isDriverSelected by rememberSaveable { mutableStateOf(true) }
+    var isConstructorSelected by rememberSaveable { mutableStateOf(true) }
 
     Card(
         modifier = modifier
@@ -53,26 +53,14 @@ fun StandingsCard(
                 modifier = Modifier.fillMaxWidth(),
             ) {
                 StandingToggle(
-                    isDriverSelected = isDriverSelected,
-                    onToggle = { isDriverSelected = it }
+                    isConstructorSelected = isConstructorSelected,
+                    onToggle = { isConstructorSelected = it }
                 )
             }
 
             Spacer(modifier = Modifier.height(16.dp))
 
-            if (isDriverSelected) {
-                StandingList(standings = driverStandings) { driver ->
-                    StandingRowItem(
-                        position = driver.position,
-                        name = driver.name.toDriverName(),
-                        team = driver.team,
-                        points = driver.points.toInt(),
-                        imageUrl = driver.driverImage,
-                        isConstructor = false,
-                        onClick = { navController.navigate("profile/true/${driver.name}") }
-                    )
-                }
-            } else {
+            if (isConstructorSelected) {
                 StandingList(standings = constructorStandings) { constructor ->
                     StandingRowItem(
                         position = constructor.position,
@@ -82,6 +70,19 @@ fun StandingsCard(
                         imageUrl = constructor.constructorLogo,
                         isConstructor = true,
                         onClick = { navController.navigate("profile/false/${constructor.name}") }
+                    )
+                }
+
+            } else {
+                StandingList(standings = driverStandings) { driver ->
+                    StandingRowItem(
+                        position = driver.position,
+                        name = driver.name.toDriverName(),
+                        team = driver.team,
+                        points = driver.points.toInt(),
+                        imageUrl = driver.driverImage,
+                        isConstructor = false,
+                        onClick = { navController.navigate("profile/true/${driver.name}") }
                     )
                 }
             }

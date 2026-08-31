@@ -24,11 +24,14 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavController
+import coil.imageLoader
+import coil.request.ImageRequest
 import com.jenil.f1comp.R
 import com.jenil.f1comp.ui.F1ScreenPadding
 import com.jenil.f1comp.ui.home.components.NextRaceCard
@@ -52,6 +55,22 @@ fun HomeScreen(
     val uiState by viewModel.uiState.collectAsStateWithLifecycle()
     val driverStandings by driverViewModel.driverStandings.collectAsStateWithLifecycle()
     val constructorStandings by constructorViewModel.constructorStandings.collectAsStateWithLifecycle()
+
+    val context = LocalContext.current
+
+    // Pre-fetch driver images for faster loading in other screens
+    LaunchedEffect(driverStandings) {
+        if (driverStandings.isNotEmpty()) {
+            driverStandings.take(10).forEach { driver ->
+                driver.driverImage?.let { url ->
+                    val request = ImageRequest.Builder(context)
+                        .data(url)
+                        .build()
+                    context.imageLoader.enqueue(request)
+                }
+            }
+        }
+    }
 
     val scrollState = rememberScrollState()
 
@@ -166,6 +185,7 @@ fun HomeScreen(
                                 }
                             }
                         )
+                        Spacer(modifier = Modifier.height(22.dp))
                     }
                 }
             }

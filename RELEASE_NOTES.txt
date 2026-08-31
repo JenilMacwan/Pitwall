@@ -1,41 +1,50 @@
 PitWall v1.0.0 Release Notes 🏁
 
-We are thrilled to announce the official v1.0.0 release of PitWall! This version represents a complete overhaul and the "Gold" standard of our F1 companion experience, combining real-time data, premium aesthetics, and professional-grade reliability.
+We are thrilled to announce the official v1.0.0 release of PitWall! PitWall is a high-performance F1 companion app for Android that combines real-time data, modern glassmorphism aesthetics, push notifications, and offline-first reliability.
 
-🚀 Key Features
+--------------------------------------------------------------------------------
+
+🚀 Key Features & Highlights
+
+🔔 Real-Time Push Notifications & Race Alarms
+- Firebase Cloud Messaging (FCM): Receive instant alerts for breaking news, race control updates, and championship changes.
+- Custom F1 Sound Effects: High-octane engine rev notification sounds for session alerts.
+- Exact Session Reminders: Set local exact alarms (15m, 30m, 1h prior) for FP, Qualifying, Sprint, and Main Race sessions.
 
 👤 Dynamic Driver & Team Profiles
-Dive deep into the grid with our new profile system:
-- Live 2026 Stats: Real-time points, podiums, and wins for the current season.
-- Teammate Head-to-Head: Visual comparisons of team pairings.
-- Technical Specs: Explore chassis details (RB21, SF-25), power units, and team leadership.
-- The Challenger: High-quality visuals of the 2026 F1 cars.
+- 2026 Driver & Team Stats: Points progression charts, podiums, wins, and driver bio details.
+- Teammate Head-to-Head: Side-by-side visual comparisons of teammate pairings across qualifying and race results.
+- Technical Chassis Specs: Explore team power units, chassis models, and high-res 2026 challenger visuals.
+
+🏁 Detailed Race Results & Standings
+- Race Results Breakdown: Full session classification, positions gained/lost, and fastest lap indicators.
+- Live Championship Standings: Redesigned Driver and Constructor leaderboards.
+
+📅 Smart System Calendar Sync
+- System Calendar Export: Sync Grand Prix weekend session schedules directly to your device's native calendar.
+- Flexible Controls: Sync all or future races with one tap, or clear synced events cleanly.
 
 🎨 Premium UI/UX & Customization
-- Dynamic Theming: Real-time switching between Light and Dark modes.
-- Glassmorphism: Modern blur effects on the navigation bar and UI components.
-- Refined Standings: Completely redesigned Driver and Constructor leaderboards.
-- Smooth Navigation: Persistent controls and optimized scrolling for deep data views.
-
-📅 Smart Calendar Sync
-- Device Integration: Sync the entire 2026 schedule directly to your system calendar.
-- Intelligent Updates: Options to sync only future races or clear all synced events with one tap.
+- Glassmorphism UI: Ultra-sleek blurred navigation and UI cards powered by the Haze library.
+- Dynamic Theming: Switch effortlessly between Light & Dark modes or choose custom accent color schemes.
+- F1 News Hub: Aggregated news headlines with expandable reader views.
 
 --------------------------------------------------------------------------------
 
-🛠️ Under the Hood (Technical)
-- Offline-First: Robust local caching using Room (v25) ensures the app works without a connection.
-- Quality Assurance: Integrated a comprehensive test suite (Unit & Instrumented) covering ViewModels, Repositories, and DAOs.
-- CI/CD Pipeline: Configured GitHub Actions for automated quality checks and artifact generation.
-- Architecture: 100% Kotlin with Jetpack Compose, Material 3, and Hilt dependency injection.
+🛠️ Technical Architecture & Stack
+- Architecture: 100% Kotlin built with Jetpack Compose & Material 3.
+- Dependency Injection: Hilt with KSP annotation processing.
+- Offline-First: Local caching via Room Database & DataStore Preferences.
+- Networking: Retrofit, OkHttp, and Jsoup for web parsing.
+- Firebase: Integrated `firebase-messaging` and `firebase-analytics` via Firebase BoM.
 
 --------------------------------------------------------------------------------
 
-📲 How to Install
-1. Download the PitWall-v1.0.0.apk.
+📲 Installation
+1. Download `PitWall-v1.0.0.apk`.
 2. Open the file on your Android device.
-3. If prompted, allow "Installation from Unknown Sources".
-4. Open PitWall and enjoy the season!
+3. Enable "Install from Unknown Sources" if prompted.
+4. Launch PitWall and enjoy the Formula 1 season!
 
 --------------------------------------------------------------------------------
-Developed with ❤️ for F1 fans by Jenil Macwan.
+Developed with ❤️ for Formula 1 fans by Jenil Macwan.

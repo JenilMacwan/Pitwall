@@ -1,5 +1,6 @@
 package com.jenil.f1comp.ui.standings.screen
 
+
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
@@ -12,12 +13,16 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.saveable.rememberSaveable
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavController
 import com.jenil.f1comp.ui.F1ScreenPadding
+import com.jenil.f1comp.ui.home.components.StandingToggle
 import com.jenil.f1comp.ui.standings.components.StandingsCard
 import com.jenil.f1comp.viewmodel.ConstructorStandingsViewModel
 import com.jenil.f1comp.viewmodel.DriverStandingsViewModel
@@ -36,31 +41,34 @@ fun StandingsScreen(
 
     val scrollState = rememberScrollState()
 
-    Box(
-        modifier = modifier.fillMaxSize()
-    )
-    {
-        Column(
-            modifier = Modifier
-                .fillMaxSize()
-                .verticalScroll(scrollState)
-                .padding(
-                    top = F1ScreenPadding.topPadding(),
-                    bottom = F1ScreenPadding.bottomPadding()
-                )
+    Column(
+        modifier = modifier
+            .fillMaxSize()
+            .padding(top = F1ScreenPadding.topPadding())
+    ) {
+        Text(
+            text = "Standings",
+            style = MaterialTheme.typography.titleLarge,
+            color = MaterialTheme.colorScheme.onSurface,
+            modifier = Modifier.padding(horizontal = 16.dp)
+        )
+        Spacer(modifier = Modifier.height(16.dp))
+
+        Box(
+            modifier = Modifier.fillMaxSize()
         ) {
-            Text(
-                text = "Standings",
-                style = MaterialTheme.typography.titleLarge,
-                color = MaterialTheme.colorScheme.onSurface,
-                modifier = Modifier.padding(horizontal = 16.dp)
-            )
-            Spacer(modifier = Modifier.height(16.dp))
-            StandingsCard(
-                navController = navController,
-                driverStandings = driverStandings,
-                constructorStandings = constructorStandings,
-            )
+            Column(
+                modifier = Modifier
+                    .fillMaxSize()
+                    .verticalScroll(scrollState)
+                    .padding(bottom = F1ScreenPadding.bottomPadding())
+            ) {
+                StandingsCard(
+                    navController = navController,
+                    driverStandings = driverStandings,
+                    constructorStandings = constructorStandings,
+                )
+            }
         }
     }
 }

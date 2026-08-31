@@ -3,6 +3,9 @@ package com.jenil.f1comp.data.local
 import androidx.room.TypeConverter
 import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
+import com.jenil.f1comp.data.local.entity.ComparisonSet
+import com.jenil.f1comp.data.local.entity.DriverInfo
+import com.jenil.f1comp.data.local.entity.StandingsComparison
 import com.jenil.f1comp.data.model.DriverCareerStats
 import com.jenil.f1comp.data.model.RaceCountdown
 import com.jenil.f1comp.data.model.RaceSession
@@ -61,6 +64,24 @@ class Converters{
     fun toTeamCareerStats(value: String?): TeamCareerStats? {
         return gson.fromJson(value, TeamCareerStats::class.java)
     }
+
+    @TypeConverter
+    fun fromDriverInfo(value: DriverInfo?): String? = gson.toJson(value)
+
+    @TypeConverter
+    fun toDriverInfo(value: String?): DriverInfo? = gson.fromJson(value, DriverInfo::class.java)
+
+    @TypeConverter
+    fun fromComparisonSet(value: ComparisonSet?): String? = gson.toJson(value)
+
+    @TypeConverter
+    fun toComparisonSet(value: String?): ComparisonSet? = gson.fromJson(value, ComparisonSet::class.java)
+
+    @TypeConverter
+    fun fromStandingsComparison(value: StandingsComparison?): String? = gson.toJson(value)
+
+    @TypeConverter
+    fun toStandingsComparison(value: String?): StandingsComparison? = gson.fromJson(value, StandingsComparison::class.java)
 
     @TypeConverter
     fun fromStringList(value: List<String>?): String? {

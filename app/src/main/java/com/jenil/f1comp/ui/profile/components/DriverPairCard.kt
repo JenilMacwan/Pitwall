@@ -27,9 +27,11 @@ fun DriverPairingCard(
     driverName: String,
     driverNumber: String,
     imageUrl: String? = null,
+    onClick: () -> Unit = {},
 ) {
     Card(
         modifier = modifier,
+        onClick = onClick,
         shape = RoundedCornerShape(12.dp),
         border = BorderStroke(1.dp, MaterialTheme.colorScheme.surfaceVariant),
         colors = CardDefaults.cardColors(

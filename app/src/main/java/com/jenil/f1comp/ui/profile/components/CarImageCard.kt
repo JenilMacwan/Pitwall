@@ -16,9 +16,11 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import coil.compose.AsyncImage
+import coil.request.ImageRequest
 
 @Composable
 fun CarImageCard(
@@ -26,6 +28,7 @@ fun CarImageCard(
     chassisName: String,
     modifier: Modifier = Modifier
 ) {
+    val context = LocalContext.current
     Column(modifier = modifier.fillMaxWidth()) {
         Text(
             text = "2026 Challenger",
@@ -58,7 +61,10 @@ fun CarImageCard(
                 ) {
                     if (!carUrl.isNullOrBlank()) {
                         AsyncImage(
-                            model = carUrl,
+                            model = ImageRequest.Builder(context)
+                                .data(carUrl)
+                                .crossfade(true)
+                                .build(),
                             contentDescription = "F1 Car: $chassisName",
                             modifier = Modifier.fillMaxWidth(),
                             contentScale = ContentScale.Fit

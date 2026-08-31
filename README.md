@@ -5,9 +5,8 @@
 <h1 align="center">PitWall — A Modern F1 Companion for Android</h1>
 
 <p align="center">
-  Modern Android F1 companion with live schedules, standings, news & offline-first caching.
+  PitWall is a sleek, high-performance Android application for Formula 1 fans that delivers real-time session status, season schedules, live standings, detailed driver/team profiles, race results, curated news, and customizable alerts — all in a lightweight, offline-first package.
 </p>
-
 
 ---
 
@@ -19,155 +18,122 @@
   <img src="assets/screenshots/screenshot-03-standings.png" width="280" alt="Driver and Constructor standings" />
 </p>
 
+---
+
+## Key Features ✨
+
+- **Real-Time Home Dashboard**
+  - Next race countdown with session breakdown (FP1, FP2, FP3, Qualifying, Sprint, Race).
+  - Quick glance at recent race podiums and track weather snapshots.
+  - Top standings overview for Drivers and Constructors.
+
+- **FCM Push Notifications & Session Reminders**
+  - Instant breaking news, race control updates, and championship standings alerts via Firebase Cloud Messaging (FCM).
+  - Local exact-alarm scheduler (`AndroidAlarmScheduler`) for custom session start reminders (15m, 30m, 1h prior).
+  - Custom F1 engine audio notifications and rich expanded notification styles.
+
+- **Dynamic Driver & Team Profiles**
+  - Deep-dive driver stats: season points, podiums, wins, and head-to-head teammate comparisons.
+  - Points progression charts and driver profile cards.
+  - Constructor profiles: chassis technical specifications, power units, team leadership, and car imagery.
+
+- **Full Season Schedule & Race Results**
+  - Interactive Grand Prix weekend schedules with local session timing.
+  - Detailed race results screen with final positions, grid changes, and fastest laps.
+
+- **Smart System Calendar Sync**
+  - Export Grand Prix weekend schedules directly to your device's system calendar with options for future races or complete clearing.
+
+- **F1 News Hub**
+  - Aggregated and parsed headlines from top F1 media sources with expandable reader cards.
+
+- **Premium Glassmorphism UI & Customization**
+  - Modern Glassmorphism blur effects powered by the Haze library.
+  - Seamless Light & Dark mode switching with custom theme accent pickers.
+
+- **Offline-First Architecture**
+  - Robust local persistence with Room Database ensures data availability even without connectivity.
 
 ---
 
-## Key features ✨
+## Stack & Libraries
 
-- Real-time Home Dashboard
-  - Next race countdown and quick glance of current session (FP, Qualifying, Sprint, Race)
-  - Recent race results (podium)
-  - Live session status and standings overview
-  - Track weather snapshot
-- Full Season Schedule
-  - Complete Grand Prix weekends with session times and circuit info
-- Live Standings
-  - Drivers & Constructors leaderboards with points and position history
-- F1 News Hub
-  - Aggregated and parsed headlines from top F1 sources
-- Personalization & Accessibility
-  - Light/Dark theme support and event alerts
-- Offline-first
-  - Local caching for essential data so the app remains useful without connectivity
-
----
-## Stack
-
-- Language: Kotlin (100%)
-- Framework / runtime: Android (Jetpack Compose, Material3)
-- Notable libraries:
-  - Hilt for dependency injection
-  - Room for local persistence
-  - Retrofit + OkHttp for networking
-  - Coil for image loading
-  - Jsoup for news parsing
+- **Language:** 100% Kotlin
+- **UI Framework:** Jetpack Compose with Material 3 & Glassmorphism (Haze)
+- **Dependency Injection:** Hilt (`com.google.dagger:hilt-android`) with KSP
+- **Architecture:** MVVM + Repository pattern with Kotlin Coroutines & StateFlow
+- **Database / Local Storage:** Room (`androidx.room`) & Jetpack DataStore Preferences
+- **Networking:** Retrofit + OkHttp logging interceptor + Gson converter
+- **Push Notifications & Alarms:** Firebase Cloud Messaging (FCM) & Android `AlarmManager`
+- **Media & Parsing:** Coil (Image loading) & Jsoup (HTML news parsing)
 
 ---
 
-## Project structure
+## Project Structure
 
+```
 app/src/main/java/com/jenil/f1comp/
-  - data/
-    - local/        — Room database, DAOs, entities (offline cache)
-    - model/        — domain data models
-    - remote/       — Retrofit API service definitions
-    - repository/   — single source of truth and data orchestration
-  - di/             — Hilt modules
-  - ui/
-    - components/   — reusable Compose UI components
-    - navigation/   — app navigation and bottom bar
-    - screen/       — feature screens (Home, Schedule, Standings, News, Settings)
-    - theme/        — Material 3 theme definitions
-    - state/        — UI state holders
-  - viewmodel/      — ViewModels and business logic
-  - util/           — helpers and mappers
-F1Application.kt    — Application class (Hilt-enabled)
-MainActivity.kt     — Compose entry point and navigation host
-
-How it fits together:
-- MainActivity sets up the Compose host and AppNavigation.
-- ViewModels (viewmodel/) coordinate UI state and call repository methods.
-- Repositories orchestrate data from remote (Retrofit) and local (Room) sources and expose flows for the UI.
-- DI is handled with Hilt modules in di/ to provide Retrofit, Room, and other dependencies.
+├── data/
+│   ├── local/        — Room Database, DAOs, and entities (offline cache)
+│   ├── model/        — Domain data models
+│   ├── remote/       — Retrofit API service interfaces
+│   └── repository/   — Single source of truth & data orchestration
+├── di/               — Hilt dependency injection modules
+├── notification/     — FCM service, alarm scheduler, and notification channels
+├── ui/
+│   ├── components/   — Reusable Compose UI components
+│   ├── home/         — Home dashboard & countdown screen
+│   ├── navigation/   — Navigation host, routes & bottom bar
+│   ├── news/         — News reader screen & expandable cards
+│   ├── profile/      — Driver & Team profile screens, charts & comparisons
+│   ├── results/      — Detailed race result breakdown
+│   ├── schedule/     — Race weekend schedule & calendar sync
+│   ├── settings/     — Notification preferences & theme customizer
+│   ├── standings/    — Driver & Constructor standings screens
+│   └── theme/        — Material 3 color palettes, typography & theme picker
+├── viewmodel/        — ViewModels handling state logic
+└── util/             — Mappers, date formatting & calendar sync helpers
+```
 
 ---
 
 ## Requirements
 
-- Android Studio (2024.2 "Ladybug" or newer) or the latest stable release
-- JDK 11 (configured for Kotlin JVM toolchain)
-- Android SDK 26+ (compile/target: 36)
+- **Android Studio:** 2024.2 "Ladybug" or newer
+- **JDK:** 11 / 17 / 21 (configured for Kotlin JVM toolchain)
+- **Android SDK:** Min SDK 26 (Android 8.0), Target/Compile SDK 36/37
 
 ---
 
-## Quick start (clone, build, run)
+## Quick Start (Clone, Build, Run)
 
-1. Clone the repository
+1. **Clone the repository:**
    ```bash
    git clone https://github.com/JenilMacwan/Pitwall.git
    cd Pitwall
    ```
 
-2. Open the project in Android Studio and let Gradle sync. Or build from the command line:
-
-   - Assemble debug APK
+2. **Build from the command line or open in Android Studio:**
+   - Assemble Debug APK:
      ```bash
      ./gradlew :app:assembleDebug
      ```
-
-   - Install to a connected device/emulator
+   - Install on connected device:
      ```bash
      ./gradlew :app:installDebug
      ```
 
-3. Run the app from Android Studio (Run ▸ Run 'app') or launch the installed APK on your device.
-
-4. Tests
-   - Unit tests:
-     ```bash
-     ./gradlew test
-     ```
-   - Instrumentation / connected tests:
-     ```bash
-     ./gradlew connectedAndroidTest
-     ```
+3. **Run Unit Tests:**
+   ```bash
+   ./gradlew test
+   ```
 
 ---
 
 ## Configuration
 
-- There are no special environment variables required by default.
-- API endpoints and parsing behavior are defined in the remote/ and data/ modules; check those if you need to point the app at a different data source or mock server for development.
-
----
-
-## Development notes
-
-- Architecture: MVVM + Repository pattern (ViewModels expose StateFlows observed by Compose UI).
-- Compose-first UI (Material3).
-- DI: Hilt; generated code uses KSP.
-- Local persistence: Room (ksp compiler for entities/DAOs).
-- Testing: MockK for mocking, Turbine for StateFlow testing, kotlinx-coroutines-test for coroutine-based code.
-
----
-
-## Contributing
-
-Contributions, improvements and bug reports are welcome.
-
-- Open an issue describing the bug/feature with steps to reproduce.
-- Create a feature branch from main: `git checkout -b feat/your-feature`
-- Keep changes focused and add tests where applicable.
-- Open a pull request with a clear description of changes.
-
-Code style:
-- Follow Kotlin coding conventions and prefer idiomatic Compose patterns.
-- Keep UI logic in Composables and business logic in ViewModels/repositories.
-
----
-
-## Roadmap / Ideas
-
-- Push notifications for session start/end and results
-- Widget for home screen with next race and countdown
-- Improved offline caching and background sync
-- Locale & timezone improvements for session times
-
----
-
-## Credits & author
-
-Developed and maintained by Jenil Macwan.
+- **Firebase Setup:** Place your `google-services.json` file inside the `app/` directory for Firebase Cloud Messaging functionality.
+- **Notification Permissions:** Android 13+ (API 33+) requires post-notification runtime permission for race alerts.
 
 ---
 
@@ -175,3 +141,4 @@ Developed and maintained by Jenil Macwan.
 
 This project is licensed under the MIT License — see the LICENSE file for details.
 
+Developed with ❤️ for F1 fans by **Jenil Macwan**.

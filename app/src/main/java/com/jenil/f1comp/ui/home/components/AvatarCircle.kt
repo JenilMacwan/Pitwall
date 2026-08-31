@@ -69,9 +69,10 @@ fun DriverProfileCircle(
                     .data(imageUrl)
                     .transformations(TopCropTransformation(topFraction = 0.22f))
                     .crossfade(true)
+                    .allowHardware(true)
                     .build(),
                 contentDescription = driverName,
-                contentScale = ContentScale.Crop, // now safe — src already square headshot
+                contentScale = ContentScale.Crop,
                 modifier = Modifier.fillMaxSize()
             )
         } else {
@@ -92,6 +93,7 @@ fun TeamLogoCircle(
     size: Dp,
     modifier: Modifier = Modifier
 ) {
+    val context = LocalContext.current
     val containerColor = MaterialTheme.colorScheme.onPrimary
     val borderColor = MaterialTheme.colorScheme.outlineVariant.copy(alpha = 0.3f)
 
@@ -109,7 +111,11 @@ fun TeamLogoCircle(
     ) {
         if (!logoUrl.isNullOrBlank()) {
             AsyncImage(
-                model = logoUrl,
+                model = ImageRequest.Builder(context)
+                    .data(logoUrl)
+                    .crossfade(true)
+                    .allowHardware(true)
+                    .build(),
                 contentDescription = teamName,
                 contentScale = ContentScale.Fit,
                 modifier = Modifier

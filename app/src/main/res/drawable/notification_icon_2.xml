@@ -1,0 +1,30 @@
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="24dp"
+    android:height="24dp"
+    android:viewportWidth="24"
+    android:viewportHeight="24">
+  <!-- Rear Wing -->
+  <path
+      android:fillColor="#FFFFFFFF"
+      android:pathData="M5,4h14v2H5z" />
+  <!-- T-Cam & Cockpit -->
+  <path
+      android:fillColor="#FFFFFFFF"
+      android:pathData="M11,3h2v4h-2z M10,7h4v4h-4z" />
+  <!-- Left & Right Front Wheels -->
+  <path
+      android:fillColor="#FFFFFFFF"
+      android:pathData="M2,8h3v8H2z M19,8h3v8h-3z" />
+  <!-- Center Nose Cone -->
+  <path
+      android:fillColor="#FFFFFFFF"
+      android:pathData="M11,10h2l0.5,7h-3z" />
+  <!-- Suspension Struts -->
+  <path
+      android:fillColor="#FFFFFFFF"
+      android:pathData="M5,11h5v1.5H5z M14,11h5v1.5h-5z" />
+  <!-- Front Wing -->
+  <path
+      android:fillColor="#FFFFFFFF"
+      android:pathData="M1,18h22v2H1z" />
+</vector>

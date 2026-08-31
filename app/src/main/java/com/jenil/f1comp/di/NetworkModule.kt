@@ -16,7 +16,7 @@ import javax.inject.Singleton
 @InstallIn(SingletonComponent::class)
 object NetworkModule {
 
-    private const val BASE_URL = "https://f1companion-api.vercel.app/"
+    private const val BASE_URL = "https://f1-companion-api-ba5k.onrender.com/"
 
     @Provides
     @Singleton

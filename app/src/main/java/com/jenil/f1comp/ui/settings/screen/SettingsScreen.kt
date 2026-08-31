@@ -3,6 +3,7 @@ package com.jenil.f1comp.ui.settings.screen
 import android.Manifest
 import android.content.Intent
 import android.content.pm.PackageManager
+import android.os.Build
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.layout.Column
@@ -61,6 +62,7 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavController
 import com.jenil.f1comp.BuildConfig
 import com.jenil.f1comp.R
+import com.jenil.f1comp.notification.RaceNotificationCoordinator
 import com.jenil.f1comp.ui.F1ScreenPadding
 import com.jenil.f1comp.ui.settings.component.SettingsItem
 import com.jenil.f1comp.ui.settings.component.SettingsSection
@@ -88,12 +90,11 @@ fun SettingsScreen(
     var showClearConfirm by remember { mutableStateOf(false) }
     var isSyncing by remember { mutableStateOf(false) }
 
-    // --- Placeholder notification toggle states ---
-    var raceReminders by remember { mutableStateOf(true) }
-    var sessionReminders by remember { mutableStateOf(false) }
-    var breakingNews by remember { mutableStateOf(true) }
-    var liveRaceEvents by remember { mutableStateOf(false) }
-    var standingsUpdates by remember { mutableStateOf(true) }
+    val raceReminders by settingsViewModel.isRaceRemindersEnabled.collectAsStateWithLifecycle()
+    val sessionReminders by settingsViewModel.isSessionRemindersEnabled.collectAsStateWithLifecycle()
+    val breakingNews by settingsViewModel.isBreakingNewsEnabled.collectAsStateWithLifecycle()
+    val liveRaceEvents by settingsViewModel.isLiveRaceEventsEnabled.collectAsStateWithLifecycle()
+    val standingsUpdates by settingsViewModel.isStandingsUpdatesEnabled.collectAsStateWithLifecycle()
 
     val calendarPermissionLauncher = rememberLauncherForActivityResult(
         contract = ActivityResultContracts.RequestMultiplePermissions()
@@ -106,6 +107,34 @@ fun SettingsScreen(
         }
         pendingAction = null
     }
+
+    val notificationPermissionLauncher = rememberLauncherForActivityResult(
+        contract = ActivityResultContracts.RequestPermission()
+    ) { isGranted ->
+        if (isGranted) {
+            pendingAction?.invoke()
+        }
+        pendingAction = null
+    }
+
+    val runWithNotificationPermission = { action: () -> Unit ->
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+            val hasPermission = ContextCompat.checkSelfPermission(
+                context,
+                Manifest.permission.POST_NOTIFICATIONS
+            ) == PackageManager.PERMISSION_GRANTED
+
+            if (hasPermission) {
+                action()
+            } else {
+                pendingAction = action
+                notificationPermissionLauncher.launch(Manifest.permission.POST_NOTIFICATIONS)
+            }
+        } else {
+            action()
+        }
+    }
+
 
     val runWithPermission = { action: () -> Unit ->
         val hasReadPerm = ContextCompat.checkSelfPermission(context, Manifest.permission.READ_CALENDAR) == PackageManager.PERMISSION_GRANTED
@@ -286,42 +315,86 @@ fun SettingsScreen(
                     icon = Icons.Outlined.CalendarMonth,
                     title = "Race Start Reminders",
                     subtitle = "Get notified before lights out",
-                    isChecked = raceReminders,
-                    onCheckedChange = {
+                    isChecked = raceReminders ?: false,
+                    onCheckedChange = { newValue ->
                         haptic.performHapticFeedback(HapticFeedbackType.TextHandleMove)
-                        raceReminders = it
-
+                        if(newValue) {
+                            runWithNotificationPermission {
+                                settingsViewModel.setRaceRemindersEnabled(true)
+                                RaceNotificationCoordinator.syncAllAlarms(
+                                    context = context,
+                                    schedule = raceSchedule,
+                                    isRaceRemindersEnabled = true,
+                                    isSessionRemindersEnabled = sessionReminders ?: false
+                                )
+                            }
+                        } else {
+                            RaceNotificationCoordinator.syncAllAlarms(
+                                context = context,
+                                schedule = raceSchedule,
+                                isRaceRemindersEnabled = false,
+                                isSessionRemindersEnabled = sessionReminders ?: false
+                            )
+                        }
                     }
                 )
                 SettingsSwitchItem(
                     icon = Icons.Outlined.Timeline,
                     title = "Practice & Qualifying Reminders",
                     subtitle = "Alerts before FP1-3 and Qualifying",
-                    isChecked = sessionReminders,
+                    isChecked = sessionReminders ?: false,
                     onCheckedChange = {
                         haptic.performHapticFeedback(HapticFeedbackType.TextHandleMove)
-                        sessionReminders = it
+                        if(it) {
+                            runWithNotificationPermission {
+                                settingsViewModel.setSessionRemindersEnabled(true)
+                                RaceNotificationCoordinator.syncAllAlarms(
+                                    context = context,
+                                    schedule = raceSchedule,
+                                    isRaceRemindersEnabled = raceReminders ?: false,
+                                    isSessionRemindersEnabled = true
+                                )
+                            }
+                        } else {
+                            RaceNotificationCoordinator.syncAllAlarms(
+                                context = context,
+                                schedule = raceSchedule,
+                                isRaceRemindersEnabled = raceReminders ?: false,
+                                isSessionRemindersEnabled = false
+                            )
+                        }
                     }
                 )
                 SettingsSwitchItem(
                     icon = Icons.Outlined.NewReleases,
                     title = "Breaking News",
                     subtitle = "Driver transfers, penalties, big stories",
-                    isChecked = breakingNews,
+                    isChecked = breakingNews ?: false,
                     onCheckedChange = {
                         haptic.performHapticFeedback(HapticFeedbackType.TextHandleMove)
-                        breakingNews = it
-
+                        if(it) {
+                            runWithNotificationPermission {
+                                settingsViewModel.setBreakingNewsEnabled(true)
+                            }
+                        } else {
+                            settingsViewModel.setBreakingNewsEnabled(false)
+                        }
                     }
                 )
                 SettingsSwitchItem(
                     icon = Icons.Outlined.RadioButtonChecked,
                     title = "Live Race Events",
                     subtitle = "Safety car, red flags, fastest lap — during races",
-                    isChecked = liveRaceEvents,
+                    isChecked = liveRaceEvents ?: false,
                     onCheckedChange = {
                         haptic.performHapticFeedback(HapticFeedbackType.TextHandleMove)
-                        liveRaceEvents = it
+                        if(it) {
+                            runWithNotificationPermission {
+                                settingsViewModel.setLiveRaceEventsEnabled(true)
+                            }
+                        } else {
+                            settingsViewModel.setLiveRaceEventsEnabled(false)
+                        }
 
                     }
                 )
@@ -329,10 +402,16 @@ fun SettingsScreen(
                     icon = Icons.Outlined.EmojiEvents,
                     title = "Standings Updates",
                     subtitle = "When the Drivers' or Constructors' standings change",
-                    isChecked = standingsUpdates,
+                    isChecked = standingsUpdates ?: false,
                     onCheckedChange = {
                         haptic.performHapticFeedback(HapticFeedbackType.TextHandleMove)
-                        standingsUpdates = it
+                        if(it) {
+                            runWithNotificationPermission {
+                                settingsViewModel.setStandingsUpdatesEnabled(true)
+                            }
+                        } else {
+                            settingsViewModel.setStandingsUpdatesEnabled(false)
+                        }
 
                     }
                 )

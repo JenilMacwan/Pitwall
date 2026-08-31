@@ -1,16 +1,62 @@
+# =========================================================================
+# Sensitive & Private Files (Secrets, Credentials, API Keys, Keystores)
+# =========================================================================
+google-services.json
+**/google-services.json
+GoogleService-Info.plist
+secrets.properties
+keystore.properties
+key.properties
+apikey.properties
+*.jks
+*.keystore
+*.p12
+*.bks
+*.pem
+*.crt
+*.key
+
+# Local configuration
+local.properties
+/local.properties
+
+# =========================================================================
+# Android Studio & IDE Files
+# =========================================================================
 *.iml
 .gradle
-/local.properties
-/.idea/caches
-/.idea/libraries
-/.idea/modules.xml
-/.idea/workspace.xml
-/.idea/navEditor.xml
-/.idea/assetWizardSettings.xml
-.DS_Store
+.idea/
+.idea/workspace.xml
+.idea/caches/
+.idea/libraries/
+.idea/shelf/
+.idea/navEditor.xml
+.idea/assetWizardSettings.xml
+.idea/appInsightsSettings.xml
+.idea/deploymentTargetSelector.xml
+.idea/deviceManager.xml
+.idea/planningMode.xml
+.idea/runConfigurations.xml
+.idea/dictionaries/
+.idea/modules.xml
+
+# VSCode
+.vscode/
+
+# =========================================================================
+# Build Output & Temporary Files
+# =========================================================================
 /build
+**/build/
 /captures
 .externalNativeBuild
 .cxx
-local.properties
 .artifacts/
+*.hprof
+*.log
+
+# =========================================================================
+# System & OS Files
+# =========================================================================
+.DS_Store
+Thumbs.db

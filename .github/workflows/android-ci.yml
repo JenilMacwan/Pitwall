@@ -27,13 +27,13 @@ jobs:
 
       - name: Setup Google Services JSON
         env:
-          GOOGLE_SERVICES_JSON: ${{ secrets.GOOGLE_SERVICES_JSON }}
+          GOOGLE_SERVICES_JSON: ${{ secrets.GOOGLE_SERVICES_JSON || secrets.FIREBASE_GOOGLE_SERVICES || secrets.GOOGLE_SERVICES }}
         run: |
           if [ -n "$GOOGLE_SERVICES_JSON" ]; then
             echo "$GOOGLE_SERVICES_JSON" > app/google-services.json
-            echo "Successfully loaded GOOGLE_SERVICES_JSON from secret."
+            echo "Successfully loaded Google Services JSON from GitHub Secret."
           else
-            echo "No GOOGLE_SERVICES_JSON secret found. Using auto-generated fallback for CI build."
+            echo "No Google Services secret found. Using fallback template."
           fi
 
       - name: Run Lint

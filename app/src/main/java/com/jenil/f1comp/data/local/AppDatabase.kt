@@ -37,7 +37,7 @@ import com.jenil.f1comp.data.local.entity.TeammateHeadtoHeadEntity
         NewsEntity::class,
         TeammateHeadtoHeadEntity::class
     ],
-    version = 26,
+    version = 28,
     exportSchema = false
 )
 @TypeConverters(Converters::class)

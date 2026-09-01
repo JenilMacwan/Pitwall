@@ -1,50 +1,22 @@
-PitWall v1.0.0 Release Notes 🏁
+PitWall v1.0.1 Release Notes 🏁
 
-We are thrilled to announce the official v1.0.0 release of PitWall! PitWall is a high-performance F1 companion app for Android that combines real-time data, modern glassmorphism aesthetics, push notifications, and offline-first reliability.
-
---------------------------------------------------------------------------------
-
-🚀 Key Features & Highlights
-
-🔔 Real-Time Push Notifications & Race Alarms
-- Firebase Cloud Messaging (FCM): Receive instant alerts for breaking news, race control updates, and championship changes.
-- Custom F1 Sound Effects: High-octane engine rev notification sounds for session alerts.
-- Exact Session Reminders: Set local exact alarms (15m, 30m, 1h prior) for FP, Qualifying, Sprint, and Main Race sessions.
-
-👤 Dynamic Driver & Team Profiles
-- 2026 Driver & Team Stats: Points progression charts, podiums, wins, and driver bio details.
-- Teammate Head-to-Head: Side-by-side visual comparisons of teammate pairings across qualifying and race results.
-- Technical Chassis Specs: Explore team power units, chassis models, and high-res 2026 challenger visuals.
-
-🏁 Detailed Race Results & Standings
-- Race Results Breakdown: Full session classification, positions gained/lost, and fastest lap indicators.
-- Live Championship Standings: Redesigned Driver and Constructor leaderboards.
-
-📅 Smart System Calendar Sync
-- System Calendar Export: Sync Grand Prix weekend session schedules directly to your device's native calendar.
-- Flexible Controls: Sync all or future races with one tap, or clear synced events cleanly.
-
-🎨 Premium UI/UX & Customization
-- Glassmorphism UI: Ultra-sleek blurred navigation and UI cards powered by the Haze library.
-- Dynamic Theming: Switch effortlessly between Light & Dark modes or choose custom accent color schemes.
-- F1 News Hub: Aggregated news headlines with expandable reader views.
+This update brings important notification enhancements and bug fixes to ensure reliable race session reminders and rich push notifications!
 
 --------------------------------------------------------------------------------
 
-🛠️ Technical Architecture & Stack
-- Architecture: 100% Kotlin built with Jetpack Compose & Material 3.
-- Dependency Injection: Hilt with KSP annotation processing.
-- Offline-First: Local caching via Room Database & DataStore Preferences.
-- Networking: Retrofit, OkHttp, and Jsoup for web parsing.
-- Firebase: Integrated `firebase-messaging` and `firebase-analytics` via Firebase BoM.
+🔔 Notification Fixes & Enhancements
+
+- Location & Session Name Fix: Resolved a bug where race location names were not showing accurately in local session reminders.
+- Rich Media Notifications: Added support for expandable image preview cards (`BigPictureStyle`) for breaking news alerts.
+- Deep Linking & Navigation: Tapping on notifications now opens direct in-app destinations (e.g. Standings, Home) or external news articles seamlessly.
+- Audio & Channel Priority: Refined custom F1 engine audio alerts and high-priority notification channel setup.
 
 --------------------------------------------------------------------------------
 
 📲 Installation
-1. Download `PitWall-v1.0.0.apk`.
+1. Download `PitWall-v1.0.1.apk`.
 2. Open the file on your Android device.
-3. Enable "Install from Unknown Sources" if prompted.
-4. Launch PitWall and enjoy the Formula 1 season!
+3. Enjoy the Formula 1 season with accurate race alerts!
 
 --------------------------------------------------------------------------------
 Developed with ❤️ for Formula 1 fans by Jenil Macwan.

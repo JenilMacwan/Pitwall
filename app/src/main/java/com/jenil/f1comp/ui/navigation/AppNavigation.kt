@@ -19,6 +19,7 @@ import androidx.navigation.compose.composable
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navArgument
+import androidx.navigation.navDeepLink
 import com.jenil.f1comp.ui.home.screen.HomeScreen
 import com.jenil.f1comp.ui.news.screen.NewsScreen
 import com.jenil.f1comp.ui.profile.screen.ProfileScreen
@@ -40,7 +41,7 @@ object BottomNavRoutes {
         BottomNavItem.News.route,
     )
 }
-
+private const val DEEP_LINK_BASE = "f1comp://"
 
 @Composable
 fun AppNavigation() {
@@ -62,23 +63,39 @@ fun AppNavigation() {
 
                 .hazeSource(state = hazeState)
         ) {
-            composable(route = BottomNavItem.Home.route) {
+            composable(
+                route = BottomNavItem.Home.route,
+                deepLinks = listOf(
+                    navDeepLink { uriPattern = "${DEEP_LINK_BASE}home" }
+                )
+            ) {
                 HomeScreen(
                     modifier = Modifier,
                     navController = navController,
                 )
             }
-            composable(route = BottomNavItem.Standings.route) {
+
+            composable(
+                route = BottomNavItem.Standings.route,
+                deepLinks = listOf(
+                    navDeepLink { uriPattern = "${DEEP_LINK_BASE}standings" }
+                )
+            ) {
                 StandingsScreen(navController = navController)
             }
+
             composable(route = BottomNavItem.Schedule.route) {
                 ScheduleScreen(navController = navController)
             }
+
             composable(
                 route = "race_result/{round}/{year}",
                 arguments = listOf(
                     navArgument("round") { type = NavType.StringType },
                     navArgument("year") { type = NavType.IntType }
+                ),
+                deepLinks = listOf(
+                    navDeepLink { uriPattern = "${DEEP_LINK_BASE}race_result/{round}/{year}" }
                 )
             ) { backStackEntry ->
                 val round = backStackEntry.arguments?.getString("round") ?: return@composable
@@ -86,9 +103,16 @@ fun AppNavigation() {
                 RaceResultScreen(round = round, year = year, navController = navController)
             }
 
-            composable(route = BottomNavItem.News.route) {
+            composable(
+                route = BottomNavItem.News.route,
+                deepLinks = listOf(
+                    navDeepLink { uriPattern = "${DEEP_LINK_BASE}news" },
+                    navDeepLink { uriPattern = "${DEEP_LINK_BASE}news?url={url}" }
+                )
+            ) {
                 NewsScreen()
             }
+
             composable(route = "settings") {
                 SettingsScreen(navController = navController)
             }

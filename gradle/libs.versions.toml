@@ -25,6 +25,7 @@ lifecycleRuntimeCompose = "2.11.0"
 turbine = "1.2.1"
 datastore = "1.2.1"
 haze = "1.7.3"
+foundation = "1.12.0"
 
 [libraries]
 androidx-compose-animation = { group = "androidx.compose.animation", name = "animation" }
@@ -88,6 +89,7 @@ turbine = { module = "app.cash.turbine:turbine", version.ref = "turbine" }
 androidx-animation = { group = "androidx.compose.animation", name = "animation" }
 androidx-foundation-layout = { group = "androidx.compose.foundation", name = "foundation-layout" }
 firebase-messaging = { module = "com.google.firebase:firebase-messaging" }
+androidx-foundation = { group = "androidx.compose.foundation", name = "foundation", version.ref = "foundation" }
 
 [plugins]
 android-application = { id = "com.android.application", version.ref = "agp" }

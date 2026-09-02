@@ -12,6 +12,7 @@ import com.jenil.f1comp.data.local.dao.NewsDao
 import com.jenil.f1comp.data.local.dao.NextRaceDao
 import com.jenil.f1comp.data.local.dao.RaceResultDao
 import com.jenil.f1comp.data.local.dao.ScheduleDao
+import com.jenil.f1comp.data.local.dao.TeamRadioDao
 import com.jenil.f1comp.data.local.dao.TeammateH2HDao
 import com.jenil.f1comp.data.local.entity.CircuitInfoEntity
 import com.jenil.f1comp.data.local.entity.ConstructorProfileEntity
@@ -22,6 +23,7 @@ import com.jenil.f1comp.data.local.entity.NewsEntity
 import com.jenil.f1comp.data.local.entity.NextRaceEntity
 import com.jenil.f1comp.data.local.entity.RaceResultEntity
 import com.jenil.f1comp.data.local.entity.ScheduleEntity
+import com.jenil.f1comp.data.local.entity.TeamRadioEntity
 import com.jenil.f1comp.data.local.entity.TeammateHeadtoHeadEntity
 
 @Database(
@@ -35,9 +37,10 @@ import com.jenil.f1comp.data.local.entity.TeammateHeadtoHeadEntity
         RaceResultEntity::class,
         NextRaceEntity::class,
         NewsEntity::class,
-        TeammateHeadtoHeadEntity::class
+        TeammateHeadtoHeadEntity::class,
+        TeamRadioEntity::class
     ],
-    version = 28,
+    version = 29,
     exportSchema = false
 )
 @TypeConverters(Converters::class)
@@ -52,4 +55,5 @@ abstract class AppDatabase : RoomDatabase() {
     abstract val constructorStandingsDao: ConstructorStandingsDao
     abstract val newsDao: NewsDao
     abstract val teammateH2HDao: TeammateH2HDao
+    abstract val teamRadioDao: TeamRadioDao
 }

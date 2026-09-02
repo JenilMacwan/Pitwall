@@ -20,9 +20,11 @@ import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navArgument
 import androidx.navigation.navDeepLink
+import com.jenil.f1comp.ui.chatbot.screen.ChatbotScreen
 import com.jenil.f1comp.ui.home.screen.HomeScreen
 import com.jenil.f1comp.ui.news.screen.NewsScreen
 import com.jenil.f1comp.ui.profile.screen.ProfileScreen
+import com.jenil.f1comp.ui.radio.screen.TeamRadioScreen
 import com.jenil.f1comp.ui.results.screen.RaceResultScreen
 import com.jenil.f1comp.ui.schedule.screen.ScheduleScreen
 import com.jenil.f1comp.ui.settings.screen.SettingsDetailPlaceholder
@@ -144,6 +146,16 @@ fun AppNavigation() {
                 val isDriver = backStackEntry.arguments?.getBoolean("isDriver") ?: true
                 val id = backStackEntry.arguments?.getString("id") ?: ""
                 ProfileScreen(navController = navController, isDriver = isDriver, profileId = id)
+            }
+            composable (route = "chatbot") {
+                ChatbotScreen(
+                    navController = navController
+                )
+            }
+            composable(route = "team_radio"){
+                TeamRadioScreen(
+                    navController = navController
+                )
             }
         }
 

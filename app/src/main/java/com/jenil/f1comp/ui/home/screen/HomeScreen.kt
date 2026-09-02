@@ -9,9 +9,11 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.outlined.Radio
 import androidx.compose.material.icons.outlined.Settings
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.Icon
@@ -34,6 +36,7 @@ import coil.imageLoader
 import coil.request.ImageRequest
 import com.jenil.f1comp.R
 import com.jenil.f1comp.ui.F1ScreenPadding
+import com.jenil.f1comp.ui.chatbot.component.ApexAvatar
 import com.jenil.f1comp.ui.home.components.NextRaceCard
 import com.jenil.f1comp.ui.home.components.RaceResultCard
 import com.jenil.f1comp.ui.home.components.TopStandingsCard
@@ -91,16 +94,42 @@ fun HomeScreen(
                 style = MaterialTheme.typography.titleLarge,
                 color = MaterialTheme.colorScheme.onSurface
             )
-            IconButton(
-                onClick = {
-                    navController.navigate("settings")
-                },
+            Row(
+                verticalAlignment = Alignment.CenterVertically
             ) {
-                Icon(
-                    imageVector = Icons.Outlined.Settings,
-                    contentDescription = "Settings",
-                    tint = MaterialTheme.colorScheme.onSurfaceVariant
-                )
+                IconButton(
+                    onClick = {
+                        navController.navigate("chatbot")
+                    },
+                ) {
+                    ApexAvatar(
+                        modifier = Modifier.size(28.dp)
+                    )
+                }
+
+                IconButton(
+                    onClick = {
+                        navController.navigate("team_radio")
+                    },
+                ) {
+                    Icon(
+                        imageVector = Icons.Outlined.Radio,
+                        contentDescription = "Team Radio",
+                        tint = MaterialTheme.colorScheme.primary
+                    )
+                }
+
+                IconButton(
+                    onClick = {
+                        navController.navigate("settings")
+                    },
+                ) {
+                    Icon(
+                        imageVector = Icons.Outlined.Settings,
+                        contentDescription = "Settings",
+                        tint = MaterialTheme.colorScheme.onSurfaceVariant
+                    )
+                }
             }
         }
 

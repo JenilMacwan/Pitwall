@@ -9,6 +9,7 @@ import com.jenil.f1comp.data.model.NewsResponse
 import com.jenil.f1comp.data.model.NextRace
 import com.jenil.f1comp.data.model.RaceResultResponse
 import com.jenil.f1comp.data.model.ScheduleResponse
+import com.jenil.f1comp.data.model.TeamRadioResponse
 import com.jenil.f1comp.data.model.TeammateHead2HeadResponse
 import retrofit2.http.GET
 import retrofit2.http.Path
@@ -55,4 +56,6 @@ interface F1ApiService {
         @Path("year") year: Int
     ): RaceResultResponse
 
+    @GET("team-radio/latest")
+    suspend fun getLatestTeamRadio(): TeamRadioResponse
 }

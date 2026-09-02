@@ -10,46 +10,92 @@ import androidx.compose.animation.core.tween
 import androidx.compose.animation.fadeIn
 import androidx.compose.animation.slideInVertically
 import androidx.compose.foundation.BorderStroke
-import androidx.compose.foundation.Image
+import androidx.compose.foundation.Canvas
 import androidx.compose.foundation.background
+import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.widthIn
+import androidx.compose.foundation.lazy.LazyRow
+import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.selection.SelectionContainer
+import androidx.compose.material3.AssistChip
+import androidx.compose.material3.AssistChipDefaults
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
-import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.graphics.Brush
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.Path
+import androidx.compose.ui.graphics.StrokeCap
+import androidx.compose.ui.graphics.StrokeJoin
+import androidx.compose.ui.graphics.drawscope.Stroke
 import androidx.compose.ui.platform.LocalConfiguration
-import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.semantics.contentDescription
 import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.unit.dp
-import com.jenil.f1comp.R
 import com.jenil.f1comp.ui.chatbot.screen.UiMessage
 
 
 @Composable
 fun ApexAvatar(modifier: Modifier = Modifier) {
-    Image(
-        painter = painterResource(id = R.drawable.ic_app_icon),
-        contentDescription = null,
+    Box(
         modifier = modifier
-            .size(28.dp)
-            .clip(CircleShape),
-        contentScale = ContentScale.Crop
-    )
+            .size(32.dp)
+            .clip(CircleShape)
+            .background(
+                brush = Brush.linearGradient(
+                    colors = listOf(
+                        MaterialTheme.colorScheme.primary,
+                        Color(0xFF8B0000) // Deep red gradient for depth
+                    )
+                )
+            )
+            .border(1.dp, MaterialTheme.colorScheme.outlineVariant, CircleShape),
+        contentAlignment = Alignment.Center
+    ) {
+        Canvas(modifier = Modifier.size(16.dp)) {
+            val path = Path().apply {
+                // Left flat telemetry line
+                moveTo(size.width * 0.0f, size.height * 0.85f)
+                lineTo(size.width * 0.25f, size.height * 0.85f)
+
+                // The Apex spike (Forming the 'A')
+                lineTo(size.width * 0.5f, size.height * 0.15f)
+                lineTo(size.width * 0.75f, size.height * 0.85f)
+
+                // Right flat telemetry line
+                lineTo(size.width * 1.0f, size.height * 0.85f)
+
+                // Crossbar of the 'A'
+                moveTo(size.width * 0.38f, size.height * 0.6f)
+                lineTo(size.width * 0.62f, size.height * 0.6f)
+            }
+
+            drawPath(
+                path = path,
+                color = Color.White,
+                style = Stroke(
+                    width = 4.5f,
+                    cap = StrokeCap.Round,
+                    join = StrokeJoin.Round
+                )
+            )
+        }
+    }
 }
 
 @Composable
@@ -153,6 +199,51 @@ fun BouncingDots() {
                     .size(6.dp)
                     .offset(y = anim.value.dp)
                     .background(MaterialTheme.colorScheme.onSurfaceVariant, CircleShape)
+            )
+        }
+    }
+}
+
+@Composable
+fun QuickPromptBar(
+    onPromptClick: (String) -> Unit,
+    modifier: Modifier = Modifier
+) {
+    val prompts = remember {
+        listOf(
+            "🏎️ 2026 Active Aero Rules",
+            "📊 Driver Standings",
+            "🏁 Next Race Schedule",
+            "⏱️ Teammate H2H Battles"
+        )
+    }
+
+    LazyRow(
+        modifier = modifier
+            .fillMaxWidth()
+            .padding(bottom = 8.dp),
+        contentPadding = PaddingValues(horizontal = 16.dp),
+        horizontalArrangement = Arrangement.spacedBy(8.dp)
+    ) {
+        items(prompts) { prompt ->
+            AssistChip(
+                onClick = { onPromptClick(prompt) },
+                label = {
+                    Text(
+                        text = prompt,
+                        style = MaterialTheme.typography.labelMedium
+                    )
+                },
+                colors = AssistChipDefaults.assistChipColors(
+                    containerColor = MaterialTheme.colorScheme.surfaceVariant,
+                    labelColor = MaterialTheme.colorScheme.onSurfaceVariant
+                ),
+                border = AssistChipDefaults.assistChipBorder(
+                    borderColor = MaterialTheme.colorScheme.outline.copy(alpha = 0.4f),
+                    enabled = true,
+                    borderWidth = 1.dp
+                ),
+                shape = RoundedCornerShape(16.dp)
             )
         }
     }

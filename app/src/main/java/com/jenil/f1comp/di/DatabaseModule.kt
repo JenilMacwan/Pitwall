@@ -64,4 +64,8 @@ object DatabaseModule {
     @Provides
     @Singleton
     fun provideTeammateH2HDao(db: AppDatabase) = db.teammateH2HDao
+
+    @Provides
+    @Singleton
+    fun provideTeamRadioDao(db: AppDatabase) = db.teamRadioDao
 }

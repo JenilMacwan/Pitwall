@@ -29,6 +29,7 @@ import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.Send
 import androidx.compose.material.icons.automirrored.rounded.ArrowBack
+import androidx.compose.material.icons.rounded.Refresh
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.IconButtonDefaults
@@ -52,32 +53,49 @@ import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardCapitalization
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
 import com.jenil.f1comp.ui.F1ScreenPadding
 import com.jenil.f1comp.ui.chatbot.component.ChatBubble
+import com.jenil.f1comp.ui.chatbot.component.QuickPromptBar
 import com.jenil.f1comp.ui.chatbot.component.ThinkBubble
 import com.jenil.f1comp.ui.theme.F1CompTheme
-import com.jenil.f1comp.viewmodel.ChatbotViewModel
 
-data class UiMessage(val text: String, val isUser: Boolean)
+data class UiMessage(
+    val id: String = java.util.UUID.randomUUID().toString(),
+    val text: String,
+    val isUser: Boolean,
+    val timestamp: String = java.text.SimpleDateFormat("HH:mm", java.util.Locale.getDefault()).format(java.util.Date())
+)
 
 @Composable
 fun ChatbotScreen(
     modifier: Modifier = Modifier,
-    viewModel: ChatbotViewModel = hiltViewModel(),
+//    viewModel: ChatbotViewModel = hiltViewModel(),
     navController: NavController,
 ) {
     var text by remember { mutableStateOf("") }
     var messages by remember {
         mutableStateOf(
             listOf(
-                UiMessage("Apex initialized. Live telemetry link active. How can I assist your race strategy?", false),
-                UiMessage("What is the C3 tire drop-off window at high-abrasion circuits?", true),
-                UiMessage("Based on Pitwall data, the Pirelli C3 compound typically suffers from thermal degradation and performance drop-off after 18 to 22 laps.", false)
+                UiMessage(
+                    text = "Apex initialized. Live telemetry link active. How can I assist your race strategy?",
+                    isUser = false,
+                    timestamp = "13:58"
+                ),
+                UiMessage(
+                    text = "What is the C3 tire drop-off window at high-abrasion circuits?",
+                    isUser = true,
+                    timestamp = "14:00"
+                ),
+                UiMessage(
+                    text = "Based on Pitwall data, the Pirelli C3 compound typically suffers from thermal degradation and performance drop-off after 18 to 22 laps.",
+                    isUser = false,
+                    timestamp = "14:01"
+                )
             )
         )
     }
@@ -95,13 +113,23 @@ fun ChatbotScreen(
         }
     }
 
-    fun sendMessage() {
-        val trimmed = text.trim()
-        if (trimmed.isEmpty()) return
-        messages = messages + UiMessage(trimmed, true)
-        text = ""
-        isThinking = true
+    fun sendMessage(promptText: String? = null) {
+        if (isThinking) return
 
+        val finalMessage = promptText ?: text
+        val trimmed = finalMessage.trim()
+
+        if (trimmed.isEmpty()) {
+            isThinking = false
+            return
+        }
+
+        messages = messages + UiMessage(text = trimmed, isUser = true)
+
+        if (promptText == null) {
+            text = ""
+        }
+        isThinking = true
     }
 
     val infiniteTransition = rememberInfiniteTransition(label = "status_pulse")
@@ -128,8 +156,8 @@ fun ChatbotScreen(
     Column(
         modifier = modifier
             .fillMaxSize()
-            .padding(top = F1ScreenPadding.topPadding())
             .background(MaterialTheme.colorScheme.background)
+            .padding(top = F1ScreenPadding.topPadding())
             .imePadding()
     ) {
         // topbar
@@ -164,6 +192,18 @@ fun ChatbotScreen(
                             style = MaterialTheme.typography.titleLarge.copy(fontWeight = FontWeight.Bold),
                             color = MaterialTheme.colorScheme.onSurface
                         )
+                        Spacer(modifier = Modifier.width(6.dp))
+                        Surface(
+                            color = MaterialTheme.colorScheme.primaryContainer,
+                            shape = RoundedCornerShape(4.dp)
+                        ) {
+                            Text(
+                                text = "BETA",
+                                style = MaterialTheme.typography.labelSmall.copy(fontWeight = FontWeight.Bold),
+                                color = MaterialTheme.colorScheme.onPrimaryContainer,
+                                modifier = Modifier.padding(horizontal = 4.dp, vertical = 2.dp)
+                            )
+                        }
                         Spacer(modifier = Modifier.width(8.dp))
                         Box(contentAlignment = Alignment.Center) {
                             Box(
@@ -191,6 +231,24 @@ fun ChatbotScreen(
                         color = MaterialTheme.colorScheme.onSurfaceVariant
                     )
                 }
+                Spacer(modifier = Modifier.weight(1f))
+                IconButton(
+                    onClick = {
+                        messages = listOf(
+                            UiMessage(
+                                text = "Pitwall link reset. Standby for new telemetry instructions.",
+                                isUser = false
+                            )
+                        )
+                        isThinking = false
+                    }
+                ) {
+                    Icon(
+                        imageVector = Icons.Rounded.Refresh,
+                        contentDescription = "Clear Chat",
+                        tint = MaterialTheme.colorScheme.onSurfaceVariant
+                    )
+                }
             }
         }
 
@@ -204,67 +262,87 @@ fun ChatbotScreen(
             verticalArrangement = Arrangement.spacedBy(12.dp),
             contentPadding = PaddingValues(vertical = 16.dp)
         ) {
-            items(messages) { message ->
+            items(messages, key = { it.id }) { message ->
                 ChatBubble(message = message)
             }
+
             if (isThinking) {
-                item {
+                item(key = "thinking_bubble") {
                     ThinkBubble()
                 }
             }
         }
+        QuickPromptBar(
+            onPromptClick = { prompt ->
+                sendMessage(prompt)
+            }
+        )
 
         // Bottom Input Section
         Surface(
             modifier = Modifier.fillMaxWidth(),
             color = Color.Transparent
         ) {
-            Row(
-                verticalAlignment = Alignment.CenterVertically,
+            Column(
                 modifier = Modifier
                     .fillMaxWidth()
-                    .padding(horizontal = 16.dp, vertical = 12.dp)
-                    .navigationBarsPadding(),
-                horizontalArrangement = Arrangement.spacedBy(8.dp),
+                    .navigationBarsPadding()
             ) {
-                OutlinedTextField(
-                    value = text,
-                    onValueChange = { text = it },
-                    placeholder = { Text("Ask Apex anything...") },
-                    modifier = Modifier.weight(1f),
-                    shape = RoundedCornerShape(24.dp),
-                    colors = OutlinedTextFieldDefaults.colors(
-                        focusedBorderColor = MaterialTheme.colorScheme.primary,
-                        unfocusedBorderColor = MaterialTheme.colorScheme.outline,
-                        cursorColor = MaterialTheme.colorScheme.primary,
-                        focusedContainerColor = MaterialTheme.colorScheme.surfaceVariant,
-                        unfocusedContainerColor = MaterialTheme.colorScheme.surfaceVariant
-                    ),
-                    keyboardOptions = KeyboardOptions(
-                        capitalization = KeyboardCapitalization.Sentences,
-                        imeAction = ImeAction.Send
-                    ),
-                    keyboardActions = KeyboardActions(
-                        onSend = { sendMessage() }
-                    ),
-                    maxLines = 4
-                )
-
-                val isButtonEnabled = text.trim().isNotEmpty()
-                IconButton(
-                    onClick = { sendMessage() },
-                    enabled = isButtonEnabled,
-                    colors = IconButtonDefaults.iconButtonColors(
-                        containerColor = if (isButtonEnabled) MaterialTheme.colorScheme.primary else MaterialTheme.colorScheme.surfaceVariant,
-                        contentColor = if (isButtonEnabled) MaterialTheme.colorScheme.onPrimary else MaterialTheme.colorScheme.onSurfaceVariant
-                    ),
-                    modifier = Modifier.size(48.dp)
+                Row(
+                    verticalAlignment = Alignment.CenterVertically,
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(horizontal = 16.dp, vertical = 8.dp),
+                    horizontalArrangement = Arrangement.spacedBy(8.dp),
                 ) {
-                    Icon(
-                        Icons.AutoMirrored.Filled.Send,
-                        contentDescription = "Send message"
+                    OutlinedTextField(
+                        value = text,
+                        onValueChange = { text = it },
+                        placeholder = { Text("Ask Apex anything...") },
+                        modifier = Modifier.weight(1f),
+                        shape = RoundedCornerShape(24.dp),
+                        colors = OutlinedTextFieldDefaults.colors(
+                            focusedBorderColor = MaterialTheme.colorScheme.primary,
+                            unfocusedBorderColor = MaterialTheme.colorScheme.outline,
+                            cursorColor = MaterialTheme.colorScheme.primary,
+                            focusedContainerColor = MaterialTheme.colorScheme.surfaceVariant,
+                            unfocusedContainerColor = MaterialTheme.colorScheme.surfaceVariant
+                        ),
+                        keyboardOptions = KeyboardOptions(
+                            capitalization = KeyboardCapitalization.Sentences,
+                            imeAction = ImeAction.Send
+                        ),
+                        keyboardActions = KeyboardActions(
+                            onSend = { sendMessage() }
+                        ),
+                        maxLines = 4
                     )
+                    val isButtonEnabled = text.trim().isNotEmpty() && !isThinking
+                    IconButton(
+                        onClick = { sendMessage() },
+                        enabled = isButtonEnabled,
+                        colors = IconButtonDefaults.iconButtonColors(
+                            containerColor = if (isButtonEnabled) MaterialTheme.colorScheme.primary else MaterialTheme.colorScheme.surfaceVariant,
+                            contentColor = if (isButtonEnabled) MaterialTheme.colorScheme.onPrimary else MaterialTheme.colorScheme.onSurfaceVariant
+                        ),
+                        modifier = Modifier.size(48.dp)
+                    ) {
+                        Icon(
+                            Icons.AutoMirrored.Filled.Send,
+                            contentDescription = "Send message"
+                        )
+                    }
                 }
+                Text(
+                    text = "Apex is in beta. AI-generated answers may be inaccurate.",
+                    style = MaterialTheme.typography.labelSmall,
+                    color = MaterialTheme.colorScheme.onSurfaceVariant.copy(alpha = 0.7f),
+                    textAlign = TextAlign.Center,
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(horizontal = 16.dp)
+                        .padding(bottom = 6.dp)
+                )
             }
         }
     }

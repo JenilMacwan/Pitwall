@@ -1,5 +1,6 @@
 package com.jenil.f1comp.ui.chatbot.screen
 
+import android.util.Log
 import androidx.compose.animation.core.RepeatMode
 import androidx.compose.animation.core.animateFloat
 import androidx.compose.animation.core.infiniteRepeatable
@@ -69,6 +70,8 @@ import java.util.Date
 import java.util.Locale
 import java.util.UUID
 
+private const val TAG = "ChatbotScreen"
+
 data class UiMessage(
     val id: String = UUID.randomUUID().toString(),
     val text: String,
@@ -101,16 +104,19 @@ fun ChatbotScreen(
     val listState = rememberLazyListState()
 
     LaunchedEffect(uiState) {
+        Log.d(TAG, "[UI STATE OBSERVED] uiState = $uiState")
         when (val state = uiState) {
             is ChatUiState.Loading -> {
                 isThinking = true
             }
             is ChatUiState.Success -> {
                 isThinking = false
+                Log.d(TAG, "[UI SUCCESS] Received response: \"${state.response}\"")
                 messages = messages + UiMessage(text = state.response, isUser = false)
             }
             is ChatUiState.Error -> {
                 isThinking = false
+                Log.e(TAG, "[UI ERROR] Chat failed: ${state.message}")
                 messages = messages + UiMessage(
                     text = "Sorry, I encountered an issue connecting to Apex. ${state.message}",
                     isUser = false
@@ -130,13 +136,17 @@ fun ChatbotScreen(
     }
 
     fun sendMessage(promptText: String? = null) {
-        if (isThinking) return
+        if (isThinking) {
+            Log.w(TAG, "[UI USER ACTION] Ignored - Apex is currently thinking...")
+            return
+        }
 
         val finalMessage = promptText ?: text
         val trimmed = finalMessage.trim()
 
         if (trimmed.isEmpty()) return
 
+        Log.d(TAG, "[UI USER ACTION] Sending user prompt: \"$trimmed\" | SessionID: $sessionId")
         messages = messages + UiMessage(text = trimmed, isUser = true)
 
         if (promptText == null) {
@@ -248,6 +258,7 @@ fun ChatbotScreen(
                 Spacer(modifier = Modifier.weight(1f))
                 IconButton(
                     onClick = {
+                        Log.d(TAG, "[UI USER ACTION] Resetting chat session | SessionID: $sessionId")
                         messages = listOf(
                             UiMessage(
                                 text = "Pitwall link reset. Standby for new telemetry instructions.",
@@ -348,7 +359,7 @@ fun ChatbotScreen(
                     }
                 }
                 Text(
-                    text = "Apex is in beta. AI-generated answers may be inaccurate.",
+                    text = "Apex is in beta, response maybe slow. AI-generated answers may be inaccurate.",
                     style = MaterialTheme.typography.labelSmall,
                     color = MaterialTheme.colorScheme.onSurfaceVariant.copy(alpha = 0.7f),
                     textAlign = TextAlign.Center,

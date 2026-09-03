@@ -10,6 +10,7 @@ import okhttp3.OkHttpClient
 import okhttp3.logging.HttpLoggingInterceptor
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
+import java.util.concurrent.TimeUnit
 import javax.inject.Named
 import javax.inject.Singleton
 
@@ -18,7 +19,7 @@ import javax.inject.Singleton
 object NetworkModule {
 
     private const val BASE_URL = "https://f1-companion-api-ba5k.onrender.com/"
-    private const val CHAT_URL = "http://10.0.2.2:8001/"
+    private const val CHAT_URL = "https://chatbot-9feg.onrender.com/"
 
     @Provides
     @Singleton
@@ -53,9 +54,15 @@ object NetworkModule {
     @Singleton
     @Named("ChatRetrofit")
     fun provideChatRetrofit(okHttpClient: OkHttpClient): Retrofit {
+
+        val chatOkHttpClient = okHttpClient.newBuilder()
+            .connectTimeout(60, TimeUnit.SECONDS)
+            .readTimeout(60, TimeUnit.SECONDS)
+            .writeTimeout(60, TimeUnit.SECONDS)
+            .build()
         return Retrofit.Builder()
             .baseUrl(CHAT_URL)
-            .client(okHttpClient)
+            .client(chatOkHttpClient)
             .addConverterFactory(GsonConverterFactory.create())
             .build()
     }

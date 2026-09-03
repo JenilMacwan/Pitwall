@@ -1,22 +1,37 @@
-PitWall v1.0.1 Release Notes 🏁
+PitWall v1.1.0 Release Notes 🏎️🏁
 
-This update brings important notification enhancements and bug fixes to ensure reliable race session reminders and rich push notifications!
+This major update introduces two brand-new flagship features: Live Team Radio Transmissions and the Apex AI Chatbot Assistant!
 
 --------------------------------------------------------------------------------
 
-🔔 Notification Fixes & Enhancements
+📻 Live Team Radio Transmissions
 
-- Location & Session Name Fix: Resolved a bug where race location names were not showing accurately in local session reminders.
-- Rich Media Notifications: Added support for expandable image preview cards (`BigPictureStyle`) for breaking news alerts.
-- Deep Linking & Navigation: Tapping on notifications now opens direct in-app destinations (e.g. Standings, Home) or external news articles seamlessly.
-- Audio & Channel Priority: Refined custom F1 engine audio alerts and high-priority notification channel setup.
+- Live Audio Clips: Stream real-time team radio transmissions recorded directly from Grand Prix race sessions.
+- Driver Filtering: Effortlessly filter audio clips by individual driver chips (e.g. ALL, VER, NOR, LEC, HAM) or view the full session timeline.
+- Custom Team-Colored Audio Player: Interactive player cards featuring team-specific accent colors, animated progress bars, and real-time playback duration timers.
+- Offline Caching: Cached team radio messages in Room Database for instant loading and offline playback.
+
+--------------------------------------------------------------------------------
+
+🤖 Apex AI Chatbot Strategy Assistant
+
+- AI-Powered F1 Assistant: Meet Apex — your dedicated AI telemetry and strategy companion for Formula 1 queries.
+- Quick Prompt Suggestions: One-tap prompt bar for 2026 Active Aero rules, driver standings, race schedules, and teammate H2H battles.
+- Live Telemetry Indicator & Animations: Smooth typing indicators, animated status indicators, and clean session reset options.
+
+--------------------------------------------------------------------------------
+
+🔔 Performance & Dependency Improvements
+
+- Updated Network Architecture: Refined Retrofit and Hilt network modules for API communication.
+- Enhanced Theme & System Bar Support: Polished light/dark status bar and navigation bar transitions across all screens.
 
 --------------------------------------------------------------------------------
 
 📲 Installation
-1. Download `PitWall-v1.0.1.apk`.
+1. Download `PitWall-v1.1.0.apk`.
 2. Open the file on your Android device.
-3. Enjoy the Formula 1 season with accurate race alerts!
+3. Enjoy the Formula 1 season with Live Team Radio and Apex AI!
 
 --------------------------------------------------------------------------------
 Developed with ❤️ for Formula 1 fans by Jenil Macwan.

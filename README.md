@@ -5,7 +5,7 @@
 <h1 align="center">PitWall — A Modern F1 Companion for Android</h1>
 
 <p align="center">
-  PitWall is a sleek, high-performance Android application for Formula 1 fans that delivers real-time session status, season schedules, live standings, detailed driver/team profiles, race results, curated news, and customizable alerts — all in a lightweight, offline-first package.
+  PitWall is a sleek, high-performance Android application for Formula 1 fans that delivers live team radio audio, an AI-powered race strategy chatbot, real-time session status, season schedules, live standings, detailed driver/team profiles, race results, curated news, and customizable alerts — all in a lightweight, offline-first package.
 </p>
 
 ---
@@ -21,6 +21,17 @@
 ---
 
 ## Key Features ✨
+
+- **📻 Live Team Radio Transmissions**
+  - Stream real-time team radio audio recordings directly from Grand Prix sessions.
+  - Interactive driver filtering chips (`ALL`, `VER`, `NOR`, `LEC`, `HAM`, etc.).
+  - Team-colored player cards with animated progress indicators and real-time playback duration timers.
+  - Offline-first Room Database caching for instant clip access.
+
+- **🤖 Apex AI Chatbot Strategy Assistant**
+  - AI-powered telemetry and strategy companion for answering all Formula 1 queries.
+  - Quick prompt bar for instant insights on 2026 Active Aero rules, driver standings, race schedules, and teammate H2H statistics.
+  - Interactive chat interface with live pulse indicators, typing animations, and session management.
 
 - **Real-Time Home Dashboard**
   - Next race countdown with session breakdown (FP1, FP2, FP3, Qualifying, Sprint, Race).
@@ -75,23 +86,25 @@
 app/src/main/java/com/jenil/f1comp/
 ├── data/
 │   ├── local/        — Room Database, DAOs, and entities (offline cache)
-│   ├── model/        — Domain data models
-│   ├── remote/       — Retrofit API service interfaces
+│   ├── model/        — Domain data models (TeamRadio, Chatbot, Schedule, Standings)
+│   ├── remote/       — Retrofit API service interfaces (F1ApiService, ChatApiService)
 │   └── repository/   — Single source of truth & data orchestration
-├── di/               — Hilt dependency injection modules
+├── di/               — Hilt dependency injection modules (DatabaseModule, NetworkModule)
 ├── notification/     — FCM service, alarm scheduler, and notification channels
 ├── ui/
+│   ├── chatbot/      — Apex AI chatbot screen, quick prompt bar & avatars
 │   ├── components/   — Reusable Compose UI components
 │   ├── home/         — Home dashboard & countdown screen
 │   ├── navigation/   — Navigation host, routes & bottom bar
 │   ├── news/         — News reader screen & expandable cards
 │   ├── profile/      — Driver & Team profile screens, charts & comparisons
+│   ├── radio/        — Team Radio screen, driver filter chips & player cards
 │   ├── results/      — Detailed race result breakdown
 │   ├── schedule/     — Race weekend schedule & calendar sync
 │   ├── settings/     — Notification preferences & theme customizer
 │   ├── standings/    — Driver & Constructor standings screens
-│   └── theme/        — Material 3 color palettes, typography & theme picker
-├── viewmodel/        — ViewModels handling state logic
+│   └── theme/        — Material 3 color palettes, typography & team swatches
+├── viewmodel/        — ViewModels handling UI state (TeamRadioViewModel, ChatViewModel)
 └── util/             — Mappers, date formatting & calendar sync helpers
 ```
 
@@ -133,6 +146,10 @@ app/src/main/java/com/jenil/f1comp/
 ## Configuration
 
 - **Firebase Setup:** Place your `google-services.json` file inside the `app/` directory for Firebase Cloud Messaging functionality.
+- **Local Properties & API Keys:** Add your Chatbot API key to `local.properties`:
+  ```properties
+  CHAT_API_KEY=your_actual_api_key_here
+  ```
 - **Notification Permissions:** Android 13+ (API 33+) requires post-notification runtime permission for race alerts.
 
 ---

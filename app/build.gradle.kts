@@ -1,3 +1,6 @@
+import java.io.FileInputStream
+import java.util.Properties
+
 val googleServicesFile = file("google-services.json")
 if (!googleServicesFile.exists()) {
     googleServicesFile.writeText(
@@ -43,6 +46,11 @@ plugins {
     alias(libs.plugins.ksp)
     id("com.google.gms.google-services")
 }
+val localProperties = Properties()
+val localPropertiesFile = rootProject.file("local.properties")
+if (localPropertiesFile.exists()) {
+    localProperties.load(FileInputStream(localPropertiesFile))
+}
 
 android {
     namespace = "com.jenil.f1comp"
@@ -57,11 +65,12 @@ android {
         minSdk = 26
         targetSdk = 37
         versionCode = 2
-        versionName = "1.0.1"
+        versionName = "1.1.0"
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
 
-        buildConfigField("String", "CHAT_API_KEY", "\"YOUR_CHAT_API_KEY\"")
+        val secretApiKey = localProperties.getProperty("CHAT_API_KEY") ?: ""
+        buildConfigField("String", "CHAT_API_KEY", "\"$secretApiKey\"")
     }
 
     buildTypes {

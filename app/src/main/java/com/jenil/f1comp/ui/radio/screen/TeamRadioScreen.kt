@@ -11,6 +11,7 @@ import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.imePadding
 import androidx.compose.foundation.layout.navigationBarsPadding
 import androidx.compose.foundation.layout.padding
@@ -73,6 +74,22 @@ fun TeamRadioScreen(
 
     val clips = remember(cachedRadios) {
         cachedRadios.map { it.toRadioClip() }
+    }
+
+    val sessionTitle = remember(cachedRadios) {
+        val first = cachedRadios.firstOrNull { !it.eventName.isNullOrEmpty() || !it.sessionName.isNullOrEmpty() }
+        if (first != null) {
+            val event = first.eventName.orEmpty()
+            val session = first.sessionName.orEmpty()
+            when {
+                event.isNotEmpty() && session.isNotEmpty() -> "$event · $session"
+                event.isNotEmpty() -> event
+                session.isNotEmpty() -> session
+                else -> "Latest Session"
+            }
+        } else {
+            "Latest Session"
+        }
     }
 
     var playingClipId by remember { mutableStateOf<String?>(null) }
@@ -220,12 +237,23 @@ fun TeamRadioScreen(
 
             Spacer(modifier = Modifier.width(8.dp))
 
-            Text(
-                text = "Team Radio",
-                style = MaterialTheme.typography.titleLarge,
-                color = MaterialTheme.colorScheme.onSurface,
-                modifier = Modifier.weight(1f)
-            )
+            Column(
+                modifier = Modifier
+                    .weight(1f)
+                    .padding(horizontal = 4.dp)
+            ) {
+                Text(
+                    text = "Team Radio",
+                    style = MaterialTheme.typography.titleLarge,
+                    color = MaterialTheme.colorScheme.onSurface
+                )
+                Spacer(modifier = Modifier.height(4.dp))
+                Text(
+                    text = sessionTitle,
+                    style = MaterialTheme.typography.bodySmall,
+                    color = MaterialTheme.colorScheme.onSurfaceVariant
+                )
+            }
 
             IconButton(onClick = { viewModel.refreshTeamRadio() }) {
                 if (isLoading) {

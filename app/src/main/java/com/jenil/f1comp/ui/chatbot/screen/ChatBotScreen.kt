@@ -54,57 +54,73 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardCapitalization
 import androidx.compose.ui.text.style.TextAlign
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavController
-import androidx.navigation.compose.rememberNavController
 import com.jenil.f1comp.ui.F1ScreenPadding
 import com.jenil.f1comp.ui.chatbot.component.ChatBubble
 import com.jenil.f1comp.ui.chatbot.component.QuickPromptBar
 import com.jenil.f1comp.ui.chatbot.component.ThinkBubble
-import com.jenil.f1comp.ui.theme.F1CompTheme
+import com.jenil.f1comp.viewmodel.ChatUiState
+import com.jenil.f1comp.viewmodel.ChatViewModel
+import java.text.SimpleDateFormat
+import java.util.Date
+import java.util.Locale
+import java.util.UUID
 
 data class UiMessage(
-    val id: String = java.util.UUID.randomUUID().toString(),
+    val id: String = UUID.randomUUID().toString(),
     val text: String,
     val isUser: Boolean,
-    val timestamp: String = java.text.SimpleDateFormat("HH:mm", java.util.Locale.getDefault()).format(java.util.Date())
+    val timestamp: String = SimpleDateFormat("HH:mm", Locale.getDefault()).format(Date())
 )
 
 @Composable
 fun ChatbotScreen(
     modifier: Modifier = Modifier,
-//    viewModel: ChatbotViewModel = hiltViewModel(),
+    viewModel: ChatViewModel = hiltViewModel(),
     navController: NavController,
 ) {
+    val uiState by viewModel.uiState.collectAsStateWithLifecycle()
+    val sessionId = remember { UUID.randomUUID().toString() }
+
     var text by remember { mutableStateOf("") }
     var messages by remember {
         mutableStateOf(
             listOf(
                 UiMessage(
                     text = "Apex initialized. Live telemetry link active. How can I assist your race strategy?",
-                    isUser = false,
-                    timestamp = "13:58"
-                ),
-                UiMessage(
-                    text = "What is the C3 tire drop-off window at high-abrasion circuits?",
-                    isUser = true,
-                    timestamp = "14:00"
-                ),
-                UiMessage(
-                    text = "Based on Pitwall data, the Pirelli C3 compound typically suffers from thermal degradation and performance drop-off after 18 to 22 laps.",
-                    isUser = false,
-                    timestamp = "14:01"
+                    isUser = false
                 )
             )
         )
     }
 
-
     var isThinking by remember { mutableStateOf(false) }
-
     val listState = rememberLazyListState()
 
+    LaunchedEffect(uiState) {
+        when (val state = uiState) {
+            is ChatUiState.Loading -> {
+                isThinking = true
+            }
+            is ChatUiState.Success -> {
+                isThinking = false
+                messages = messages + UiMessage(text = state.response, isUser = false)
+            }
+            is ChatUiState.Error -> {
+                isThinking = false
+                messages = messages + UiMessage(
+                    text = "Sorry, I encountered an issue connecting to Apex. ${state.message}",
+                    isUser = false
+                )
+            }
+            is ChatUiState.Idle -> {
+                isThinking = false
+            }
+        }
+    }
 
     LaunchedEffect(messages.size, isThinking) {
         val lastIndex = messages.size - if (isThinking) 0 else 1
@@ -119,17 +135,15 @@ fun ChatbotScreen(
         val finalMessage = promptText ?: text
         val trimmed = finalMessage.trim()
 
-        if (trimmed.isEmpty()) {
-            isThinking = false
-            return
-        }
+        if (trimmed.isEmpty()) return
 
         messages = messages + UiMessage(text = trimmed, isUser = true)
 
         if (promptText == null) {
             text = ""
         }
-        isThinking = true
+
+        viewModel.sendMessage(sessionId, trimmed)
     }
 
     val infiniteTransition = rememberInfiniteTransition(label = "status_pulse")
@@ -345,13 +359,5 @@ fun ChatbotScreen(
                 )
             }
         }
-    }
-}
-
-@Preview(showBackground = true, showSystemUi = true)
-@Composable
-fun ChatbotScreenPreview() {
-    F1CompTheme {
-        ChatbotScreen(navController = rememberNavController())
     }
 }

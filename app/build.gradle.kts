@@ -60,6 +60,8 @@ android {
         versionName = "1.0.1"
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
+
+        buildConfigField("String", "CHAT_API_KEY", "\"YOUR_CHAT_API_KEY\"")
     }
 
     buildTypes {

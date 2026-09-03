@@ -9,7 +9,6 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
@@ -36,7 +35,6 @@ import coil.imageLoader
 import coil.request.ImageRequest
 import com.jenil.f1comp.R
 import com.jenil.f1comp.ui.F1ScreenPadding
-import com.jenil.f1comp.ui.chatbot.component.ApexAvatar
 import com.jenil.f1comp.ui.home.components.NextRaceCard
 import com.jenil.f1comp.ui.home.components.RaceResultCard
 import com.jenil.f1comp.ui.home.components.TopStandingsCard
@@ -97,15 +95,15 @@ fun HomeScreen(
             Row(
                 verticalAlignment = Alignment.CenterVertically
             ) {
-                IconButton(
-                    onClick = {
-                        navController.navigate("chatbot")
-                    },
-                ) {
-                    ApexAvatar(
-                        modifier = Modifier.size(28.dp)
-                    )
-                }
+//                IconButton(
+//                    onClick = {
+//                        navController.navigate("chatbot")
+//                    },
+//                ) {
+//                    ApexAvatar(
+//                        modifier = Modifier.size(28.dp)
+//                    )
+//                }
 
                 IconButton(
                     onClick = {

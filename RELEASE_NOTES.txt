@@ -1,6 +1,6 @@
 PitWall v1.1.1 Release Notes 🏎️🏁
 
-This update brings important bug fixes and stability enhancements to Schedule Calendar Sync, and the Apex AI Strategy Assistant.
+This update brings important bug fixes and stability enhancements to Schedule Calendar Sync, the Apex AI Strategy Assistant, and the Settings & Privacy suite.
 
 --------------------------------------------------------------------------------
 
@@ -16,6 +16,14 @@ This update brings important bug fixes and stability enhancements to Schedule Ca
 
 - Connection & Initialization Fixes: Resolved API connection and initialization issues to ensure fast, reliable responses.
 - Logging & Diagnostics: Added comprehensive request/response diagnostic logs.
+
+--------------------------------------------------------------------------------
+
+⚙️ Settings, Privacy & App Information
+
+- Redesigned Privacy Policy: Polished document-style interface featuring key privacy trust guarantees (100% Local-First Data, Zero Data Selling, No Account Needed), numbered policy sections, and direct data protection contact options.
+- Open Source Licenses & Data Attribution: Added animated open-source library cards with license badges and clear F1 data source attributions.
+- Language & Preferences: UI polish across settings items and enhanced language selection support.
 
 --------------------------------------------------------------------------------
 

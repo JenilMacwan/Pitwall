@@ -1,0 +1,20 @@
+<resources>
+    <string name="app_name">PitWall</string>
+    <string name="title_home">Inicio</string>
+    <string name="title_schedule">Calendario</string>
+    <string name="title_news">Noticias</string>
+    <string name="title_standings">Clasificación</string>
+    <string name="title_settings">Ajustes</string>
+    <string name="title_chatbot">Apex IA</string>
+
+    <string name="title_theme">Tema</string>
+    <string name="sub_title_theme">Predeterminado del sistema</string>
+    <string name="title_alerts">Alertas</string>
+    <string name="sub_title_alerts">15 minutos antes del evento</string>
+    <string name="title_version">Versión</string>
+    <string name="sub_title_version">1.1.0</string>
+    <string name="title_developer">Desarrollador</string>
+    <string name="sub_title_developer">Jenil Macwan</string>
+    <string name="title_mode">Modo Oscuro</string>
+    <string name="sub_title_mode">Desactivado</string>
+</resources>

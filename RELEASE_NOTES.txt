@@ -1,6 +1,6 @@
-PitWall v1.1.1 Release Notes 🏎️🏁
+PitWall v1.1.2 Release Notes 🏎️🏁
 
-This update brings important bug fixes and stability enhancements to Schedule Calendar Sync, the Apex AI Strategy Assistant, and the Settings & Privacy suite.
+This update brings important bug fixes and stability enhancements to Schedule Calendar Sync, Race & Session Notifications, the Apex AI Strategy Assistant, and the Settings & Privacy suite.
 
 --------------------------------------------------------------------------------
 
@@ -9,6 +9,13 @@ This update brings important bug fixes and stability enhancements to Schedule Ca
 - Complete Session Sync: Calendar sync now imports all weekend sessions (FP1, FP2, FP3, Sprint Shootout, Sprint Race, Qualifying, and Grand Prix).
 - PitWall App Branding: All calendar entries now feature distinct `🏎️ PitWall` event titles and detailed descriptions.
 - Accurate Time Parsing & Deduplication: Fixed a glitch where events had random timestamps or failed to appear, and added duplicate event prevention.
+
+--------------------------------------------------------------------------------
+
+🔔 Notifications & Session Reminders
+
+- Unified Notification Design: All local session alarms and push notifications now feature uniform PitWall branding with the large F1 app icon, signature F1 Red accent, and expanded text layout.
+- Audio & Channel Fixes: Standardized notification channel (`f1_alerts_v3`) and custom engine audio alerts (`f1_car_2`) for consistent delivery across all Android versions.
 
 --------------------------------------------------------------------------------
 
@@ -28,7 +35,7 @@ This update brings important bug fixes and stability enhancements to Schedule Ca
 --------------------------------------------------------------------------------
 
 📲 Installation
-1. Download `PitWall-v1.1.1.apk`.
+1. Download `PitWall-v1.1.2.apk`.
 2. Open the file on your Android device.
 3. Enjoy the Formula 1 season with Live Team Radio and Apex AI!
 

@@ -6,6 +6,7 @@ import android.content.pm.PackageManager
 import android.os.Build
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
+import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
@@ -80,7 +81,8 @@ fun SettingsScreen(
     settingsViewModel: SettingsViewModel = hiltViewModel()
 ) {
     val scrollState = rememberScrollState()
-    val isDarkMode by settingsViewModel.isDarkMode.collectAsStateWithLifecycle()
+    val isDarkModePref by settingsViewModel.isDarkMode.collectAsStateWithLifecycle()
+    val isDarkMode = isDarkModePref ?: isSystemInDarkTheme()
     val context = LocalContext.current
     val raceSchedule by viewModel.schedule.collectAsStateWithLifecycle()
     val haptic = LocalHapticFeedback.current
@@ -155,7 +157,7 @@ fun SettingsScreen(
         }
     }
 
-    val dynamicSubtitle = if (isDarkMode == true) {
+    val dynamicSubtitle = if (isDarkMode) {
         "Dark theme is currently active"
     } else {
         "Light theme is currently active"
@@ -240,7 +242,7 @@ fun SettingsScreen(
                     icon = Icons.Outlined.DarkMode,
                     title = stringResource(id = R.string.title_mode),
                     subtitle = dynamicSubtitle,
-                    isChecked = isDarkMode ?: false,
+                    isChecked = isDarkMode,
                     onCheckedChange = { newValue ->
                         haptic.performHapticFeedback(HapticFeedbackType.TextHandleMove)
                         settingsViewModel.toggleDarkMode(newValue)

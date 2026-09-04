@@ -31,7 +31,6 @@ import androidx.compose.material.icons.outlined.NewReleases
 import androidx.compose.material.icons.outlined.Palette
 import androidx.compose.material.icons.outlined.Policy
 import androidx.compose.material.icons.outlined.RadioButtonChecked
-import androidx.compose.material.icons.outlined.Speed
 import androidx.compose.material.icons.outlined.StarRate
 import androidx.compose.material.icons.outlined.Sync
 import androidx.compose.material.icons.outlined.Timeline
@@ -258,12 +257,6 @@ fun SettingsScreen(
                     title = "Language & Region",
                     subtitle = "Date format, driver name display",
                     onClick = { navController.navigate("language_settings") }
-                )
-                SettingsItem(
-                    icon = Icons.Outlined.Speed,
-                    title = "Units",
-                    subtitle = "Speed and distance format (km/h, mph)",
-                    onClick = { navController.navigate("units_settings") }
                 )
             }
 

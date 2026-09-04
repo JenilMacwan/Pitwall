@@ -33,6 +33,10 @@ import com.jenil.f1comp.ui.profile.screen.ProfileScreen
 import com.jenil.f1comp.ui.radio.screen.TeamRadioScreen
 import com.jenil.f1comp.ui.results.screen.RaceResultScreen
 import com.jenil.f1comp.ui.schedule.screen.ScheduleScreen
+import com.jenil.f1comp.ui.settings.screen.DataAttributionScreen
+import com.jenil.f1comp.ui.settings.screen.LanguageSettingsScreen
+import com.jenil.f1comp.ui.settings.screen.LicensesScreen
+import com.jenil.f1comp.ui.settings.screen.PrivacyPolicyScreen
 import com.jenil.f1comp.ui.settings.screen.SettingsDetailPlaceholder
 import com.jenil.f1comp.ui.settings.screen.SettingsScreen
 import com.jenil.f1comp.ui.standings.screen.StandingsScreen
@@ -128,19 +132,19 @@ fun AppNavigation() {
                 SettingsDetailPlaceholder(title = "Appearance & Theme", navController = navController)
             }
             composable(route = "language_settings") {
-                SettingsDetailPlaceholder(title = "Language & Region", navController = navController)
+                LanguageSettingsScreen(navController = navController)
             }
             composable(route = "units_settings") {
                 SettingsDetailPlaceholder(title = "Units", navController = navController)
             }
             composable(route = "licenses") {
-                SettingsDetailPlaceholder(title = "Open Source Licenses", navController = navController)
+                LicensesScreen(navController = navController)
             }
             composable(route = "privacy_policy") {
-                SettingsDetailPlaceholder(title = "Privacy Policy", navController = navController)
+                PrivacyPolicyScreen(navController = navController)
             }
             composable(route = "data_attribution") {
-                SettingsDetailPlaceholder(title = "Data Attribution", navController = navController)
+                DataAttributionScreen(navController = navController)
             }
             composable(
                 route = "profile/{isDriver}/{id}",

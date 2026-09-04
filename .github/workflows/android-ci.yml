@@ -11,6 +11,8 @@ on:
 jobs:
   build-and-test:
     runs-on: ubuntu-latest
+    env:
+      CHAT_API_KEY: ${{ secrets.CHAT_API_KEY }}
     steps:
       - name: Checkout Code
         uses: actions/checkout@v4
@@ -34,6 +36,15 @@ jobs:
             echo "Successfully loaded Google Services JSON from GitHub Secret."
           else
             echo "No Google Services secret found. Using fallback template."
+          fi
+
+      - name: Setup local.properties
+        run: |
+          if [ -n "$CHAT_API_KEY" ]; then
+            echo "CHAT_API_KEY=$CHAT_API_KEY" >> local.properties
+            echo "Successfully loaded CHAT_API_KEY into local.properties."
+          else
+            echo "No CHAT_API_KEY secret found."
           fi
 
       - name: Run Lint

@@ -65,11 +65,13 @@ android {
         minSdk = 26
         targetSdk = 37
         versionCode = 2
-        versionName = "1.1.0"
+        versionName = "1.1."
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
 
-        val secretApiKey = localProperties.getProperty("CHAT_API_KEY") ?: ""
+        val secretApiKey = System.getenv("CHAT_API_KEY")
+            ?: localProperties.getProperty("CHAT_API_KEY")
+            ?: ""
         buildConfigField("String", "CHAT_API_KEY", "\"$secretApiKey\"")
     }
 

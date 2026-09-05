@@ -10,8 +10,11 @@ import com.jenil.f1comp.data.local.dao.DriverProfileDao
 import com.jenil.f1comp.data.local.dao.DriverStandingsDao
 import com.jenil.f1comp.data.local.dao.NewsDao
 import com.jenil.f1comp.data.local.dao.NextRaceDao
+import com.jenil.f1comp.data.local.dao.QualifyingResultDao
 import com.jenil.f1comp.data.local.dao.RaceResultDao
 import com.jenil.f1comp.data.local.dao.ScheduleDao
+import com.jenil.f1comp.data.local.dao.SprintQualiDao
+import com.jenil.f1comp.data.local.dao.SprintResultDao
 import com.jenil.f1comp.data.local.dao.TeamRadioDao
 import com.jenil.f1comp.data.local.dao.TeammateH2HDao
 import com.jenil.f1comp.data.local.entity.CircuitInfoEntity
@@ -21,8 +24,11 @@ import com.jenil.f1comp.data.local.entity.DriverProfileEntity
 import com.jenil.f1comp.data.local.entity.DriverStandingsEntity
 import com.jenil.f1comp.data.local.entity.NewsEntity
 import com.jenil.f1comp.data.local.entity.NextRaceEntity
+import com.jenil.f1comp.data.local.entity.QualifyingResultEntity
 import com.jenil.f1comp.data.local.entity.RaceResultEntity
 import com.jenil.f1comp.data.local.entity.ScheduleEntity
+import com.jenil.f1comp.data.local.entity.SprintQualifyingResultEntity
+import com.jenil.f1comp.data.local.entity.SprintResultEntity
 import com.jenil.f1comp.data.local.entity.TeamRadioEntity
 import com.jenil.f1comp.data.local.entity.TeammateHeadtoHeadEntity
 
@@ -38,9 +44,12 @@ import com.jenil.f1comp.data.local.entity.TeammateHeadtoHeadEntity
         NextRaceEntity::class,
         NewsEntity::class,
         TeammateHeadtoHeadEntity::class,
-        TeamRadioEntity::class
+        TeamRadioEntity::class,
+        QualifyingResultEntity::class,
+        SprintQualifyingResultEntity::class,
+        SprintResultEntity::class
     ],
-    version = 29,
+    version = 31,
     exportSchema = false
 )
 @TypeConverters(Converters::class)
@@ -56,4 +65,7 @@ abstract class AppDatabase : RoomDatabase() {
     abstract val newsDao: NewsDao
     abstract val teammateH2HDao: TeammateH2HDao
     abstract val teamRadioDao: TeamRadioDao
+    abstract val qualifyingResultDao: QualifyingResultDao
+    abstract val sprintQualiDao: SprintQualiDao
+    abstract val sprintResultDao: SprintResultDao
 }

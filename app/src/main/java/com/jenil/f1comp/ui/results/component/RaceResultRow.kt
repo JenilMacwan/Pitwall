@@ -20,6 +20,7 @@ import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import com.jenil.f1comp.data.local.entity.RaceResultEntity
+import com.jenil.f1comp.data.local.entity.SprintResultEntity
 import com.jenil.f1comp.ui.home.components.DriverProfileCircle
 
 @Composable
@@ -28,16 +29,63 @@ fun RaceResultRow(
     onDriverClick: () -> Unit,
     onConstructorClick: () -> Unit
 ) {
-    val position = result.position.toIntOrNull()
+    RaceResultRowContent(
+        position = result.position,
+        positionText = result.positionText,
+        driver = result.driver,
+        driverImage = result.driverImage,
+        constructor = result.constructor,
+        points = result.points,
+        time = result.time,
+        status = result.status,
+        onDriverClick = onDriverClick,
+        onConstructorClick = onConstructorClick
+    )
+}
 
-    val badgeTextColor = when (position) {
+@Composable
+fun RaceResultRow(
+    result: SprintResultEntity,
+    onDriverClick: () -> Unit,
+    onConstructorClick: () -> Unit
+) {
+    RaceResultRowContent(
+        position = result.position,
+        positionText = result.positionText,
+        driver = result.driver,
+        driverImage = result.driverImage,
+        constructor = result.constructor,
+        points = result.points,
+        time = result.time,
+        status = result.status,
+        onDriverClick = onDriverClick,
+        onConstructorClick = onConstructorClick
+    )
+}
+
+@Composable
+private fun RaceResultRowContent(
+    position: String,
+    positionText: String?,
+    driver: String,
+    driverImage: String?,
+    constructor: String,
+    points: String,
+    time: String,
+    status: String,
+    onDriverClick: () -> Unit,
+    onConstructorClick: () -> Unit
+) {
+    val posInt = position.toIntOrNull()
+
+    val badgeTextColor = when (posInt) {
         1 -> MaterialTheme.colorScheme.tertiary
         2 -> MaterialTheme.colorScheme.secondary
         3 -> MaterialTheme.colorScheme.secondaryContainer
         else -> MaterialTheme.colorScheme.onSurfaceVariant
     }
 
-    val podiumBorder = when (position) {
+    val podiumBorder = when (posInt) {
         1 -> BorderStroke(1.5.dp, MaterialTheme.colorScheme.tertiary.copy(alpha = 0.8f))
         2 -> BorderStroke(1.dp, MaterialTheme.colorScheme.secondary.copy(alpha = 0.6f))
         3 -> BorderStroke(1.dp, MaterialTheme.colorScheme.secondaryContainer.copy(alpha = 0.6f))
@@ -51,7 +99,7 @@ fun RaceResultRow(
         shape = RoundedCornerShape(14.dp),
         border = podiumBorder,
         elevation = CardDefaults.cardElevation(
-            defaultElevation = if (position != null && position in 1..3) 2.dp else 0.dp
+            defaultElevation = if (posInt != null && posInt in 1..3) 2.dp else 0.dp
         ),
         colors = CardDefaults.cardColors(
             containerColor = MaterialTheme.colorScheme.surface,
@@ -66,7 +114,7 @@ fun RaceResultRow(
         ) {
 
             Text(
-                text = result.positionText ?: result.position,
+                text = positionText ?: position,
                 fontFamily = FontFamily.Monospace,
                 fontWeight = FontWeight.Bold,
                 style = MaterialTheme.typography.bodyMedium,
@@ -76,22 +124,22 @@ fun RaceResultRow(
             Spacer(modifier = Modifier.width(8.dp))
 
             DriverProfileCircle(
-                imageUrl = result.driverImage,
-                driverName = result.driver,
+                imageUrl = driverImage,
+                driverName = driver,
                 size = 40.dp,
             )
             Spacer(modifier = Modifier.width(12.dp))
 
             Column(modifier = Modifier.weight(1f)) {
                 Text(
-                    text = result.driver,
+                    text = driver,
                     fontFamily = FontFamily.Monospace,
                     fontWeight = FontWeight.Bold,
                     style = MaterialTheme.typography.bodyMedium,
                     color = MaterialTheme.colorScheme.onSurface
                 )
                 Text(
-                    text = result.constructor,
+                    text = constructor,
                     fontFamily = FontFamily.Monospace,
                     style = MaterialTheme.typography.bodySmall,
                     color = MaterialTheme.colorScheme.onSurfaceVariant,
@@ -101,12 +149,12 @@ fun RaceResultRow(
 
             Column(horizontalAlignment = Alignment.End) {
                 Text(
-                    text = "${result.points} pts",
+                    text = "$points pts",
                     fontFamily = FontFamily.Monospace,
                     style = MaterialTheme.typography.bodyMedium,
                     color = MaterialTheme.colorScheme.primary
                 )
-                val secondaryLabel = if (result.time.isNotBlank()) result.time else result.status
+                val secondaryLabel = if (time.isNotBlank()) time else status
                 if (secondaryLabel.isNotBlank()) {
                     Text(
                         text = secondaryLabel,

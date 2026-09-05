@@ -68,4 +68,16 @@ object DatabaseModule {
     @Provides
     @Singleton
     fun provideTeamRadioDao(db: AppDatabase) = db.teamRadioDao
+
+    @Provides
+    @Singleton
+    fun provideQualifyingResultDao(db: AppDatabase) = db.qualifyingResultDao
+
+    @Provides
+    @Singleton
+    fun provideSprintQualiDao(db: AppDatabase) = db.sprintQualiDao
+
+    @Provides
+    @Singleton
+    fun provideSprintResultDao(db: AppDatabase) = db.sprintResultDao
 }

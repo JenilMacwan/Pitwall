@@ -20,7 +20,7 @@ import com.jenil.f1comp.R
 class RaceAlarmReceiver : BroadcastReceiver() {
 
     companion object {
-        const val CHANNEL_ID = "f1_alerts_v3"
+        const val CHANNEL_ID = "f1_alerts_v4"
         const val CHANNEL_NAME = "Race & Session Reminders"
         const val EXTRA_TITLE = "extra_title"
         const val EXTRA_MESSAGE = "extra_message"

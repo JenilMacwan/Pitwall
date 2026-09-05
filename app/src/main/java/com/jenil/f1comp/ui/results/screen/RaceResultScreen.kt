@@ -40,12 +40,23 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavController
 import com.jenil.f1comp.data.local.entity.ScheduleEntity
 import com.jenil.f1comp.ui.F1ScreenPadding
+import com.jenil.f1comp.ui.results.component.QualifyingResultRow
 import com.jenil.f1comp.ui.results.component.RaceChip
 import com.jenil.f1comp.ui.results.component.RaceResultRow
+import com.jenil.f1comp.viewmodel.QualifyingViewModel
 import com.jenil.f1comp.viewmodel.RaceResultViewModel
 import com.jenil.f1comp.viewmodel.ScheduleViewModel
+import com.jenil.f1comp.viewmodel.SprintQualifyingViewModel
+import com.jenil.f1comp.viewmodel.SprintRaceViewModel
+import kotlinx.coroutines.launch
 import java.time.LocalDate
 
+enum class ResultSessionType(val label: String) {
+    RACE("Race Result"),
+    QUALIFYING("Quali Result"),
+    SPRINT("Sprint Result"),
+    SPRINT_QUALIFYING("Sprint Quali")
+}
 
 @Composable
 fun RaceResultScreen(
@@ -54,6 +65,9 @@ fun RaceResultScreen(
     navController: NavController,
     modifier: Modifier = Modifier,
     viewModel: RaceResultViewModel = hiltViewModel(),
+    qualifyingViewModel: QualifyingViewModel = hiltViewModel(),
+    sprintQualifyingViewModel: SprintQualifyingViewModel = hiltViewModel(),
+    sprintResultViewModel: SprintRaceViewModel = hiltViewModel(),
     scheduleViewModel: ScheduleViewModel = hiltViewModel()
 ) {
     val raceSchedule by scheduleViewModel.schedule.collectAsStateWithLifecycle()
@@ -66,6 +80,7 @@ fun RaceResultScreen(
 
     var currentRound by remember { mutableStateOf(round) }
     var currentYear by remember { mutableStateOf(year) }
+    var selectedSession by remember { mutableStateOf(ResultSessionType.RACE) }
 
     val currentIndex = remember(completedRaces, currentRound) {
         completedRaces.indexOfFirst { it.round == currentRound }
@@ -78,17 +93,43 @@ fun RaceResultScreen(
             .getOrDefault(currentYear)
     }
 
-    val resultsFlow = remember(currentRound) { viewModel.raceResultsFlow(currentRound) }
-    val results by resultsFlow.collectAsStateWithLifecycle()
-    val isLoading by viewModel.isLoading.collectAsStateWithLifecycle()
-    val error by viewModel.error.collectAsStateWithLifecycle()
+    val raceResultsFlow = remember(currentRound) { viewModel.raceResultsFlow(currentRound) }
+    val qualiResultsFlow = remember(currentRound) { qualifyingViewModel.qualifyingResultsFlow(currentRound) }
+    val sprintQualiResultsFlow = remember(currentRound) { sprintQualifyingViewModel.sprintQualifyingResultsFlow(currentRound) }
+    val sprintResultsFlow = remember(currentRound) { sprintResultViewModel.sprintResultsFlow(currentRound) }
+
+    val raceResults by raceResultsFlow.collectAsStateWithLifecycle()
+    val qualifyingResults by qualiResultsFlow.collectAsStateWithLifecycle()
+    val sprintQualifyingResults by sprintQualiResultsFlow.collectAsStateWithLifecycle()
+    val sprintResults by sprintResultsFlow.collectAsStateWithLifecycle()
+
+    val isRaceLoading by viewModel.isLoading.collectAsStateWithLifecycle()
+    val isQualiLoading by qualifyingViewModel.isLoading.collectAsStateWithLifecycle()
+    val isSprintQualiLoading by sprintQualifyingViewModel.isLoading.collectAsStateWithLifecycle()
+    val isSprintLoading by sprintResultViewModel.isLoading.collectAsStateWithLifecycle()
+
+    val raceError by viewModel.error.collectAsStateWithLifecycle()
+    val qualiError by qualifyingViewModel.error.collectAsStateWithLifecycle()
+    val sprintQualiError by sprintQualifyingViewModel.error.collectAsStateWithLifecycle()
+    val sprintError by sprintResultViewModel.error.collectAsStateWithLifecycle()
 
     LaunchedEffect(currentRound, currentYear) {
-        viewModel.refreshRaceResult(currentRound, currentYear)
+        launch { viewModel.refreshRaceResult(currentRound, currentYear) }
+        launch { qualifyingViewModel.refreshQualifyingResults(currentRound, currentYear) }
+        launch { sprintQualifyingViewModel.refreshSprintQualifyingResults(currentRound, currentYear) }
+        launch { sprintResultViewModel.refreshSprintResults(currentRound, currentYear) }
     }
 
-    val sortedResults = remember(results) {
-        results.sortedBy { it.position.toIntOrNull() ?: Int.MAX_VALUE }
+    val hasSprint = remember(currentScheduleEntry, sprintResults, sprintQualifyingResults) {
+        (currentScheduleEntry?.sprint != null || currentScheduleEntry?.sprintQualifying != null)
+                || sprintResults.isNotEmpty()
+                || sprintQualifyingResults.isNotEmpty()
+    }
+
+    LaunchedEffect(hasSprint) {
+        if (!hasSprint && (selectedSession == ResultSessionType.SPRINT || selectedSession == ResultSessionType.SPRINT_QUALIFYING)) {
+            selectedSession = ResultSessionType.RACE
+        }
     }
 
     val chipListState = rememberLazyListState()
@@ -97,6 +138,11 @@ fun RaceResultScreen(
             chipListState.animateScrollToItem(maxOf(0, currentIndex - 1))
         }
     }
+
+    val raceName = currentScheduleEntry?.raceName
+        ?: raceResults.firstOrNull()?.raceName
+        ?: qualifyingResults.firstOrNull()?.raceName
+        ?: "Race Result"
 
     Column(
         modifier = modifier
@@ -123,9 +169,7 @@ fun RaceResultScreen(
                     .padding(start = 8.dp)
             ) {
                 Text(
-                    text = (currentScheduleEntry?.raceName
-                        ?: sortedResults.firstOrNull()?.raceName
-                        ?: "Race Result")
+                    text = raceName
                         .replace("Grand Prix", "GP")
                         .replace("GrandPrix", "GP"),
                     style = MaterialTheme.typography.titleLarge,
@@ -173,7 +217,6 @@ fun RaceResultScreen(
 
         Spacer(modifier = Modifier.height(12.dp))
 
-
         if (completedRaces.size > 1) {
             LazyRow(
                 state = chipListState,
@@ -192,14 +235,88 @@ fun RaceResultScreen(
             Spacer(modifier = Modifier.height(12.dp))
         }
 
+        // Session Filter Toggles
+        LazyRow(
+            horizontalArrangement = Arrangement.spacedBy(8.dp),
+            contentPadding = PaddingValues(horizontal = 16.dp),
+            modifier = Modifier.fillMaxWidth()
+        ) {
+            item {
+                RaceChip(
+                    label = ResultSessionType.RACE.label,
+                    isSelected = selectedSession == ResultSessionType.RACE,
+                    onClick = { selectedSession = ResultSessionType.RACE }
+                )
+            }
+            item {
+                RaceChip(
+                    label = ResultSessionType.QUALIFYING.label,
+                    isSelected = selectedSession == ResultSessionType.QUALIFYING,
+                    onClick = { selectedSession = ResultSessionType.QUALIFYING }
+                )
+            }
+            if (hasSprint) {
+                item {
+                    RaceChip(
+                        label = ResultSessionType.SPRINT.label,
+                        isSelected = selectedSession == ResultSessionType.SPRINT,
+                        onClick = { selectedSession = ResultSessionType.SPRINT }
+                    )
+                }
+                item {
+                    RaceChip(
+                        label = ResultSessionType.SPRINT_QUALIFYING.label,
+                        isSelected = selectedSession == ResultSessionType.SPRINT_QUALIFYING,
+                        onClick = { selectedSession = ResultSessionType.SPRINT_QUALIFYING }
+                    )
+                }
+            }
+        }
+
+        Spacer(modifier = Modifier.height(12.dp))
+
+        val isCurrentSessionLoading = when (selectedSession) {
+            ResultSessionType.RACE -> isRaceLoading
+            ResultSessionType.QUALIFYING -> isQualiLoading
+            ResultSessionType.SPRINT -> isSprintLoading
+            ResultSessionType.SPRINT_QUALIFYING -> isSprintQualiLoading
+        }
+
+        val currentSessionError = when (selectedSession) {
+            ResultSessionType.RACE -> raceError
+            ResultSessionType.QUALIFYING -> qualiError
+            ResultSessionType.SPRINT -> sprintError
+            ResultSessionType.SPRINT_QUALIFYING -> sprintQualiError
+        }
+
+        val sortedRaceResults = remember(raceResults) {
+            raceResults.sortedBy { it.position.toIntOrNull() ?: Int.MAX_VALUE }
+        }
+        val sortedQualiResults = remember(qualifyingResults) {
+            qualifyingResults.sortedBy { it.position.toIntOrNull() ?: Int.MAX_VALUE }
+        }
+        val sortedSprintResults = remember(sprintResults) {
+            sprintResults.sortedBy { it.position.toIntOrNull() ?: Int.MAX_VALUE }
+        }
+        val sortedSprintQualiResults = remember(sprintQualifyingResults) {
+            sprintQualifyingResults.sortedBy { it.position.toIntOrNull() ?: Int.MAX_VALUE }
+        }
+
+        val isCurrentResultsEmpty = when (selectedSession) {
+            ResultSessionType.RACE -> sortedRaceResults.isEmpty()
+            ResultSessionType.QUALIFYING -> sortedQualiResults.isEmpty()
+            ResultSessionType.SPRINT -> sortedSprintResults.isEmpty()
+            ResultSessionType.SPRINT_QUALIFYING -> sortedSprintQualiResults.isEmpty()
+        }
+
         when {
-            isLoading && sortedResults.isEmpty() -> {
+            isCurrentSessionLoading && isCurrentResultsEmpty -> {
                 Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
                     CircularProgressIndicator()
                 }
             }
 
-            error != null && sortedResults.isEmpty() -> {
+            currentSessionError != null && isCurrentResultsEmpty -> {
                 Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
                     Column(horizontalAlignment = Alignment.CenterHorizontally) {
                         Icon(
@@ -210,7 +327,7 @@ fun RaceResultScreen(
                         )
                         Spacer(modifier = Modifier.height(8.dp))
                         Text(
-                            text = error ?: "Couldn't load results",
+                            text = currentSessionError,
                             style = MaterialTheme.typography.bodyMedium,
                             color = MaterialTheme.colorScheme.onSurfaceVariant,
                             textAlign = TextAlign.Center,
@@ -220,7 +337,7 @@ fun RaceResultScreen(
                 }
             }
 
-            sortedResults.isEmpty() -> {
+            isCurrentResultsEmpty -> {
                 Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
                     Text(
                         text = "No results available yet",
@@ -236,12 +353,43 @@ fun RaceResultScreen(
                     contentPadding = PaddingValues(horizontal = 16.dp, vertical = 8.dp),
                     verticalArrangement = Arrangement.spacedBy(8.dp)
                 ) {
-                    items(sortedResults, key = { it.driver }) { result ->
-                        RaceResultRow(
-                            result = result,
-                            onDriverClick = { navController.navigate("profile/true/${result.driver}") },
-                            onConstructorClick = { navController.navigate("profile/false/${result.constructor}") }
-                        )
+                    when (selectedSession) {
+                        ResultSessionType.RACE -> {
+                            items(sortedRaceResults, key = { "race_${it.driver}" }) { result ->
+                                RaceResultRow(
+                                    result = result,
+                                    onDriverClick = { navController.navigate("profile/true/${result.driver}") },
+                                    onConstructorClick = { navController.navigate("profile/false/${result.constructor}") }
+                                )
+                            }
+                        }
+                        ResultSessionType.QUALIFYING -> {
+                            items(sortedQualiResults, key = { "quali_${it.driver}" }) { result ->
+                                QualifyingResultRow(
+                                    result = result,
+                                    onDriverClick = { navController.navigate("profile/true/${result.driver}") },
+                                    onConstructorClick = { navController.navigate("profile/false/${result.constructor}") }
+                                )
+                            }
+                        }
+                        ResultSessionType.SPRINT -> {
+                            items(sortedSprintResults, key = { "sprint_${it.driver}" }) { result ->
+                                RaceResultRow(
+                                    result = result,
+                                    onDriverClick = { navController.navigate("profile/true/${result.driver}") },
+                                    onConstructorClick = { navController.navigate("profile/false/${result.constructor}") }
+                                )
+                            }
+                        }
+                        ResultSessionType.SPRINT_QUALIFYING -> {
+                            items(sortedSprintQualiResults, key = { "sprint_quali_${it.driver}" }) { result ->
+                                QualifyingResultRow(
+                                    result = result,
+                                    onDriverClick = { navController.navigate("profile/true/${result.driver}") },
+                                    onConstructorClick = { navController.navigate("profile/false/${result.constructor}") }
+                                )
+                            }
+                        }
                     }
                     item { Spacer(modifier = Modifier.height(F1ScreenPadding.bottomPadding())) }
                 }
@@ -249,5 +397,3 @@ fun RaceResultScreen(
         }
     }
 }
-
-

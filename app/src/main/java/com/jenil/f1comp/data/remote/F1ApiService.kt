@@ -7,6 +7,7 @@ import com.jenil.f1comp.data.model.DriverProfileResponse
 import com.jenil.f1comp.data.model.DriverStandingsResponse
 import com.jenil.f1comp.data.model.NewsResponse
 import com.jenil.f1comp.data.model.NextRace
+import com.jenil.f1comp.data.model.QualifyingResultResponse
 import com.jenil.f1comp.data.model.RaceResultResponse
 import com.jenil.f1comp.data.model.ScheduleResponse
 import com.jenil.f1comp.data.model.TeamRadioResponse
@@ -15,12 +16,6 @@ import retrofit2.http.GET
 import retrofit2.http.Path
 
 interface F1ApiService {
-
-//    @GET("drivers")
-//        suspend fun getDriverInfo(): DriverProfileResponse
-//
-//    @GET("constructors")
-//    suspend fun getConstructorsInfo(): ConstructorProfileResponse
 
     @GET("driver_profile")
     suspend fun getDriverProfile(): DriverProfileResponse
@@ -55,6 +50,24 @@ interface F1ApiService {
         @Path("race_id") raceId: String,
         @Path("year") year: Int
     ): RaceResultResponse
+
+    @GET("qualifying_results/{race_id}/{year}")
+    suspend fun getQualifyingResults(
+        @Path("race_id") raceId: String,
+        @Path("year") year: Int
+    ): QualifyingResultResponse
+
+    @GET("sprint_results/{race_id}/{year}")
+    suspend fun getSprintResults(
+        @Path("race_id") raceId: String,
+        @Path("year") year: Int
+    ): RaceResultResponse
+
+    @GET("sprint_qualifying_results/{race_id}/{year}")
+    suspend fun getSprintQualifyingResults(
+        @Path("race_id") raceId: String,
+        @Path("year") year: Int
+    ): QualifyingResultResponse
 
     @GET("team-radio/latest")
     suspend fun getLatestTeamRadio(): TeamRadioResponse

@@ -1,20 +1,28 @@
-PitWall v1.1.2 Release Notes 🏎️🏁
+PitWall v1.1.3 Release Notes 🏎️🏁
 
-This update brings important bug fixes and stability enhancements to Schedule Calendar Sync, Race & Session Notifications, the Apex AI Strategy Assistant, and the Settings & Privacy suite.
+This update introduces comprehensive race session filtering and complete result support for Qualifying, Sprint Race, and Sprint Qualifying sessions, alongside UI refinements and performance enhancements.
+
+--------------------------------------------------------------------------------
+
+🏎️ Race Results & Session Filtering
+
+- Multi-Session Support: Complete result coverage added for Grand Prix Race, Qualifying, Sprint Race, and Sprint Qualifying sessions.
+- Dynamic Session Filter: Quick-toggle chips allow filtering between Race Result and Quali Result for standard weekends, with dedicated Sprint Result and Sprint Quali options dynamically shown for Sprint weekends.
+- Qualifying Breakdowns: Detailed lap time breakdown for Q1/Q2/Q3 and SQ1/SQ2/SQ3 with highlighted fastest session laps and driver profile support.
 
 --------------------------------------------------------------------------------
 
 🗓️ Schedule Calendar Sync Improvements
 
-- Complete Session Sync: Calendar sync now imports all weekend sessions (FP1, FP2, FP3, Sprint Shootout, Sprint Race, Qualifying, and Grand Prix).
-- PitWall App Branding: All calendar entries now feature distinct `🏎️ PitWall` event titles and detailed descriptions.
+- Complete Session Sync: Calendar sync imports all weekend sessions (FP1, FP2, FP3, Sprint Shootout, Sprint Race, Qualifying, and Grand Prix).
+- PitWall App Branding: All calendar entries feature distinct `🏎️ PitWall` event titles and detailed descriptions.
 - Accurate Time Parsing & Deduplication: Fixed a glitch where events had random timestamps or failed to appear, and added duplicate event prevention.
 
 --------------------------------------------------------------------------------
 
 🔔 Notifications & Session Reminders
 
-- Unified Notification Design: All local session alarms and push notifications now feature uniform PitWall branding with the large F1 app icon, signature F1 Red accent, and expanded text layout.
+- Unified Notification Design: All local session alarms and push notifications feature uniform PitWall branding with the large F1 app icon, signature F1 Red accent, and expanded text layout.
 - Audio & Channel Fixes: Standardized notification channel (`f1_alerts_v3`) and custom engine audio alerts (`f1_car_2`) for consistent delivery across all Android versions.
 
 --------------------------------------------------------------------------------
@@ -35,7 +43,7 @@ This update brings important bug fixes and stability enhancements to Schedule Ca
 --------------------------------------------------------------------------------
 
 📲 Installation
-1. Download `PitWall-v1.1.2.apk`.
+1. Download `PitWall-v1.1.3.apk`.
 2. Open the file on your Android device.
 3. Enjoy the Formula 1 season with Live Team Radio and Apex AI!
 

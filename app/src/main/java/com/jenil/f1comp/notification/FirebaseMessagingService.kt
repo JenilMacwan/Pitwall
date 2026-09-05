@@ -47,7 +47,7 @@ class PitwallMessagingService : FirebaseMessagingService() {
         val notificationManager =
             getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
 
-        val newChannelId = "f1_alerts_v3"
+        val newChannelId = "f1_alerts_v4"
         val largeIconBitmap = BitmapFactory.decodeResource(resources, R.drawable.ic_app_icon)
         val soundUri =
             (android.content.ContentResolver.SCHEME_ANDROID_RESOURCE + "://" + packageName + "/" + R.raw.f1_car_2).toUri()

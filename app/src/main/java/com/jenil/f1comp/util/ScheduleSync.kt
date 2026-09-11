@@ -3,7 +3,6 @@ package com.jenil.f1comp.util
 import android.content.ContentValues
 import android.content.Context
 import android.provider.CalendarContract
-import android.widget.Toast
 import com.jenil.f1comp.data.local.entity.ScheduleEntity
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -22,7 +21,7 @@ private data class SessionItem(
     val durationHours: Long = 1L
 )
 
-fun syncRacesToCalendar(context: Context, races: List<ScheduleEntity>) {
+fun syncRacesToCalendar(context: Context, races: List<ScheduleEntity>,onComplete: (String) -> Unit) {
     CoroutineScope(Dispatchers.IO).launch {
         val contentResolver = context.contentResolver
         var calendarId: Long? = null
@@ -49,7 +48,7 @@ fun syncRacesToCalendar(context: Context, races: List<ScheduleEntity>) {
 
         if (calendarId == null) {
             withContext(Dispatchers.Main) {
-                Toast.makeText(context, "No primary calendar found", Toast.LENGTH_SHORT).show()
+                onComplete("No primary calendar found")
             }
             return@launch
         }
@@ -152,30 +151,30 @@ fun syncRacesToCalendar(context: Context, races: List<ScheduleEntity>) {
         }
 
         withContext(Dispatchers.Main) {
-            Toast.makeText(context, "Successfully synced $insertedCount F1 sessions to Calendar (PitWall)", Toast.LENGTH_SHORT).show()
+            onComplete("Successfully synced ${LocalDate.now().year} F1 sessions to Calendar")
         }
     }
 }
 
-fun removeRacesFromCalendar(context: Context) {
+fun removeRacesFromCalendar(context: Context,onComplete: (String) -> Unit) {
     CoroutineScope(Dispatchers.IO).launch {
         val contentResolver = context.contentResolver
         val selection = "${CalendarContract.Events.TITLE} LIKE ? OR ${CalendarContract.Events.DESCRIPTION} LIKE ?"
         val selectionArgs = arrayOf("%PitWall%", "%PitWall%")
 
         try {
-            val deletedCount = contentResolver.delete(
+            contentResolver.delete(
                 CalendarContract.Events.CONTENT_URI,
                 selection,
                 selectionArgs
             )
             withContext(Dispatchers.Main) {
-                Toast.makeText(context, "Successfully removed $deletedCount PitWall events", Toast.LENGTH_SHORT).show()
+                onComplete("Successfully removed ${LocalDate.now().year} F1 sessions from Calendar")
             }
         } catch (e: SecurityException) {
             e.printStackTrace()
             withContext(Dispatchers.Main) {
-                Toast.makeText(context, "Permission denied", Toast.LENGTH_SHORT).show()
+                onComplete("Permission denied")
             }
         }
     }

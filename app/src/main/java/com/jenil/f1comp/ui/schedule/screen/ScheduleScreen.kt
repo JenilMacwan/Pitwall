@@ -2,7 +2,6 @@ package com.jenil.f1comp.ui.schedule.screen
 
 import android.Manifest
 import android.content.pm.PackageManager
-import android.widget.Toast
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.layout.Arrangement
@@ -13,27 +12,39 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Scaffold
+import androidx.compose.material3.SnackbarHost
+import androidx.compose.material3.SnackbarHostState
+import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.core.content.ContextCompat
 import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavController
 import com.example.test.calendar_add_on
+import com.jenil.f1comp.R
 import com.jenil.f1comp.data.local.entity.ScheduleEntity
 import com.jenil.f1comp.ui.F1ScreenPadding
 import com.jenil.f1comp.ui.schedule.components.ScheduleCard
@@ -41,12 +52,14 @@ import com.jenil.f1comp.ui.schedule.components.SectionLabel
 import com.jenil.f1comp.ui.schedule.components.TabPill
 import com.jenil.f1comp.util.syncRacesToCalendar
 import com.jenil.f1comp.viewmodel.ScheduleViewModel
+import kotlinx.coroutines.launch
 import java.time.LocalDate
 
 @Composable
 fun ScheduleScreen(
     navController: NavController,
     modifier: Modifier = Modifier,
+    onDrawerClick: () -> Unit,
     viewModel: ScheduleViewModel = hiltViewModel()
 ) {
     val raceSchedule by viewModel.schedule.collectAsStateWithLifecycle()
@@ -76,6 +89,9 @@ fun ScheduleScreen(
         navController.navigate("race_result/${race.round}/$year")
     }
 
+    val snackbarHostState = remember { SnackbarHostState() }
+    val scope = rememberCoroutineScope()
+
     val calendarPermissionLauncher = rememberLauncherForActivityResult(
         contract = ActivityResultContracts.RequestMultiplePermissions()
     ) { permissions ->
@@ -83,46 +99,71 @@ fun ScheduleScreen(
         val writeGranted = permissions[Manifest.permission.WRITE_CALENDAR] ?: false
 
         if (readGranted && writeGranted) {
-            syncRacesToCalendar(context, allRaces)
+            syncRacesToCalendar(context, allRaces) { message ->
+                scope.launch { snackbarHostState.showSnackbar(message) }
+            }
         } else {
-            Toast.makeText(context, "Calendar permissions are required to sync.", Toast.LENGTH_SHORT).show()
+            scope.launch {
+                snackbarHostState.showSnackbar("Calendar permissions are required to sync.")
+            }
         }
     }
 
-    Column(
-        modifier = modifier
-            .fillMaxSize()
-            .padding(top = F1ScreenPadding.topPadding())
-    ) {
-        Row(
+    Scaffold(
+        snackbarHost = { SnackbarHost(snackbarHostState) },
+        containerColor = Color.Transparent
+    ) { innerPadding ->
+        Column(
             modifier = modifier
-                .fillMaxWidth()
-                .padding(end = 16.dp),
-            horizontalArrangement = Arrangement.SpaceBetween,
-            verticalAlignment = Alignment.CenterVertically
+                .fillMaxSize()
+                .padding(innerPadding)
         ) {
-            Text(
-                text = "Schedule",
-                style = MaterialTheme.typography.titleLarge,
-                color = MaterialTheme.colorScheme.onSurface,
-                modifier = Modifier.padding(horizontal = 16.dp)
-            )
-            IconButton(
-                onClick = {
-                    val hasReadPerm = ContextCompat.checkSelfPermission(context, Manifest.permission.READ_CALENDAR) == PackageManager.PERMISSION_GRANTED
-                    val hasWritePerm = ContextCompat.checkSelfPermission(context, Manifest.permission.WRITE_CALENDAR) == PackageManager.PERMISSION_GRANTED
-
-                    if (hasReadPerm && hasWritePerm) {
-                        // Permissions already exist, execute sync
-                        syncRacesToCalendar(context, allRaces)
-                    } else {
-                        // Launch permission request
-                        calendarPermissionLauncher.launch(
-                            arrayOf(Manifest.permission.READ_CALENDAR, Manifest.permission.WRITE_CALENDAR)
-                        )
-                    }
-                }
+            Row(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(start = 8.dp, end = 8.dp),
+                horizontalArrangement = Arrangement.SpaceBetween,
+                verticalAlignment = Alignment.CenterVertically
             ) {
+                Row(verticalAlignment = Alignment.CenterVertically) {
+                    Surface(
+                        modifier = Modifier
+                            .size(38.dp)
+                            .clip(CircleShape),
+                        color = MaterialTheme.colorScheme.surface
+                    ) {
+                        IconButton(onClick = onDrawerClick) {
+                            Icon(
+                                painter = painterResource(R.drawable.ic_menu),
+                                contentDescription = "Menu",
+                                tint = MaterialTheme.colorScheme.onSurface
+                            )
+                        }
+                    }
+                    Spacer(modifier = Modifier.width(12.dp))
+                    Text(
+                        text = "Schedule",
+                        style = MaterialTheme.typography.titleLarge,
+                        fontWeight = FontWeight.Bold,
+                        color = MaterialTheme.colorScheme.onSurface
+                    )
+                }
+                IconButton(
+                    onClick = {
+                        val hasReadPerm = ContextCompat.checkSelfPermission(context, Manifest.permission.READ_CALENDAR) == PackageManager.PERMISSION_GRANTED
+                        val hasWritePerm = ContextCompat.checkSelfPermission(context, Manifest.permission.WRITE_CALENDAR) == PackageManager.PERMISSION_GRANTED
+
+                        if (hasReadPerm && hasWritePerm) {
+                            syncRacesToCalendar(context, allRaces) { message ->
+                                scope.launch { snackbarHostState.showSnackbar(message) }
+                            }
+                        } else {
+                            calendarPermissionLauncher.launch(
+                                arrayOf(Manifest.permission.READ_CALENDAR, Manifest.permission.WRITE_CALENDAR)
+                            )
+                        }
+                    }
+                ) {
                 Icon(
                     imageVector = calendar_add_on,
                     contentDescription = "Sync calendar",
@@ -205,4 +246,4 @@ fun ScheduleScreen(
         }
     }
 }
-
+}

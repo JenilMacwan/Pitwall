@@ -1,4 +1,4 @@
-package com.jenil.f1comp.ui.home.components
+package com.jenil.f1comp.ui.standings.components
 
 import android.util.Log
 import androidx.compose.foundation.clickable
@@ -15,6 +15,9 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.unit.dp
+import com.jenil.f1comp.ui.home.components.DriverProfileCircle
+import com.jenil.f1comp.ui.home.components.StandingPositionCircle
+import com.jenil.f1comp.ui.home.components.TeamLogoCircle
 
 @Composable
 fun StandingRowItem(

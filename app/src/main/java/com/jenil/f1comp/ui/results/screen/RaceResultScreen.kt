@@ -33,16 +33,24 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavController
+import com.jenil.f1comp.data.local.entity.QualifyingResultEntity
+import com.jenil.f1comp.data.local.entity.RaceResultEntity
 import com.jenil.f1comp.data.local.entity.ScheduleEntity
+import com.jenil.f1comp.data.local.entity.SprintQualifyingResultEntity
+import com.jenil.f1comp.data.local.entity.SprintResultEntity
 import com.jenil.f1comp.ui.F1ScreenPadding
+import com.jenil.f1comp.ui.results.component.PodiumDriverData
 import com.jenil.f1comp.ui.results.component.QualifyingResultRow
 import com.jenil.f1comp.ui.results.component.RaceChip
 import com.jenil.f1comp.ui.results.component.RaceResultRow
+import com.jenil.f1comp.util.ProfileUtils
 import com.jenil.f1comp.viewmodel.QualifyingViewModel
 import com.jenil.f1comp.viewmodel.RaceResultViewModel
 import com.jenil.f1comp.viewmodel.ScheduleViewModel
@@ -78,9 +86,17 @@ fun RaceResultScreen(
             .sortedBy { it.round.toIntOrNull() ?: Int.MAX_VALUE }
     }
 
-    var currentRound by remember { mutableStateOf(round) }
+    var currentRound by remember { mutableStateOf(if(round == "last" || round =="latest") "1" else round )}
     var currentYear by remember { mutableStateOf(year) }
     var selectedSession by remember { mutableStateOf(ResultSessionType.RACE) }
+
+    LaunchedEffect(completedRaces) {
+        if ((round == "last" || round == "latest") && completedRaces.isNotEmpty()) {
+            completedRaces.lastOrNull()?.round?.let {
+                currentRound = it
+            }
+        }
+    }
 
     val currentIndex = remember(completedRaces, currentRound) {
         completedRaces.indexOfFirst { it.round == currentRound }
@@ -139,17 +155,25 @@ fun RaceResultScreen(
         }
     }
 
-    val raceName = currentScheduleEntry?.raceName
+    val rawRaceName = currentScheduleEntry?.raceName
         ?: raceResults.firstOrNull()?.raceName
         ?: qualifyingResults.firstOrNull()?.raceName
         ?: "Race Result"
+
+    val displayRaceName = rawRaceName
+        .replace("Grand Prix", "GP")
+        .replace("GrandPrix", "GP")
+
+    val countryFlag = currentScheduleEntry?.flag?.takeIf { it.isNotBlank() }
+        ?: currentScheduleEntry?.circuitCountry?.let { ProfileUtils.getFlagEmoji(it) }
+        ?: "🏁"
 
     Column(
         modifier = modifier
             .fillMaxSize()
             .padding(top = F1ScreenPadding.topPadding())
     ) {
-        // Top bar with prev/next arrows for quick race switching
+        // --- Top Bar Header ---
         Row(
             modifier = Modifier
                 .fillMaxWidth()
@@ -166,19 +190,21 @@ fun RaceResultScreen(
             Column(
                 modifier = Modifier
                     .weight(1f)
-                    .padding(start = 8.dp)
+                    .padding(start = 6.dp)
             ) {
+                Row(verticalAlignment = Alignment.CenterVertically) {
+                    Text(
+                        text = "$displayRaceName $countryFlag",
+                        style = MaterialTheme.typography.titleLarge,
+                        fontWeight = FontWeight.Bold,
+                        color = MaterialTheme.colorScheme.onSurface,
+                        maxLines = 1,
+                        overflow = TextOverflow.Ellipsis
+                    )
+                }
+                Spacer(modifier = Modifier.height(2.dp))
                 Text(
-                    text = raceName
-                        .replace("Grand Prix", "GP")
-                        .replace("GrandPrix", "GP"),
-                    style = MaterialTheme.typography.titleLarge,
-                    color = MaterialTheme.colorScheme.onSurface,
-                    maxLines = 1
-                )
-                Spacer(modifier = Modifier.height(8.dp))
-                Text(
-                    text = "Round $currentRound · $currentYear",
+                    text = "Round $currentRound · $currentYear ${currentScheduleEntry?.circuitLocation?.let { "• $it" } ?: ""}",
                     style = MaterialTheme.typography.bodySmall,
                     color = MaterialTheme.colorScheme.onSurfaceVariant
                 )
@@ -215,8 +241,9 @@ fun RaceResultScreen(
             }
         }
 
-        Spacer(modifier = Modifier.height(12.dp))
+        Spacer(modifier = Modifier.height(8.dp))
 
+        // --- Grand Prix Round Selector ---
         if (completedRaces.size > 1) {
             LazyRow(
                 state = chipListState,
@@ -232,10 +259,10 @@ fun RaceResultScreen(
                     )
                 }
             }
-            Spacer(modifier = Modifier.height(12.dp))
+            Spacer(modifier = Modifier.height(10.dp))
         }
 
-        // Session Filter Toggles
+        // --- Session Filter Segmented Toggles ---
         LazyRow(
             horizontalArrangement = Arrangement.spacedBy(8.dp),
             contentPadding = PaddingValues(horizontal = 16.dp),
@@ -273,7 +300,7 @@ fun RaceResultScreen(
             }
         }
 
-        Spacer(modifier = Modifier.height(12.dp))
+        Spacer(modifier = Modifier.height(10.dp))
 
         val isCurrentSessionLoading = when (selectedSession) {
             ResultSessionType.RACE -> isRaceLoading
@@ -312,7 +339,15 @@ fun RaceResultScreen(
         when {
             isCurrentSessionLoading && isCurrentResultsEmpty -> {
                 Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
-                    CircularProgressIndicator()
+                    Column(horizontalAlignment = Alignment.CenterHorizontally) {
+                        CircularProgressIndicator(color = MaterialTheme.colorScheme.primary)
+                        Spacer(modifier = Modifier.height(12.dp))
+                        Text(
+                            text = "Loading ${selectedSession.label}...",
+                            style = MaterialTheme.typography.bodySmall,
+                            color = MaterialTheme.colorScheme.onSurfaceVariant
+                        )
+                    }
                 }
             }
 
@@ -323,7 +358,7 @@ fun RaceResultScreen(
                             imageVector = Icons.Rounded.ErrorOutline,
                             contentDescription = null,
                             tint = MaterialTheme.colorScheme.error,
-                            modifier = Modifier.size(36.dp)
+                            modifier = Modifier.size(40.dp)
                         )
                         Spacer(modifier = Modifier.height(8.dp))
                         Text(
@@ -340,7 +375,7 @@ fun RaceResultScreen(
             isCurrentResultsEmpty -> {
                 Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
                     Text(
-                        text = "No results available yet",
+                        text = "No ${selectedSession.label.lowercase()} available",
                         style = MaterialTheme.typography.bodyMedium,
                         color = MaterialTheme.colorScheme.onSurfaceVariant
                     )
@@ -350,9 +385,10 @@ fun RaceResultScreen(
             else -> {
                 LazyColumn(
                     modifier = Modifier.fillMaxSize(),
-                    contentPadding = PaddingValues(horizontal = 16.dp, vertical = 8.dp),
+                    contentPadding = PaddingValues(horizontal = 16.dp, vertical = 6.dp),
                     verticalArrangement = Arrangement.spacedBy(8.dp)
                 ) {
+                    // --- Items : Full Driver Results List ---
                     when (selectedSession) {
                         ResultSessionType.RACE -> {
                             items(sortedRaceResults, key = { "race_${it.driver}" }) { result ->
@@ -391,9 +427,64 @@ fun RaceResultScreen(
                             }
                         }
                     }
+
                     item { Spacer(modifier = Modifier.height(F1ScreenPadding.bottomPadding())) }
                 }
             }
         }
     }
+}
+
+// --- Helper Functions to Extract Podium Data ---
+
+private fun extractRacePodium(results: List<RaceResultEntity>): Triple<PodiumDriverData?, PodiumDriverData?, PodiumDriverData?> {
+    val p1 = results.firstOrNull { it.position == "1" }?.let {
+        PodiumDriverData("1", it.driver, it.driverImage, it.constructor, "${it.points} pts")
+    }
+    val p2 = results.firstOrNull { it.position == "2" }?.let {
+        PodiumDriverData("2", it.driver, it.driverImage, it.constructor, if (it.time.isNotBlank()) it.time else "${it.points} pts")
+    }
+    val p3 = results.firstOrNull { it.position == "3" }?.let {
+        PodiumDriverData("3", it.driver, it.driverImage, it.constructor, if (it.time.isNotBlank()) it.time else "${it.points} pts")
+    }
+    return Triple(p1, p2, p3)
+}
+
+private fun extractSprintPodium(results: List<SprintResultEntity>): Triple<PodiumDriverData?, PodiumDriverData?, PodiumDriverData?> {
+    val p1 = results.firstOrNull { it.position == "1" }?.let {
+        PodiumDriverData("1", it.driver, it.driverImage, it.constructor, "${it.points} pts")
+    }
+    val p2 = results.firstOrNull { it.position == "2" }?.let {
+        PodiumDriverData("2", it.driver, it.driverImage, it.constructor, if (it.time.isNotBlank()) it.time else "${it.points} pts")
+    }
+    val p3 = results.firstOrNull { it.position == "3" }?.let {
+        PodiumDriverData("3", it.driver, it.driverImage, it.constructor, if (it.time.isNotBlank()) it.time else "${it.points} pts")
+    }
+    return Triple(p1, p2, p3)
+}
+
+private fun extractQualiPodium(results: List<QualifyingResultEntity>): Triple<PodiumDriverData?, PodiumDriverData?, PodiumDriverData?> {
+    val p1 = results.firstOrNull { it.position == "1" }?.let {
+        PodiumDriverData("1", it.driver, it.driverImage, it.constructor, it.q3 ?: it.q2 ?: it.q1 ?: "POLE")
+    }
+    val p2 = results.firstOrNull { it.position == "2" }?.let {
+        PodiumDriverData("2", it.driver, it.driverImage, it.constructor, it.q3 ?: it.q2 ?: it.q1 ?: "")
+    }
+    val p3 = results.firstOrNull { it.position == "3" }?.let {
+        PodiumDriverData("3", it.driver, it.driverImage, it.constructor, it.q3 ?: it.q2 ?: it.q1 ?: "")
+    }
+    return Triple(p1, p2, p3)
+}
+
+private fun extractSprintQualiPodium(results: List<SprintQualifyingResultEntity>): Triple<PodiumDriverData?, PodiumDriverData?, PodiumDriverData?> {
+    val p1 = results.firstOrNull { it.position == "1" }?.let {
+        PodiumDriverData("1", it.driver, it.driverImage, it.constructor, it.q3 ?: it.q2 ?: it.q1 ?: "SQ POLE")
+    }
+    val p2 = results.firstOrNull { it.position == "2" }?.let {
+        PodiumDriverData("2", it.driver, it.driverImage, it.constructor, it.q3 ?: it.q2 ?: it.q1 ?: "")
+    }
+    val p3 = results.firstOrNull { it.position == "3" }?.let {
+        PodiumDriverData("3", it.driver, it.driverImage, it.constructor, it.q3 ?: it.q2 ?: it.q1 ?: "")
+    }
+    return Triple(p1, p2, p3)
 }

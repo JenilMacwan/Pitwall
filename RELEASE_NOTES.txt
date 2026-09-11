@@ -1,51 +1,41 @@
-PitWall v1.1.3 Release Notes 🏎️🏁
+PitWall v1.2.0 Release Notes 🏎️🏁
 
-This update introduces comprehensive race session filtering and complete result support for Qualifying, Sprint Race, and Sprint Qualifying sessions, alongside UI refinements and performance enhancements.
-
---------------------------------------------------------------------------------
-
-🏎️ Race Results & Session Filtering
-
-- Multi-Session Support: Complete result coverage added for Grand Prix Race, Qualifying, Sprint Race, and Sprint Qualifying sessions.
-- Dynamic Session Filter: Quick-toggle chips allow filtering between Race Result and Quali Result for standard weekends, with dedicated Sprint Result and Sprint Quali options dynamically shown for Sprint weekends.
-- Qualifying Breakdowns: Detailed lap time breakdown for Q1/Q2/Q3 and SQ1/SQ2/SQ3 with highlighted fastest session laps and driver profile support.
+This major update introduces the Next Race Session Timeline, Championship Standings redesign, custom F1 navigation icons, track temperature weather telemetry, Material 3 Snackbar feedback, and first-launch notification permissions.
 
 --------------------------------------------------------------------------------
 
-🗓️ Schedule Calendar Sync Improvements
+🏎️ Home Dashboard & Next Race Card
 
-- Complete Session Sync: Calendar sync imports all weekend sessions (FP1, FP2, FP3, Sprint Shootout, Sprint Race, Qualifying, and Grand Prix).
-- PitWall App Branding: All calendar entries feature distinct `🏎️ PitWall` event titles and detailed descriptions.
-- Accurate Time Parsing & Deduplication: Fixed a glitch where events had random timestamps or failed to appear, and added duplicate event prevention.
-
---------------------------------------------------------------------------------
-
-🔔 Notifications & Session Reminders
-
-- Unified Notification Design: All local session alarms and push notifications feature uniform PitWall branding with the large F1 app icon, signature F1 Red accent, and expanded text layout.
-- Audio & Channel Fixes: Standardized notification channel (`f1_alerts_v3`) and custom engine audio alerts (`f1_car_2`) for consistent delivery across all Android versions.
+- Session Schedule Timeline Bar: Added a horizontal weekend schedule timeline bar on the Next Race card showing FP1, FP2, FP3, Qualifying, Sprint, and Grand Prix sessions with live green indicator dots (•), completed session dimming, and F1 Red race highlights.
+- Custom F1 Hamburger Menu Icon: Custom 3-bar F1 hamburger navigation icon with an F1 Red middle accent line across all main screens.
+- Live Session Status Pill: High-visibility green status pill (`• LIVE: SESSION`) when a Grand Prix session is actively taking place.
+- Adaptive Countdown Progress Ring: Progress ring for countdown days, displaying a full 360° red ring on session day (0 Days remaining).
+- Track Temperature & Weather Badge: Weather badge now displays both Air Temperature and Track Temperature (`Track 38°C`) with condition-adaptive icon color tinting (Sunny Amber, Rain Blue, Slate Grey).
+- Quick Results Navigation: Tapping "View Full Race Result →" on the Podium card navigates directly to the results breakdown of the last completed round.
 
 --------------------------------------------------------------------------------
 
-🤖 Apex AI Chatbot Strategy Assistant
+📊 Championship Standings 3-Card Redesign
 
-- Connection & Initialization Fixes: Resolved API connection and initialization issues to ensure fast, reliable responses.
-- Logging & Diagnostics: Added comprehensive request/response diagnostic logs.
+- 3-Card Podium Layout: Redesigned Constructor & Driver top standings into a 3-card layout featuring Championship Leader (P1) and Contenders (P2 & P3).
+- Real Data & P1 Telemetry Index: Live standings data with point gap calculations, official constructor team color themes, and dynamic P1 Index progress bars.
+- Clean Constructor Driver Names: Constructor driver lineups are formatted to display clean last names (e.g., `Antonelli · Russell`, `Hamilton · Leclerc`).
+- Round Progress Pill: Added top bar round progress pill (`R14 / 24`) with a live green indicator dot on the Standings screen.
 
 --------------------------------------------------------------------------------
 
-⚙️ Settings, Privacy & App Information
+📱 Navigation Drawer & System Enhancements
 
-- Redesigned Privacy Policy: Polished document-style interface featuring key privacy trust guarantees (100% Local-First Data, Zero Data Selling, No Account Needed), numbered policy sections, and direct data protection contact options.
-- Open Source Licenses & Data Attribution: Added animated open-source library cards with license badges and clear F1 data source attributions.
-- Language & Preferences: UI polish across settings items and enhanced language selection support.
+- Grouped Navigation Drawer: Organized side drawer options into structured sections (`RACE HUB`, `UTILITIES`, `PREFERENCES`) with monospaced headers.
+- Material 3 Snackbar System: Converted system Toast messages across Schedule, Settings, and Navigation Drawer to Material 3 `Snackbar` overlays for clean in-app feedback.
+- First-Launch Notification Permissions: On Android 13+ (API 33+), notification permissions are requested on initial app startup for a seamless setup experience.
 
 --------------------------------------------------------------------------------
 
 📲 Installation
-1. Download `PitWall-v1.1.3.apk`.
+1. Download `PitWall-v1.2.0.apk`.
 2. Open the file on your Android device.
-3. Enjoy the Formula 1 season with Live Team Radio and Apex AI!
+3. Enjoy the Formula 1 season with Live Team Radio, Apex AI, and Real-Time Race Intelligence!
 
 --------------------------------------------------------------------------------
 Developed with ❤️ for Formula 1 fans by Jenil Macwan.

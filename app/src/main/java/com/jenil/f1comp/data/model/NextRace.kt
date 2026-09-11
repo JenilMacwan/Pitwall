@@ -7,6 +7,7 @@ data class NextRace(
     @SerializedName("race_name")
     val raceName: String,
     val circuit: String,
+    val country: String,
     val weather: RaceWeather?,
     val countdown: RaceCountdown,
     @SerializedName("next_session")
@@ -21,6 +22,8 @@ data class NextRace(
 
 data class RaceWeather(
     val temp: String,
+    @SerializedName("track_temp")
+    val trackTemp: String,
     val condition: String
 )
 

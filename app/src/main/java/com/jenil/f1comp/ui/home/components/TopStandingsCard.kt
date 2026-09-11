@@ -69,31 +69,17 @@ fun TopStandingsCard(
             Spacer(modifier = Modifier.height(16.dp))
 
             if (isConstructorSelected) {
-                StandingsList(standings = constructorStandings) { constructor ->
-                    StandingRowItem(
-                        position = constructor.position,
-                        name = constructor.name,
-                        points = constructor.points.toInt(),
-                        team = constructor.drivers,
-                        isConstructor = true,
-                        imageUrl = constructor.constructorLogo,
-                        onClick = { navController.navigate("profile/false/${constructor.name}") }
-                    )
-                }
-
+                Standing3Card(
+                    constructorStandings = constructorStandings,
+                    navController = navController
+                )
             } else {
-                StandingsList(standings = driverStandings) { driver ->
-                    StandingRowItem(
-                        position = driver.position,
-                        name = driver.name,
-                        team = driver.team,
-                        points = driver.points.toInt(),
-                        imageUrl = driver.driverImage,
-                        isConstructor = false,
-                        onClick = { navController.navigate("profile/true/${driver.name}") }
-                    )
-                }
+                Driver3Card(
+                    driverStandings = driverStandings,
+                    navController = navController
+                )
             }
+            Spacer(modifier = Modifier.height(22.dp))
             // 4. THE FOOTER
             Box(
                 modifier = Modifier.fillMaxWidth(),

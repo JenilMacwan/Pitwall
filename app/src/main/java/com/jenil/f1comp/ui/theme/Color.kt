@@ -53,3 +53,7 @@ val TeamRB = Color(0xFF6692FF)
 val TeamAudi = Color(0xFFFF2D00)
 val TeamHaas = Color(0xFFDEE1E2)
 val TeamCadillac = Color(0xFFAAAAAD)
+
+val FatestLap = Color(0xFFB15EFF)
+val DeltaGain = Color(0xFF2E7D32)
+val DeltaLoss = Color(0xFFC62828)

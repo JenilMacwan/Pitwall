@@ -125,7 +125,7 @@ class PitwallMessagingService : FirebaseMessagingService() {
 
         // 5. Build and Show
         val notification = NotificationCompat.Builder(this, newChannelId)
-            .setSmallIcon(R.drawable.notification_icon)
+            .setSmallIcon(R.drawable.ic_stat_name)
             .setLargeIcon(largeIconBitmap)
             .setColor(ContextCompat.getColor(this, R.color.f1_red))
             .setContentTitle(title)

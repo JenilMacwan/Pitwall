@@ -58,7 +58,7 @@ class RaceAlarmReceiver : BroadcastReceiver() {
             .bigText(if (message.isNotEmpty()) "$title\n\n$message" else title)
 
         val notification = NotificationCompat.Builder(context, CHANNEL_ID)
-            .setSmallIcon(R.drawable.notification_icon)
+            .setSmallIcon(R.drawable.ic_stat_name)
             .setLargeIcon(largeIconBitmap)
             .setColor(ContextCompat.getColor(context, R.color.f1_red))
             .setContentTitle(title)

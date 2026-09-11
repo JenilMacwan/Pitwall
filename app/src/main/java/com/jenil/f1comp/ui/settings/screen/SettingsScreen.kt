@@ -41,15 +41,20 @@ import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Scaffold
+import androidx.compose.material3.SnackbarHost
+import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.hapticfeedback.HapticFeedbackType
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalHapticFeedback
@@ -71,6 +76,7 @@ import com.jenil.f1comp.util.removeRacesFromCalendar
 import com.jenil.f1comp.util.syncRacesToCalendar
 import com.jenil.f1comp.viewmodel.ScheduleViewModel
 import com.jenil.f1comp.viewmodel.SettingsViewModel
+import kotlinx.coroutines.launch
 
 
 @Composable
@@ -91,6 +97,9 @@ fun SettingsScreen(
     var showClearConfirm by remember { mutableStateOf(false) }
     var isSyncing by remember { mutableStateOf(false) }
 
+    val snackbarHostState = remember { SnackbarHostState() }
+    val scope = rememberCoroutineScope()
+
     val raceReminders by settingsViewModel.isRaceRemindersEnabled.collectAsStateWithLifecycle()
     val sessionReminders by settingsViewModel.isSessionRemindersEnabled.collectAsStateWithLifecycle()
     val breakingNews by settingsViewModel.isBreakingNewsEnabled.collectAsStateWithLifecycle()
@@ -105,6 +114,10 @@ fun SettingsScreen(
 
         if (readGranted && writeGranted) {
             pendingAction?.invoke()
+        } else {
+            scope.launch {
+                snackbarHostState.showSnackbar("Calendar permissions are required to sync.")
+            }
         }
         pendingAction = null
     }
@@ -180,7 +193,9 @@ fun SettingsScreen(
                     onClick = {
                         showClearConfirm = false
                         runWithPermission {
-                            removeRacesFromCalendar(context)
+                            removeRacesFromCalendar(context) { message ->
+                                scope.launch { snackbarHostState.showSnackbar(message) }
+                            }
                         }
                     }
                 ) {
@@ -195,11 +210,15 @@ fun SettingsScreen(
         )
     }
 
-    Column(
-        modifier = modifier
-            .fillMaxSize()
-            .padding(top = F1ScreenPadding.topPadding())
-    ) {
+    Scaffold(
+        snackbarHost = { SnackbarHost(snackbarHostState) },
+        containerColor = Color.Transparent
+    ) { innerPadding ->
+        Column(
+            modifier = modifier
+                .fillMaxSize()
+                .padding(innerPadding)
+        ) {
         // Top Bar
         Row(
             modifier = Modifier
@@ -279,7 +298,9 @@ fun SettingsScreen(
                     } else null,
                     onClick = {
                         runWithPermission {
-                            syncRacesToCalendar(context, raceSchedule)
+                            syncRacesToCalendar(context, raceSchedule) { message ->
+                                scope.launch { snackbarHostState.showSnackbar(message) }
+                            }
                         }
                     }
                 )
@@ -290,7 +311,9 @@ fun SettingsScreen(
                     onClick = {
                         runWithPermission {
                             val upcoming = raceSchedule.filter { !it.isCompleted }
-                            syncRacesToCalendar(context, upcoming)
+                            syncRacesToCalendar(context, upcoming) { message ->
+                                scope.launch { snackbarHostState.showSnackbar(message) }
+                            }
                         }
                     }
                 )
@@ -482,12 +505,6 @@ fun SettingsScreen(
                     subtitle = "How your data is handled",
                     onClick = { navController.navigate("privacy_policy") }
                 )
-                SettingsItem(
-                    icon = Icons.Outlined.Description,
-                    title = "Data Attribution",
-                    subtitle = "Race data via Jolpica & OpenF1 APIs",
-                    onClick = { navController.navigate("data_attribution") }
-                )
             }
 
             Spacer(modifier = Modifier.height(32.dp))
@@ -512,4 +529,5 @@ fun SettingsScreen(
             Spacer(modifier = Modifier.height(F1ScreenPadding.bottomPadding()))
         }
     }
+}
 }

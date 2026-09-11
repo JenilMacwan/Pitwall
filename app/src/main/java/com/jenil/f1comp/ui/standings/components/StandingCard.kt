@@ -21,8 +21,8 @@ import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import com.jenil.f1comp.data.local.entity.ConstructorStandingsEntity
 import com.jenil.f1comp.data.local.entity.DriverStandingsEntity
-import com.jenil.f1comp.ui.home.components.StandingRowItem
 import com.jenil.f1comp.ui.home.components.StandingToggle
+import com.jenil.f1comp.util.toConstructorLastNames
 import com.jenil.f1comp.util.toDriverName
 
 @Composable
@@ -66,7 +66,7 @@ fun StandingsCard(
                         position = constructor.position,
                         name = constructor.name,
                         points = constructor.points.toInt(),
-                        team = constructor.drivers,
+                        team = constructor.drivers.toConstructorLastNames(),
                         imageUrl = constructor.constructorLogo,
                         isConstructor = true,
                         onClick = { navController.navigate("profile/false/${constructor.name}") }

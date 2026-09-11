@@ -13,3 +13,15 @@ fun String.toDriverName(): String {
         else -> this
     }
 }
+
+fun String.toConstructorLastNames(): String {
+    if (isBlank()) return ""
+    val driverFullNames = split("·", ",", ";").map { it.trim() }.filter { it.isNotBlank() }
+
+    fun extractLastName(fullName: String): String {
+        val parts = fullName.trim().split("\\s+".toRegex())
+        return parts.lastOrNull()?.trim() ?: fullName
+    }
+
+    return driverFullNames.joinToString(" · ") { extractLastName(it) }
+}

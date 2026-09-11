@@ -25,6 +25,7 @@ class NextRaceRepository @Inject constructor (
                 round = response.round,
                 raceName = response.raceName,
                 circuit = response.circuit,
+                country = response.country,
                 weather = response.weather,
                 countdown = response.countdown,
                 sessionName = response.sessionName,

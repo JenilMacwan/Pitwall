@@ -1,9 +1,5 @@
 package com.jenil.f1comp.ui.schedule.screen
 
-import android.Manifest
-import android.content.pm.PackageManager
-import androidx.activity.compose.rememberLauncherForActivityResult
-import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -29,30 +25,26 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
-import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
-import androidx.core.content.ContextCompat
 import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavController
-import com.example.test.calendar_add_on
 import com.jenil.f1comp.R
 import com.jenil.f1comp.data.local.entity.ScheduleEntity
 import com.jenil.f1comp.ui.F1ScreenPadding
 import com.jenil.f1comp.ui.schedule.components.ScheduleCard
 import com.jenil.f1comp.ui.schedule.components.SectionLabel
 import com.jenil.f1comp.ui.schedule.components.TabPill
-import com.jenil.f1comp.util.syncRacesToCalendar
+import com.jenil.f1comp.ui.schedule.components.UpcomingRaceCard
 import com.jenil.f1comp.viewmodel.ScheduleViewModel
-import kotlinx.coroutines.launch
 import java.time.LocalDate
 
 @Composable
@@ -63,12 +55,12 @@ fun ScheduleScreen(
     viewModel: ScheduleViewModel = hiltViewModel()
 ) {
     val raceSchedule by viewModel.schedule.collectAsStateWithLifecycle()
+    val circuitsMap by viewModel.circuitsMap.collectAsStateWithLifecycle()
 
     var selectedTab by remember { mutableStateOf("All") }
 
     val scrollState = rememberScrollState()
 
-    val context = LocalContext.current
 
     val upcomingRaces = remember(raceSchedule) {
         raceSchedule.filter { !it.isCompleted }
@@ -90,24 +82,6 @@ fun ScheduleScreen(
     }
 
     val snackbarHostState = remember { SnackbarHostState() }
-    val scope = rememberCoroutineScope()
-
-    val calendarPermissionLauncher = rememberLauncherForActivityResult(
-        contract = ActivityResultContracts.RequestMultiplePermissions()
-    ) { permissions ->
-        val readGranted = permissions[Manifest.permission.READ_CALENDAR] ?: false
-        val writeGranted = permissions[Manifest.permission.WRITE_CALENDAR] ?: false
-
-        if (readGranted && writeGranted) {
-            syncRacesToCalendar(context, allRaces) { message ->
-                scope.launch { snackbarHostState.showSnackbar(message) }
-            }
-        } else {
-            scope.launch {
-                snackbarHostState.showSnackbar("Calendar permissions are required to sync.")
-            }
-        }
-    }
 
     Scaffold(
         snackbarHost = { SnackbarHost(snackbarHostState) },
@@ -148,82 +122,82 @@ fun ScheduleScreen(
                         color = MaterialTheme.colorScheme.onSurface
                     )
                 }
-                IconButton(
-                    onClick = {
-                        val hasReadPerm = ContextCompat.checkSelfPermission(context, Manifest.permission.READ_CALENDAR) == PackageManager.PERMISSION_GRANTED
-                        val hasWritePerm = ContextCompat.checkSelfPermission(context, Manifest.permission.WRITE_CALENDAR) == PackageManager.PERMISSION_GRANTED
+            }
+            TabPill(
+                selectedTab = selectedTab,
+                onTabSelected = { selectedTab = it },
+                modifier = Modifier.padding(top = 20.dp, start = 16.dp, end = 16.dp)
+            )
+            Spacer(modifier = Modifier.height(20.dp))
 
-                        if (hasReadPerm && hasWritePerm) {
-                            syncRacesToCalendar(context, allRaces) { message ->
-                                scope.launch { snackbarHostState.showSnackbar(message) }
-                            }
-                        } else {
-                            calendarPermissionLauncher.launch(
-                                arrayOf(Manifest.permission.READ_CALENDAR, Manifest.permission.WRITE_CALENDAR)
+            Column(
+                modifier = Modifier
+                    .fillMaxSize()
+                    .verticalScroll(scrollState)
+                    .padding(bottom = F1ScreenPadding.bottomPadding()),
+                verticalArrangement = Arrangement.spacedBy(4.dp)
+            ) {
+                when (selectedTab) {
+                    "All" -> {
+                        allRaces.forEach { race ->
+                            ScheduleCard(
+                                schedule = race, circuit = circuitsMap[race.circuitId],
+                                isNextRace = false,
+                                onResultsClick = { navigateToResults(race) }
                             )
                         }
                     }
-                ) {
-                Icon(
-                    imageVector = calendar_add_on,
-                    contentDescription = "Sync calendar",
-                    tint = MaterialTheme.colorScheme.onSurfaceVariant
-                )
-            }
-        }
-        Row(
-            modifier = Modifier
-                .padding(top = 20.dp, start = 16.dp, end = 16.dp),
-            horizontalArrangement = Arrangement.SpaceBetween,
-            verticalAlignment = Alignment.CenterVertically
-        ) {
-            TabPill(
-                text = "All Races",
-                isSelected = selectedTab == "All",
-                onClick = { selectedTab = "All" }
-            )
-            Spacer(modifier = Modifier.width(5.dp))
-            TabPill(
-                text = "Upcoming",
-                isSelected = selectedTab == "Upcoming",
-                onClick = { selectedTab = "Upcoming" }
-            )
-            Spacer(modifier = Modifier.width(5.dp))
-            TabPill(
-                text = "Completed",
-                isSelected = selectedTab == "Completed",
-                onClick = { selectedTab = "Completed" }
-            )
-        }
-        Spacer(modifier = Modifier.height(20.dp))
 
-        Column(
-            modifier = Modifier
-                .fillMaxSize()
-                .verticalScroll(scrollState)
-                .padding(bottom = F1ScreenPadding.bottomPadding()),
-            verticalArrangement = Arrangement.spacedBy(4.dp)
-        ) {
-            when (selectedTab) {
-                "All" -> {
-                    allRaces.forEach { race ->
-                        ScheduleCard(
-                            schedule = race,
-                            isNextRace = false,
-                            onResultsClick = { navigateToResults(race) }
-                        )
+                    "Upcoming" -> {
+                        upcomingRaces.forEachIndexed { index, race ->
+                            if (index == 0) {
+                                SectionLabel(text = "NEXT UP — ROUND ${race.round}")
+                                ScheduleCard(
+                                    schedule = race,
+                                    circuit = circuitsMap[race.circuitId],
+                                    isNextRace = true
+                                )
+                            } else {
+                                if (index == 1) {
+                                    Row(
+                                        modifier = Modifier
+                                            .fillMaxWidth()
+                                            .padding(
+                                                start = 16.dp,
+                                                end = 16.dp,
+                                                top = 12.dp,
+                                                bottom = 4.dp
+                                            ),
+                                        horizontalArrangement = Arrangement.SpaceBetween,
+                                        verticalAlignment = Alignment.CenterVertically
+                                    ) {
+                                        Text(
+                                            text = "UPCOMING GRAND PRIX",
+                                            fontFamily = FontFamily.Monospace,
+                                            style = MaterialTheme.typography.labelSmall,
+                                            fontWeight = FontWeight.Bold,
+                                            color = MaterialTheme.colorScheme.onSurfaceVariant
+                                        )
+                                        Text(
+                                            text = "${upcomingRaces.size - 1} Rounds Left",
+                                            fontFamily = FontFamily.Monospace,
+                                            style = MaterialTheme.typography.labelSmall,
+                                            color = MaterialTheme.colorScheme.onSurfaceVariant
+                                        )
+                                    }
+                                }
+                                UpcomingRaceCard(
+                                    schedule = race,
+                                    circuit = circuitsMap[race.circuitId]
+                                )
+                            }
+                        }
                     }
-                }
 
-                "Upcoming" -> {
-                    upcomingRaces.forEachIndexed { index, race ->
-                        if (index == 0) {
-                            SectionLabel(text = "NEXT UP — ROUND ${race.round}")
-                            ScheduleCard(schedule = race, isNextRace = true)
-                            Spacer(modifier = Modifier.height(20.dp))
-                        } else {
+                    "Completed" -> {
+                        completedRaces.forEach { race ->
                             ScheduleCard(
-                                schedule = race,
+                                schedule = race, circuit = circuitsMap[race.circuitId],
                                 isNextRace = false,
                                 onResultsClick = { navigateToResults(race) }
                             )
@@ -231,19 +205,8 @@ fun ScheduleScreen(
                     }
                 }
 
-                "Completed" -> {
-                    completedRaces.forEach { race ->
-                        ScheduleCard(
-                            schedule = race,
-                            isNextRace = false,
-                            onResultsClick = { navigateToResults(race) }
-                        )
-                    }
-                }
+                Spacer(modifier = Modifier.height(24.dp))
             }
-
-            Spacer(modifier = Modifier.height(24.dp))
         }
     }
-}
 }

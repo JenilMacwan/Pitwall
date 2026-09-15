@@ -2,9 +2,7 @@ package com.jenil.f1comp.ui.standings.components
 
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Card
@@ -12,16 +10,11 @@ import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.saveable.rememberSaveable
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import com.jenil.f1comp.data.local.entity.ConstructorStandingsEntity
 import com.jenil.f1comp.data.local.entity.DriverStandingsEntity
-import com.jenil.f1comp.ui.home.components.StandingToggle
 import com.jenil.f1comp.util.toConstructorLastNames
 import com.jenil.f1comp.util.toDriverName
 
@@ -30,10 +23,9 @@ fun StandingsCard(
     modifier: Modifier = Modifier,
     navController: NavController,
     driverStandings: List<DriverStandingsEntity>,
-    constructorStandings: List<ConstructorStandingsEntity>
+    constructorStandings: List<ConstructorStandingsEntity>,
+    isConstructorSelected: Boolean
 ) {
-    var isConstructorSelected by rememberSaveable { mutableStateOf(true) }
-
     Card(
         modifier = modifier
             .fillMaxWidth()
@@ -48,17 +40,6 @@ fun StandingsCard(
         Column(
             modifier = Modifier.padding(16.dp)
         ) {
-            // 1. HEADER ROW
-            Column(
-                modifier = Modifier.fillMaxWidth(),
-            ) {
-                StandingToggle(
-                    isConstructorSelected = isConstructorSelected,
-                    onToggle = { isConstructorSelected = it }
-                )
-            }
-
-            Spacer(modifier = Modifier.height(16.dp))
 
             if (isConstructorSelected) {
                 StandingList(standings = constructorStandings) { constructor ->

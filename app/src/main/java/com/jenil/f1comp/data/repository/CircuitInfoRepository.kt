@@ -22,7 +22,10 @@ class CircuitInfoRepository @Inject constructor(
                 circuitName = networkModel.circuitName,
                 circuitLocation = networkModel.circuitLocation,
                 circuitCountry = networkModel.circuitCountry,
-                circuitLayout = networkModel.circuitLayout
+                circuitLayout = networkModel.circuitLayout,
+                laps = networkModel.laps,
+                length = networkModel.length,
+                type = networkModel.type
             )
         }
         circuitInfoDao.refreshCircuits(circuitEntities)

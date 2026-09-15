@@ -65,7 +65,7 @@ android {
         minSdk = 26
         targetSdk = 37
         versionCode = 3
-        versionName = "1.2.0"
+        versionName = "1.2.1"
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
 
@@ -126,6 +126,10 @@ dependencies {
 
     //Image
     implementation(libs.coil.compose)
+
+    //Vico for Charts
+    //noinspection UseTomlInstead
+    implementation("com.patrykandpatrick.vico:compose:3.3.1")
 
     // Networking
     implementation(libs.retrofit)

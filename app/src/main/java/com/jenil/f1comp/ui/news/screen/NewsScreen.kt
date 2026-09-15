@@ -89,22 +89,34 @@ fun NewsScreen(
                     color = MaterialTheme.colorScheme.onSurface
                 )
             }
-            IconButton(
-                onClick = { viewModel.refreshNews() },
-                enabled = !isLoading
+            Surface(
+                modifier = Modifier
+                    .size(38.dp)
+                    .clip(CircleShape),
+                color = MaterialTheme.colorScheme.surface
             ) {
-                if (isLoading) {
-                    CircularProgressIndicator(
-                        modifier = Modifier.size(20.dp),
-                        color = MaterialTheme.colorScheme.primary,
-                        strokeWidth = 2.dp
-                    )
-                } else {
-                    Icon(
-                        imageVector = Icons.Rounded.Refresh,
-                        contentDescription = "Refresh News",
-                        tint = MaterialTheme.colorScheme.onSurfaceVariant
-                    )
+                Box(
+                    contentAlignment = Alignment.Center,
+                    modifier = Modifier.fillMaxSize()
+                ) {
+                    if (isLoading) {
+                        CircularProgressIndicator(
+                            modifier = Modifier.size(20.dp),
+                            color = MaterialTheme.colorScheme.primary,
+                            strokeWidth = 2.dp
+                        )
+                    } else {
+                        IconButton(
+                            onClick = { viewModel.refreshNews() }
+                        ) {
+                            Icon(
+                                imageVector = Icons.Rounded.Refresh,
+                                contentDescription = "Refresh News",
+                                tint = MaterialTheme.colorScheme.onSurface,
+                                modifier = Modifier.size(20.dp)
+                            )
+                        }
+                    }
                 }
             }
         }

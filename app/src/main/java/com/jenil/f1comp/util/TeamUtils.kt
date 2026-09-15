@@ -61,6 +61,52 @@ object TeamUtils {
     }
 
     /**
+     * Resolves short code or acronym of the driver.
+     */
+    fun getDriverCode(driverName: String?): String {
+        if (driverName.isNullOrBlank()) return "00"
+        val name = driverName.lowercase().trim()
+        return when {
+            name.contains("norris") -> "1"
+            name.contains("piastri") -> "81"
+            name.contains("hamilton") -> "44"
+            name.contains("leclerc") -> "16"
+            name.contains("russell") -> "63"
+            name.contains("antonelli") -> "12"
+            name.contains("verstappen") -> "3"
+            name.contains("hadjar") -> "6"
+            name.contains("stroll") -> "18"
+            name.contains("alonso") -> "14"
+            name.contains("sainz") -> "55"
+            name.contains("albon") -> "23"
+            name.contains("gasly") -> "10"
+            name.contains("colapinto") -> "43"
+            name.contains("lawson") -> "30"
+            name.contains("lindblad") -> "41"
+            name.contains("ocon") -> "31"
+            name.contains("bearman") -> "87"
+            name.contains("hülkenberg") -> "27"
+            name.contains("bortoleto") -> "5"
+            name.contains("pérez") -> "11"
+            name.contains("bottas") -> "77"
+            name.contains("tsunoda") -> "22"
+            else -> "00"
+        }
+    }
+
+    fun getDriverCodeColor(driverName: String?): Color {
+        if (driverName.isNullOrBlank()) return Color.White
+        val name = driverName.lowercase().trim()
+        return when {
+            name.contains("russell") -> Color.Black
+            name.contains("antonelli") ->  Color.Black
+            name.contains("ocon") -> Color.Black
+            name.contains("bearman") -> Color.Black
+            else -> Color.White
+        }
+    }
+
+    /**
      * Calculates positions gained or lost between Grid and Finish position.
      * Returns null if position is invalid/DNS/DNF.
      */

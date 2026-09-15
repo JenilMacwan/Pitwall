@@ -6,6 +6,9 @@ import android.content.pm.PackageManager
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.Image
+import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
+import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -19,17 +22,21 @@ import androidx.compose.foundation.layout.navigationBarsPadding
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.layout.widthIn
+import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.automirrored.outlined.OpenInNew
-import androidx.compose.material.icons.outlined.Code
+import androidx.compose.material.icons.automirrored.outlined.Chat
+import androidx.compose.material.icons.outlined.DarkMode
 import androidx.compose.material.icons.outlined.Description
 import androidx.compose.material.icons.outlined.EmojiEvents
+import androidx.compose.material.icons.outlined.Equalizer
+import androidx.compose.material.icons.outlined.LightMode
 import androidx.compose.material.icons.outlined.Radio
 import androidx.compose.material.icons.outlined.Settings
+import androidx.compose.material.icons.rounded.Share
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
-import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.ModalDrawerSheet
 import androidx.compose.material3.SnackbarHost
@@ -43,15 +50,18 @@ import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.hapticfeedback.HapticFeedbackType
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.platform.LocalHapticFeedback
+import androidx.compose.ui.platform.LocalWindowInfo
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
 import androidx.core.content.ContextCompat
 import androidx.core.net.toUri
 import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
@@ -59,10 +69,16 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.example.test.calendar_add_on
 import com.jenil.f1comp.BuildConfig
 import com.jenil.f1comp.R
+import com.jenil.f1comp.data.local.entity.NextRaceEntity
+import com.jenil.f1comp.data.local.entity.ScheduleEntity
+import com.jenil.f1comp.data.model.RaceCountdown
 import com.jenil.f1comp.ui.chatbot.component.apexMark
+import com.jenil.f1comp.ui.state.NextRaceUiState
+import com.jenil.f1comp.ui.theme.F1CompTheme
 import com.jenil.f1comp.util.syncRacesToCalendar
 import com.jenil.f1comp.viewmodel.NextRaceViewModel
 import com.jenil.f1comp.viewmodel.ScheduleViewModel
+import com.jenil.f1comp.viewmodel.SettingsViewModel
 import kotlinx.coroutines.launch
 import java.time.LocalDate
 
@@ -71,14 +87,45 @@ fun PitwallDrawer(
     currentRoute: String?,
     onNavigate: (String) -> Unit,
     nextRaceViewModel: NextRaceViewModel = hiltViewModel(),
-    scheduleViewModel: ScheduleViewModel = hiltViewModel()
+    scheduleViewModel: ScheduleViewModel = hiltViewModel(),
+    settingsViewModel: SettingsViewModel = hiltViewModel()
 ) {
     val uiState by nextRaceViewModel.uiState.collectAsStateWithLifecycle()
     val raceSchedule by scheduleViewModel.schedule.collectAsStateWithLifecycle()
+    val isDarkModePref by settingsViewModel.isDarkMode.collectAsStateWithLifecycle()
+    val isDarkMode = isDarkModePref ?: isSystemInDarkTheme()
+
+
+
+    PitwallDrawerContent(
+        currentRoute = currentRoute,
+        onNavigate = onNavigate,
+        uiState = uiState,
+        raceSchedule = raceSchedule,
+        isDarkMode = isDarkMode,
+        onToggleTheme = { newValue ->
+            settingsViewModel.toggleDarkMode(newValue)
+        }
+    )
+}
+
+@Composable
+fun PitwallDrawerContent(
+    currentRoute: String?,
+    onNavigate: (String) -> Unit,
+    uiState: NextRaceUiState,
+    raceSchedule: List<ScheduleEntity>,
+    isDarkMode: Boolean,
+    onToggleTheme: (Boolean) -> Unit
+) {
     val context = LocalContext.current
 
     val allRaces = remember(raceSchedule) {
         raceSchedule.sortedBy { it.round.toIntOrNull() ?: 0 }
+    }
+
+    val totalRaces = remember(raceSchedule) {
+        raceSchedule.size.takeIf { it > 0 } ?: 24
     }
 
     val snackbarHostState = remember { SnackbarHostState() }
@@ -101,8 +148,15 @@ fun PitwallDrawer(
         }
     }
 
+    val containerSize = LocalWindowInfo.current.containerSize
+    val density = LocalDensity.current
+    val screenWidth = with(density) { containerSize.width.toDp() }
+    val drawerWidth = (screenWidth - 56.dp).coerceAtMost(360.dp)
+
     ModalDrawerSheet(
-        modifier = Modifier.fillMaxHeight(),
+        modifier = Modifier
+            .fillMaxHeight()
+            .widthIn(max = drawerWidth),
         drawerContainerColor = MaterialTheme.colorScheme.surface,
         drawerContentColor = MaterialTheme.colorScheme.onSurface
     ) {
@@ -113,218 +167,354 @@ fun PitwallDrawer(
                     .navigationBarsPadding()
             ) {
 
-            // Header
-            Spacer(modifier = Modifier.height(20.dp))
+                // Header
+                Spacer(modifier = Modifier.height(20.dp))
 
-            Row(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(horizontal = 24.dp),
-                verticalAlignment = Alignment.CenterVertically
-            ) {
-                Box(
-                    modifier = Modifier
-                        .clip(RoundedCornerShape(12.dp)),
-                    contentAlignment = Alignment.Center
-                ) {
-                    Image(
-                        painter = painterResource(R.drawable.ic_app_icon),
-                        contentDescription = null,
-                        modifier = Modifier.size(44.dp)
-                    )
-                }
-                Spacer(modifier = Modifier.width(12.dp))
-                Column {
-                    Text(
-                        text = "PitWall",
-                        style = MaterialTheme.typography.titleLarge,
-                        fontWeight = FontWeight.Bold,
-                        color = MaterialTheme.colorScheme.onSurface
-                    )
-                    Text(
-                        text = "Built for the Obsessed.",
-                        style = MaterialTheme.typography.labelSmall,
-                        color = MaterialTheme.colorScheme.onSurfaceVariant
-                    )
-                }
-            }
-
-            val nextRace = uiState.nextRace
-            if (nextRace != null) {
-                Spacer(modifier = Modifier.height(14.dp))
-                Surface(
+                Row(
                     modifier = Modifier
                         .fillMaxWidth()
-                        .padding(horizontal = 20.dp),
-                    shape = RoundedCornerShape(12.dp),
-                    color = MaterialTheme.colorScheme.primaryContainer.copy(alpha = 0.22f)
+                        .padding(horizontal = 24.dp),
+                    verticalAlignment = Alignment.CenterVertically
                 ) {
-                    Row(
+                    Box(
+                        modifier = Modifier
+                            .clip(RoundedCornerShape(12.dp)),
+                        contentAlignment = Alignment.Center
+                    ) {
+                        Image(
+                            painter = painterResource(R.drawable.ic_app_icon),
+                            contentDescription = null,
+                            modifier = Modifier.size(44.dp)
+                        )
+                    }
+                    Spacer(modifier = Modifier.width(12.dp))
+                    Column {
+                        Text(
+                            text = "PitWall",
+                            style = MaterialTheme.typography.titleLarge,
+                            fontWeight = FontWeight.Bold,
+                            color = MaterialTheme.colorScheme.onSurface
+                        )
+                        Text(
+                            text = "Built for the Obsessed.",
+                            style = MaterialTheme.typography.labelSmall,
+                            color = MaterialTheme.colorScheme.onSurfaceVariant
+                        )
+                    }
+                }
+
+                val nextRace = uiState.nextRace
+                if (nextRace != null) {
+                    Spacer(modifier = Modifier.height(14.dp))
+                    Surface(
                         modifier = Modifier
                             .fillMaxWidth()
-                            .padding(horizontal = 12.dp, vertical = 10.dp),
-                        verticalAlignment = Alignment.CenterVertically,
-                        horizontalArrangement = Arrangement.SpaceBetween
+                            .padding(horizontal = 20.dp),
+                        shape = RoundedCornerShape(12.dp),
+                        color = MaterialTheme.colorScheme.primaryContainer.copy(alpha = 0.22f)
                     ) {
-                        Row(verticalAlignment = Alignment.CenterVertically) {
-                            Text(text = nextRace.flagEmoji, style = MaterialTheme.typography.bodyMedium)
-                            Spacer(modifier = Modifier.width(8.dp))
+                        Row(
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .padding(horizontal = 12.dp, vertical = 10.dp),
+                            verticalAlignment = Alignment.CenterVertically,
+                            horizontalArrangement = Arrangement.SpaceBetween
+                        ) {
+                            Row(verticalAlignment = Alignment.CenterVertically) {
+                                Text(
+                                    text = nextRace.flagEmoji,
+                                    style = MaterialTheme.typography.bodyMedium
+                                )
+                                Spacer(modifier = Modifier.width(8.dp))
+                                Text(
+                                    text = nextRace.raceName,
+                                    style = MaterialTheme.typography.labelMedium,
+                                    fontFamily = FontFamily.Monospace,
+                                    fontWeight = FontWeight.SemiBold,
+                                    color = MaterialTheme.colorScheme.onSurface,
+                                    maxLines = 1
+                                )
+                            }
+                            val countdown = nextRace.countdown
+                            val countdownText = when {
+                                countdown.days > 0 -> "${countdown.days}d ${countdown.hours}h"
+                                countdown.hours > 0 -> "${countdown.hours}h ${countdown.minutes}m"
+                                else -> "Live soon"
+                            }
                             Text(
-                                text = nextRace.raceName,
-                                style = MaterialTheme.typography.labelMedium,
+                                text = countdownText,
+                                style = MaterialTheme.typography.labelSmall,
                                 fontFamily = FontFamily.Monospace,
-                                fontWeight = FontWeight.SemiBold,
-                                color = MaterialTheme.colorScheme.onSurface,
-                                maxLines = 1
+                                fontWeight = FontWeight.Bold,
+                                color = MaterialTheme.colorScheme.primary
                             )
                         }
-                        val countdown = nextRace.countdown
-                        val countdownText = when {
-                            countdown.days > 0 -> "${countdown.days}d ${countdown.hours}h"
-                            countdown.hours > 0 -> "${countdown.hours}h ${countdown.minutes}m"
-                            else -> "Live soon"
+                    }
+                }
+
+                Spacer(modifier = Modifier.height(16.dp))
+                HorizontalDivider(
+                    modifier = Modifier.padding(horizontal = 24.dp),
+                    color = MaterialTheme.colorScheme.outlineVariant.copy(alpha = 0.5f)
+                )
+                Spacer(modifier = Modifier.height(8.dp))
+
+                // Navigation Sections
+                DrawerSectionHeader("RACE HUB")
+
+                DrawerNavItem(
+                    icon = Icons.Outlined.Radio,
+                    label = "Team Radio",
+                    selected = currentRoute == "team_radio",
+                    onClick = { onNavigate("team_radio") }
+                )
+
+                DrawerNavItem(
+                    icon = Icons.Outlined.EmojiEvents,
+                    label = "Race Results",
+                    selected = currentRoute?.startsWith("race_result") == true,
+                    onClick = { onNavigate("race_result/last/${LocalDate.now().year}") }
+                )
+
+                DrawerNavItem(
+                    icon = apexMark,
+                    label = "Apex AI Assistant",
+                    selected = currentRoute == "chatbot",
+                    onClick = { onNavigate("chatbot") }
+                )
+
+                DrawerNavItem(
+                    icon = Icons.Outlined.Equalizer,
+                    label = "Live Telemetry",
+                    selected = currentRoute == "telemetry",
+                    onClick = { onNavigate("telemetry") }
+                )
+
+                Spacer(modifier = Modifier.height(8.dp))
+                DrawerSectionHeader("UTILITIES")
+
+                DrawerNavItem(
+                    icon = calendar_add_on,
+                    label = "Sync Calendar",
+                    info = totalRaces.toString(),
+                    selected = false,
+                    onClick = {
+                        val hasReadPerm = ContextCompat.checkSelfPermission(
+                            context,
+                            Manifest.permission.READ_CALENDAR
+                        ) == PackageManager.PERMISSION_GRANTED
+                        val hasWritePerm = ContextCompat.checkSelfPermission(
+                            context,
+                            Manifest.permission.WRITE_CALENDAR
+                        ) == PackageManager.PERMISSION_GRANTED
+
+                        if (hasReadPerm && hasWritePerm) {
+                            syncRacesToCalendar(context, allRaces) { message ->
+                                scope.launch { snackbarHostState.showSnackbar(message) }
+                            }
+                        } else {
+                            calendarPermissionLauncher.launch(
+                                arrayOf(
+                                    Manifest.permission.READ_CALENDAR,
+                                    Manifest.permission.WRITE_CALENDAR
+                                )
+                            )
                         }
+                    }
+                )
+
+                DrawerNavItem(
+                    icon = Icons.Rounded.Share,
+                    label = "Share Pitwall",
+                    selected = false,
+                    onClick = {
+                        val uri =
+                            "https://play.google.com/store/apps/details?id=${context.packageName}".toUri()
+                        val intent = Intent(Intent.ACTION_SEND).apply {
+                            type = "text/plain"
+                            putExtra(Intent.EXTRA_SUBJECT, "PitWall")
+                            putExtra(Intent.EXTRA_TEXT, uri.toString())
+                        }
+                        try {
+                            context.startActivity(intent)
+                        } catch (_: Exception) {
+                        }
+                    }
+                )
+
+                Spacer(modifier = Modifier.height(8.dp))
+                DrawerSectionHeader("PREFERENCES")
+
+                DrawerNavItem(
+                    icon = Icons.Outlined.Settings,
+                    label = "Settings",
+                    selected = currentRoute == "settings",
+                    onClick = { onNavigate("settings") }
+                )
+
+                DrawerNavItem(
+                    icon = Icons.Outlined.Description,
+                    label = "Data Attribution",
+                    selected = false,
+                    onClick = {
+                        onNavigate("data_attribution")
+                    }
+                )
+
+                Spacer(modifier = Modifier.weight(1f))
+
+                // Footer
+                HorizontalDivider(
+                    modifier = Modifier.padding(horizontal = 24.dp),
+                    color = MaterialTheme.colorScheme.outlineVariant.copy(alpha = 0.5f)
+                )
+                Column(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(horizontal = 24.dp, vertical = 16.dp)
+                ) {
+                    Row(
+                        modifier = Modifier.fillMaxWidth(),
+                        horizontalArrangement = Arrangement.SpaceBetween,
+                        verticalAlignment = Alignment.CenterVertically
+                    ) {
+                        // Left side: Connection Status
+                        Row(verticalAlignment = Alignment.CenterVertically) {
+                            // Green Dot
+                            Box(
+                                modifier = Modifier
+                                    .size(8.dp)
+                                    .background(
+                                        color = Color(0xFF10B981),
+                                        shape = CircleShape
+                                    )
+                            )
+                            Spacer(modifier = Modifier.width(8.dp))
+                            Text(
+                                text = "PitWall",
+                                style = MaterialTheme.typography.labelSmall,
+                                fontFamily = FontFamily.Monospace,
+                                color = MaterialTheme.colorScheme.onSurfaceVariant
+                            )
+                        }
+
+
                         Text(
-                            text = countdownText,
+                            text = "v${BuildConfig.VERSION_NAME}",
                             style = MaterialTheme.typography.labelSmall,
                             fontFamily = FontFamily.Monospace,
-                            fontWeight = FontWeight.Bold,
-                            color = MaterialTheme.colorScheme.primary
+                            color = MaterialTheme.colorScheme.onSurfaceVariant
                         )
                     }
-                }
-            }
 
-            Spacer(modifier = Modifier.height(16.dp))
-            HorizontalDivider(
-                modifier = Modifier.padding(horizontal = 24.dp),
-                color = MaterialTheme.colorScheme.outlineVariant.copy(alpha = 0.5f)
-            )
-            Spacer(modifier = Modifier.height(8.dp))
+                    Spacer(modifier = Modifier.height(16.dp))
 
-            // Navigation Sections
-            DrawerSectionHeader("RACE HUB")
 
-            DrawerNavItem(
-                icon = Icons.Outlined.Radio,
-                label = "Team Radio",
-                selected = currentRoute == "team_radio",
-                onClick = { onNavigate("team_radio") }
-            )
-
-            DrawerNavItem(
-                icon = Icons.Outlined.EmojiEvents,
-                label = "Race Results",
-                selected = currentRoute?.startsWith("race_result") == true,
-                onClick = { onNavigate("race_result/last/${LocalDate.now().year}") }
-            )
-
-            DrawerNavItem(
-                icon = apexMark,
-                label = "Apex AI Assistant",
-                selected = currentRoute == "chatbot",
-                onClick = { onNavigate("chatbot") }
-            )
-
-            Spacer(modifier = Modifier.height(8.dp))
-            DrawerSectionHeader("UTILITIES")
-
-            DrawerNavItem(
-                icon = calendar_add_on,
-                label = "Sync Calendar",
-                selected = false,
-                onClick = {
-                    val hasReadPerm = ContextCompat.checkSelfPermission(context, Manifest.permission.READ_CALENDAR) == PackageManager.PERMISSION_GRANTED
-                    val hasWritePerm = ContextCompat.checkSelfPermission(context, Manifest.permission.WRITE_CALENDAR) == PackageManager.PERMISSION_GRANTED
-
-                    if (hasReadPerm && hasWritePerm) {
-                        syncRacesToCalendar(context, allRaces) { message ->
-                            scope.launch { snackbarHostState.showSnackbar(message) }
+                    Row(
+                        modifier = Modifier.fillMaxWidth(),
+                        horizontalArrangement = Arrangement.SpaceBetween,
+                        verticalAlignment = Alignment.CenterVertically
+                    ) {
+                        // Left side: Feedback Button
+                        Row(
+                            verticalAlignment = Alignment.CenterVertically,
+                            modifier = Modifier.clickable {
+                                val intent = Intent(Intent.ACTION_SENDTO).apply {
+                                    data = "mailto:".toUri()
+                                    putExtra(Intent.EXTRA_EMAIL, arrayOf("support@pitwall.com"))
+                                    putExtra(
+                                        Intent.EXTRA_SUBJECT,
+                                        "F1Companion Feedback (v${BuildConfig.VERSION_NAME})"
+                                    )
+                                }
+                                try {
+                                    context.startActivity(intent)
+                                } catch (_: Exception) {
+                                }
+                            }
+                        ) {
+                            Icon(
+                                imageVector = Icons.AutoMirrored.Outlined.Chat,
+                                contentDescription = "Feedback",
+                                tint = MaterialTheme.colorScheme.onSurfaceVariant,
+                                modifier = Modifier.size(16.dp)
+                            )
+                            Spacer(modifier = Modifier.width(8.dp))
+                            Text(
+                                text = "Feedback",
+                                style = MaterialTheme.typography.labelSmall,
+                                fontFamily = FontFamily.Monospace,
+                                color = MaterialTheme.colorScheme.onSurfaceVariant
+                            )
                         }
-                    } else {
-                        calendarPermissionLauncher.launch(
-                            arrayOf(Manifest.permission.READ_CALENDAR, Manifest.permission.WRITE_CALENDAR)
-                        )
+
+                        // Right side: Custom Theme Toggle
+                        Surface(
+                            shape = RoundedCornerShape(50),
+                            border = androidx.compose.foundation.BorderStroke(
+                                1.dp,
+                                MaterialTheme.colorScheme.outlineVariant
+                            ),
+                            color = Color.Transparent
+                        ) {
+                            Row(
+                                modifier = Modifier.padding(2.dp),
+                                verticalAlignment = Alignment.CenterVertically
+                            ) {
+                                val haptic = LocalHapticFeedback.current
+
+                                // Dark Mode Toggle
+                                Box(
+                                    modifier = Modifier
+                                        .background(
+                                            color = if (isDarkMode) MaterialTheme.colorScheme.onSurface else Color.Transparent,
+                                            shape = CircleShape
+                                        )
+                                        .clip(CircleShape)
+                                        .clickable {
+                                            if (!isDarkMode) {
+                                                haptic.performHapticFeedback(HapticFeedbackType.TextHandleMove)
+                                                onToggleTheme(true)
+                                            }
+                                        }
+                                        .padding(6.dp)
+                                ) {
+                                    Icon(
+                                        imageVector = Icons.Outlined.DarkMode,
+                                        contentDescription = "Dark Mode",
+                                        tint = if (isDarkMode) MaterialTheme.colorScheme.surface else MaterialTheme.colorScheme.onSurfaceVariant,
+                                        modifier = Modifier.size(14.dp)
+                                    )
+                                }
+
+                                // Light Mode Toggle
+                                Box(
+                                    modifier = Modifier
+                                        .background(
+                                            color = if (!isDarkMode) MaterialTheme.colorScheme.onSurface else Color.Transparent,
+                                            shape = CircleShape
+                                        )
+                                        .clip(CircleShape)
+                                        .clickable {
+                                            if (isDarkMode) {
+                                                haptic.performHapticFeedback(HapticFeedbackType.TextHandleMove)
+                                                onToggleTheme(false)
+                                            }
+                                        }
+                                        .padding(6.dp)
+                                ) {
+                                    Icon(
+                                        imageVector = Icons.Outlined.LightMode,
+                                        contentDescription = "Light Mode",
+                                        tint = if (!isDarkMode) MaterialTheme.colorScheme.surface else MaterialTheme.colorScheme.onSurfaceVariant,
+                                        modifier = Modifier.size(14.dp)
+                                    )
+                                }
+                            }
+                        }
                     }
-                }
-            )
-
-            DrawerNavItem(
-                icon = Icons.AutoMirrored.Outlined.OpenInNew,
-                label = "Share Pitwall",
-                selected = false,
-                onClick = {
-                    val uri = "https://play.google.com/store/apps/details?id=${context.packageName}".toUri()
-                    val intent = Intent(Intent.ACTION_SEND).apply {
-                        type = "text/plain"
-                        putExtra(Intent.EXTRA_SUBJECT, "PitWall")
-                        putExtra(Intent.EXTRA_TEXT, uri.toString())
-                    }
-                    try {
-                        context.startActivity(intent)
-                    } catch (_: Exception) {
-                    }
-                }
-            )
-
-            Spacer(modifier = Modifier.height(8.dp))
-            DrawerSectionHeader("PREFERENCES")
-
-            DrawerNavItem(
-                icon = Icons.Outlined.Settings,
-                label = "Settings",
-                selected = currentRoute == "settings",
-                onClick = { onNavigate("settings") }
-            )
-
-            DrawerNavItem(
-                icon = Icons.Outlined.Description,
-                label = "Data Attribution",
-                selected = false,
-                onClick = {
-                    onNavigate("data_attribution")
-                }
-            )
-
-            Spacer(modifier = Modifier.weight(1f))
-
-            // Footer
-            HorizontalDivider(
-                modifier = Modifier.padding(horizontal = 24.dp),
-                color = MaterialTheme.colorScheme.outlineVariant.copy(alpha = 0.5f)
-            )
-            Row(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(horizontal = 20.dp, vertical = 8.dp),
-                verticalAlignment = Alignment.CenterVertically,
-                horizontalArrangement = Arrangement.SpaceBetween
-            ) {
-                Text(
-                    text = "PitWall v${BuildConfig.VERSION_NAME}",
-                    style = MaterialTheme.typography.labelSmall.copy(fontSize = 11.sp),
-                    fontFamily = FontFamily.Monospace,
-                    color = MaterialTheme.colorScheme.onSurfaceVariant.copy(alpha = 0.6f)
-                )
-                IconButton(
-                    onClick = {
-                        val intent = Intent(
-                            Intent.ACTION_VIEW,
-                            "https://github.com/JenilMacwan/Pitwall".toUri()
-                        )
-                        context.startActivity(intent)
-                    },
-                    modifier = Modifier.size(32.dp)
-                ) {
-                    Icon(
-                        imageVector = Icons.Outlined.Code,
-                        contentDescription = "View source on GitHub",
-                        tint = MaterialTheme.colorScheme.onSurfaceVariant,
-                        modifier = Modifier.size(18.dp)
-                    )
                 }
             }
-        }
             SnackbarHost(
                 hostState = snackbarHostState,
                 modifier = Modifier.align(Alignment.BottomCenter)
@@ -348,18 +538,19 @@ private fun DrawerSectionHeader(title: String) {
 
 @Composable
 private fun DrawerNavItem(
-    icon: ImageVector,
+    modifier: Modifier = Modifier,
+    icon: ImageVector? = null,
     label: String,
+    info: String? = null,
     selected: Boolean,
     onClick: () -> Unit,
-    modifier: Modifier = Modifier
 ) {
     val haptic = LocalHapticFeedback.current
 
     val containerColor = if (selected) {
         MaterialTheme.colorScheme.primary.copy(alpha = 0.12f)
     } else {
-        androidx.compose.ui.graphics.Color.Transparent
+        Color.Transparent
     }
     val contentColor = if (selected) {
         MaterialTheme.colorScheme.primary
@@ -379,15 +570,30 @@ private fun DrawerNavItem(
         }
     ) {
         Row(
-            modifier = Modifier.padding(horizontal = 16.dp, vertical = 14.dp),
+            modifier = Modifier.padding(horizontal = 16.dp, vertical = 10.dp),
             verticalAlignment = Alignment.CenterVertically
         ) {
-            Icon(
-                imageVector = icon,
-                contentDescription = null,
-                tint = contentColor,
-                modifier = Modifier.size(22.dp)
-            )
+
+            if (icon != null) {
+                Box(
+                    modifier = Modifier
+                        .size(36.dp)
+                        .background(
+                            color = if (selected) MaterialTheme.colorScheme.primaryContainer else MaterialTheme.colorScheme.surfaceVariant.copy(
+                                alpha = 0.5f
+                            ),
+                            shape = RoundedCornerShape(10.dp)
+                        ),
+                    contentAlignment = Alignment.Center
+                ) {
+                    Icon(
+                        imageVector = icon,
+                        contentDescription = null,
+                        tint = contentColor,
+                        modifier = Modifier.size(20.dp)
+                    )
+                }
+            }
             Spacer(modifier = Modifier.width(16.dp))
             Text(
                 text = label,
@@ -395,6 +601,47 @@ private fun DrawerNavItem(
                 fontWeight = if (selected) FontWeight.Bold else FontWeight.Medium,
                 color = contentColor
             )
+            Spacer(modifier = Modifier.weight(1f))
+
+            if (info != null) {
+                Text(
+                    text = "$info Races",
+                    style = MaterialTheme.typography.labelSmall,
+                    fontWeight = if (selected) FontWeight.Bold else FontWeight.Medium,
+                    color = contentColor
+                )
+            }
         }
+    }
+}
+
+@Preview
+@Composable
+fun PitwallDrawerPreview() {
+    F1CompTheme {
+        PitwallDrawerContent(
+            currentRoute = "team_radio",
+            onNavigate = {},
+            uiState = NextRaceUiState(
+                isLoading = false,
+                nextRace = NextRaceEntity(
+                    id = 1,
+                    round = "1",
+                    raceName = "Bahrain Grand Prix",
+                    circuit = "Bahrain International Circuit",
+                    country = "Bahrain",
+                    weather = null,
+                    countdown = RaceCountdown(days = 5, hours = 12, minutes = 30, seconds = 0),
+                    sessionName = "Race",
+                    ongoingSession = null,
+                    sprint = false,
+                    flagEmoji = "🇧🇭"
+                ),
+                error = null
+            ),
+            raceSchedule = emptyList(),
+            isDarkMode = true,
+            onToggleTheme = {}
+        )
     }
 }

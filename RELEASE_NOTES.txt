@@ -1,39 +1,37 @@
-PitWall v1.2.0 Release Notes 🏎️🏁
+PitWall v1.2.1 Release Notes 🏎️🏁
 
-This major update introduces the Next Race Session Timeline, Championship Standings redesign, custom F1 navigation icons, track temperature weather telemetry, Material 3 Snackbar feedback, and first-launch notification permissions.
+This update introduces the redesigned Race Schedule experience, interactive segmented tab toggles, compact upcoming race cards, dynamic circuit telemetry & track layout mapping, expanded news card styling, and Vico chart analytics upgrades.
 
---------------------------------------------------------------------------------
-
-🏎️ Home Dashboard & Next Race Card
-
-- Session Schedule Timeline Bar: Added a horizontal weekend schedule timeline bar on the Next Race card showing FP1, FP2, FP3, Qualifying, Sprint, and Grand Prix sessions with live green indicator dots (•), completed session dimming, and F1 Red race highlights.
-- Custom F1 Hamburger Menu Icon: Custom 3-bar F1 hamburger navigation icon with an F1 Red middle accent line across all main screens.
-- Live Session Status Pill: High-visibility green status pill (`• LIVE: SESSION`) when a Grand Prix session is actively taking place.
-- Adaptive Countdown Progress Ring: Progress ring for countdown days, displaying a full 360° red ring on session day (0 Days remaining).
-- Track Temperature & Weather Badge: Weather badge now displays both Air Temperature and Track Temperature (`Track 38°C`) with condition-adaptive icon color tinting (Sunny Amber, Rain Blue, Slate Grey).
-- Quick Results Navigation: Tapping "View Full Race Result →" on the Podium card navigates directly to the results breakdown of the last completed round.
+🚀 More UI and performance updates coming soon!
 
 --------------------------------------------------------------------------------
 
-📊 Championship Standings 3-Card Redesign
+📅 Redesigned Schedule Hub & Race Cards
 
-- 3-Card Podium Layout: Redesigned Constructor & Driver top standings into a 3-card layout featuring Championship Leader (P1) and Contenders (P2 & P3).
-- Real Data & P1 Telemetry Index: Live standings data with point gap calculations, official constructor team color themes, and dynamic P1 Index progress bars.
-- Clean Constructor Driver Names: Constructor driver lineups are formatted to display clean last names (e.g., `Antonelli · Russell`, `Hamilton · Leclerc`).
-- Round Progress Pill: Added top bar round progress pill (`R14 / 24`) with a live green indicator dot on the Standings screen.
+- Segmented Tab Toggle: Upgraded Schedule filtering tabs into a smooth sliding segmented toggle bar ("All Races", "Upcoming", "Completed") with spring-animated pill indicators.
+- Compact Upcoming Race Cards: Introduced a sleek, compact card layout for upcoming Grands Prix featuring round numbers, sprint badges, event date ranges, and interactive "Details ⌄" / "Collapse ↑" expandable session timetables.
+- Grand Prix Session Badge: Redesigned the Grand Prix box with an F1 Red squircle trophy icon, red laps pill badge, and date/time formatting converted to the user's local device time zone.
+- Circuit Telemetry & Track Layouts: Added a 3-column telemetry section displaying LAPS, CIRCUIT LENGTH, and dynamic track layout diagrams with crisp vertical dividers.
+- Circuit Type Badges: Theme-adaptive badges ("STREET CIRCUIT", "PERMANENT CIRCUIT") positioned on race cards.
 
 --------------------------------------------------------------------------------
 
-📱 Navigation Drawer & System Enhancements
+📰 News Feed & Visual Enhancements
 
-- Grouped Navigation Drawer: Organized side drawer options into structured sections (`RACE HUB`, `UTILITIES`, `PREFERENCES`) with monospaced headers.
-- Material 3 Snackbar System: Converted system Toast messages across Schedule, Settings, and Navigation Drawer to Material 3 `Snackbar` overlays for clean in-app feedback.
-- First-Launch Notification Permissions: On Android 13+ (API 33+), notification permissions are requested on initial app startup for a seamless setup experience.
+- Top Bar Surface Alignment: Refactored top bar buttons across News and Schedule screens with symmetrical 38dp circular surfaces for smooth, unclipped refresh progress spinners.
+- Expanded News Cards: Enhanced expanded news article styling with subtle outline dividers and call-to-action buttons ("Read Full Article →").
+
+--------------------------------------------------------------------------------
+
+📊 Analytics & Performance Upgrades
+
+- Points Progression Chart: Upgraded Vico chart layer interpolation for driver and constructor points progression analytics.
+- Offline Circuit Caching: Updated local Room database schema (`CircuitInfoEntity`) to cache circuit length, total laps, circuit type, and SVG layout diagrams for instant offline viewing.
 
 --------------------------------------------------------------------------------
 
 📲 Installation
-1. Download `PitWall-v1.2.0.apk`.
+1. Download `PitWall-v1.2.1.apk`.
 2. Open the file on your Android device.
 3. Enjoy the Formula 1 season with Live Team Radio, Apex AI, and Real-Time Race Intelligence!
 

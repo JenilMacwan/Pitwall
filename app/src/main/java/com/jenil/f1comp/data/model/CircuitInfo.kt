@@ -19,5 +19,8 @@ data class CircuitInfo(
     val circuitCountry: String,
 
     @SerializedName("circuitlayout")
-    val circuitLayout: String?
+    val circuitLayout: String?,
+    val laps: Int?,
+    val length: String?,
+    val type: String?
 )

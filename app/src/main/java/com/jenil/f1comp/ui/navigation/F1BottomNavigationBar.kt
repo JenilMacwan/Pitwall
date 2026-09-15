@@ -56,7 +56,7 @@ fun F1BottomNavigationBar(
             .hazeEffect(
                 state = hazeState,
                 style = HazeMaterials.thin(
-                    containerColor = MaterialTheme.colorScheme.surface
+                    containerColor = MaterialTheme.colorScheme.surfaceVariant
                 )
             )
             .background(Color.Transparent)

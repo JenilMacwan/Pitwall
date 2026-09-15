@@ -1,6 +1,7 @@
 package com.jenil.f1comp.ui.news.components
 
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -10,14 +11,17 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
-import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.platform.LocalUriHandler
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
@@ -26,7 +30,7 @@ import coil.compose.AsyncImage
 import com.jenil.f1comp.R
 import com.jenil.f1comp.data.local.entity.NewsEntity
 import com.jenil.f1comp.util.DateParserUtil
-import androidx.compose.ui.platform.LocalUriHandler
+
 @Composable
 fun ExpandedNewsContent(news: NewsEntity, isFirstItem: Boolean) {
 
@@ -38,7 +42,7 @@ fun ExpandedNewsContent(news: NewsEntity, isFirstItem: Boolean) {
     Column(
         modifier = Modifier.fillMaxWidth()
     ) {
-        // Image Placeholder (Replace with Coil AsyncImage)
+        // Image Header
         Box(
             modifier = Modifier
                 .fillMaxWidth()
@@ -73,7 +77,7 @@ fun ExpandedNewsContent(news: NewsEntity, isFirstItem: Boolean) {
                         letterSpacing = 1.sp
                     )
                 } else {
-                    Spacer(modifier = Modifier.width(1.dp)) // Spacer to push date to right if not featured
+                    Spacer(modifier = Modifier.width(1.dp))
                 }
 
                 Text(
@@ -102,21 +106,32 @@ fun ExpandedNewsContent(news: NewsEntity, isFirstItem: Boolean) {
                 lineHeight = 20.sp
             )
 
-            Spacer(modifier = Modifier.height(16.dp))
+            Spacer(modifier = Modifier.height(14.dp))
 
-            // Add a clear call to action at the bottom
-            TextButton(
-                onClick = {
+            HorizontalDivider(
+                color = MaterialTheme.colorScheme.outlineVariant,
+                thickness = 1.dp
+            )
 
-                    if (news.link.isNotEmpty()) {
-                        uriHandler.openUri(news.link)
+            Spacer(modifier = Modifier.height(8.dp))
+
+            // Clear call-to-action button
+            Row(
+                modifier = Modifier
+                    .align(Alignment.End)
+                    .clip(RoundedCornerShape(8.dp))
+                    .clickable {
+                        if (news.link.isNotEmpty()) {
+                            uriHandler.openUri(news.link)
+                        }
                     }
-                },
-                modifier = Modifier.align(Alignment.End)
+                    .padding(horizontal = 8.dp, vertical = 6.dp),
+                verticalAlignment = Alignment.CenterVertically
             ) {
                 Text(
-                    text = "Read Full Article",
+                    text = "Read Full Article →",
                     color = MaterialTheme.colorScheme.primary,
+                    style = MaterialTheme.typography.labelLarge,
                     fontWeight = FontWeight.Bold
                 )
             }

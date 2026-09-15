@@ -11,7 +11,6 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -28,6 +27,7 @@ import coil.compose.AsyncImage
 import com.jenil.f1comp.R
 import com.jenil.f1comp.data.local.entity.NewsEntity
 import com.jenil.f1comp.util.DateParserUtil
+
 @Composable
 fun CollapsedNewsContent(news: NewsEntity) {
 
@@ -75,7 +75,7 @@ fun CollapsedNewsContent(news: NewsEntity) {
             Spacer(modifier = Modifier.height(8.dp))
 
             Text(
-                text = "$timeAgo · ${news.source }",
+                text = "$timeAgo • ${news.source}",
                 color = MaterialTheme.colorScheme.onSurfaceVariant,
                 fontSize = 12.sp
             )

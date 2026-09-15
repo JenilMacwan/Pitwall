@@ -1,5 +1,6 @@
 package com.jenil.f1comp.ui.home.components
 
+import android.util.Log
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -34,7 +35,7 @@ fun WeatherBadge(
     val condition = weather.condition.lowercase()
 
     val (weatherIcon, calculatedTint) = when {
-        condition.contains("rain") || condition.contains("wet") || condition.contains("shower") || condition.contains("storm") -> {
+        condition.contains("rain") || condition.contains("patchy rain nearby") || condition.contains("wet") || condition.contains("shower") || condition.contains("storm") -> {
             Icons.Default.Thunderstorm to Color(0xFF29B6F6) // Vibrant Rain Blue
         }
         condition.contains("cloud") || condition.contains("overcast") || condition.contains("partly") -> {
@@ -110,5 +111,6 @@ fun WeatherBadge(
             style = MaterialTheme.typography.labelSmall,
             color = MaterialTheme.colorScheme.onSurfaceVariant
         )
+        Log.d("WeatherBadge", "Condition: $condition")
     }
 }

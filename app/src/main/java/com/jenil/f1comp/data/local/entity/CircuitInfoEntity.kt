@@ -2,7 +2,6 @@ package com.jenil.f1comp.data.local.entity
 
 import androidx.room.Entity
 import androidx.room.PrimaryKey
-import com.google.gson.annotations.SerializedName
 
 @Entity("circuits_table")
 data class CircuitInfoEntity(
@@ -11,5 +10,8 @@ data class CircuitInfoEntity(
     val circuitName: String,
     val circuitLocation: String,
     val circuitCountry: String,
-    val circuitLayout: String?
+    val circuitLayout: String?,
+    val laps: Int?,
+    val length: String?,
+    val type: String?
 )

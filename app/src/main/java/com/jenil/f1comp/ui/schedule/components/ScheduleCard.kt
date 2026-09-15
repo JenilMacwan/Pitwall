@@ -19,13 +19,15 @@ import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.rounded.EmojiEvents
+import androidx.compose.material.icons.outlined.EmojiEvents
+import androidx.compose.material.icons.outlined.LocationOn
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedButton
+import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
@@ -34,21 +36,24 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalLocale
 import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
+import coil.compose.AsyncImage
+import com.jenil.f1comp.data.local.entity.CircuitInfoEntity
 import com.jenil.f1comp.data.local.entity.ScheduleEntity
+import com.jenil.f1comp.ui.theme.F1Red
 import java.time.LocalDate
 import java.time.LocalTime
 import java.time.format.DateTimeFormatter
-
-//import com.jenil.f1comp.util.countryFlagEmoji
-
 @Composable
 fun ScheduleCard(
     modifier: Modifier = Modifier,
     schedule: ScheduleEntity,
+    circuit: CircuitInfoEntity? = null,
     isNextRace: Boolean = false,
     onResultsClick: () -> Unit = {}
 ) {
@@ -56,12 +61,14 @@ fun ScheduleCard(
     val isCompleted = schedule.isCompleted
 
     val parsedDate = LocalDate.parse(schedule.grandPrix)
-    val formatter = DateTimeFormatter.ofPattern("MMMM dd, yyyy", LocalLocale.current.platformLocale)
+    val formatter = DateTimeFormatter.ofPattern("EEE, MMM dd, yyyy", LocalLocale.current.platformLocale)
     val date = parsedDate.format(formatter)
 
     val parsedTime = LocalTime.parse(schedule.time.removeSuffix("Z"))
     val timeFormatter = DateTimeFormatter.ofPattern("hh:mm a", LocalLocale.current.platformLocale)
     val time = parsedTime.format(timeFormatter)
+    val laps = circuit?.laps?.toString()?: "N/A"
+    val type = circuit?.type?.let { "$it CIRCUIT" } ?: "N/A"
 
     Card(
         modifier = modifier
@@ -105,6 +112,7 @@ fun ScheduleCard(
                     modifier = Modifier.fillMaxWidth()
                 ) {
                     Column(modifier = Modifier.weight(1f)) {
+
                         Row(verticalAlignment = Alignment.CenterVertically) {
                             Text(
                                 text = schedule.flag,
@@ -119,26 +127,44 @@ fun ScheduleCard(
                                 color = MaterialTheme.colorScheme.onSurface
                             )
                         }
-                        Spacer(modifier = Modifier.height(4.dp))
-                        Text(
-                            text = "${schedule.circuitName} · ${schedule.circuitLocation}",
-                            fontFamily = FontFamily.Monospace,
-                            style = MaterialTheme.typography.bodySmall,
-                            color = MaterialTheme.colorScheme.onSurfaceVariant
-                        )
+                        Spacer(modifier = Modifier.height(6.dp))
+                        Row(
+                            verticalAlignment = Alignment.CenterVertically,
+                            horizontalArrangement = Arrangement.spacedBy(4.dp)
+                        ) {
+                            Icon(
+                                imageVector = Icons.Outlined.LocationOn,
+                                contentDescription = null,
+                                tint = MaterialTheme.colorScheme.onSurfaceVariant,
+                                modifier = Modifier.size(14.dp)
+                            )
+                            Text(
+                                text = "${schedule.circuitName} · ${schedule.circuitLocation}",
+                                fontFamily = FontFamily.Monospace,
+                                style = MaterialTheme.typography.bodySmall,
+                                color = MaterialTheme.colorScheme.onSurfaceVariant
+                            )
+                        }
                     }
 
-                    if (isCompleted) {
-                        StatusPill(
-                            text = "Done",
-                            backgroundColor = MaterialTheme.colorScheme.surfaceVariant
-                        )
-                    } else if (schedule.sprint != null) {
-                        StatusPill(
-                            text = "Sprint",
-                            backgroundColor = MaterialTheme.colorScheme.tertiary,
-                            textColor = MaterialTheme.colorScheme.onTertiary
-                        )
+                    Row(
+                        horizontalArrangement = Arrangement.spacedBy(6.dp),
+                        verticalAlignment = Alignment.CenterVertically
+                    ) {
+                        CircuitTypeBadge(circuitType = type)
+
+                        if (isCompleted) {
+                            StatusPill(
+                                text = "Done",
+                                backgroundColor = MaterialTheme.colorScheme.surfaceVariant
+                            )
+                        } else if (schedule.sprint != null) {
+                            StatusPill(
+                                text = "Sprint",
+                                backgroundColor = MaterialTheme.colorScheme.tertiary,
+                                textColor = MaterialTheme.colorScheme.onTertiary
+                            )
+                        }
                     }
                 }
 
@@ -197,12 +223,112 @@ fun ScheduleCard(
                     }
                 } else {
                     Spacer(modifier = Modifier.height(8.dp))
-                    Text(
-                        text = "Round ${schedule.round}",
-                        fontFamily = FontFamily.Monospace,
-                        style = MaterialTheme.typography.labelSmall,
-                        color = MaterialTheme.colorScheme.onSurfaceVariant
-                    )
+                    // Basic Info
+                    Box(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .padding(top = 8.dp, bottom = 4.dp)
+                            .background(
+                                shape = RoundedCornerShape(14.dp),
+                                color = MaterialTheme.colorScheme.surfaceVariant
+                            )
+                            .padding(horizontal = 12.dp, vertical = 12.dp)
+                    ) {
+                        Row(
+                            modifier = Modifier.fillMaxWidth(),
+                            verticalAlignment = Alignment.CenterVertically,
+                            horizontalArrangement = Arrangement.SpaceEvenly
+                        ) {
+                            // LAPS
+                            Column(
+                                modifier = Modifier.weight(1f),
+                                horizontalAlignment = Alignment.CenterHorizontally
+                            ) {
+                                Text(
+                                    text = "LAPS",
+                                    fontFamily = FontFamily.Monospace,
+                                    style = MaterialTheme.typography.labelSmall,
+                                    color = MaterialTheme.colorScheme.onSurfaceVariant
+                                )
+                                Spacer(modifier = Modifier.height(4.dp))
+                                Text(
+                                    text = laps,
+                                    fontFamily = FontFamily.Monospace,
+                                    style = MaterialTheme.typography.bodyMedium,
+                                    fontWeight = FontWeight.Bold,
+                                    color = MaterialTheme.colorScheme.onSurface
+                                )
+                            }
+
+                            // Vertical Divider
+                            Box(
+                                modifier = Modifier
+                                    .width(1.dp)
+                                    .height(28.dp)
+                                    .background(MaterialTheme.colorScheme.outline)
+                            )
+
+                            // CIRCUIT LENGTH
+                            Column(
+                                modifier = Modifier.weight(1.3f),
+                                horizontalAlignment = Alignment.CenterHorizontally
+                            ) {
+                                Text(
+                                    text = "CIRCUIT LENGTH",
+                                    fontFamily = FontFamily.Monospace,
+                                    style = MaterialTheme.typography.labelSmall,
+                                    color = MaterialTheme.colorScheme.onSurfaceVariant,
+                                )
+                                Spacer(modifier = Modifier.height(4.dp))
+                                Text(
+                                    text = circuit?.length ?: "N/A",
+                                    fontFamily = FontFamily.Monospace,
+                                    style = MaterialTheme.typography.bodyMedium,
+                                    fontWeight = FontWeight.Bold,
+                                    color = MaterialTheme.colorScheme.onSurface
+                                )
+                            }
+
+                            // Vertical Divider
+                            Box(
+                                modifier = Modifier
+                                    .width(1.dp)
+                                    .height(28.dp)
+                                    .background(MaterialTheme.colorScheme.outline)
+                            )
+
+                            // LAYOUT
+                            Column(
+                                modifier = Modifier.weight(1.1f),
+                                horizontalAlignment = Alignment.CenterHorizontally
+                            ) {
+                                Text(
+                                    text = "LAYOUT",
+                                    fontFamily = FontFamily.Monospace,
+                                    style = MaterialTheme.typography.labelSmall,
+                                    color = MaterialTheme.colorScheme.onSurfaceVariant
+                                )
+                                Spacer(modifier = Modifier.height(4.dp))
+                                if (circuit?.circuitLayout != null) {
+                                    AsyncImage(
+                                        model = circuit.circuitLayout,
+                                        contentDescription = "Circuit Layout",
+                                        modifier = Modifier.size(35.dp),
+                                        alignment = Alignment.Center
+                                    )
+                                } else {
+                                    Text(
+                                        text = "N/A",
+                                        fontFamily = FontFamily.Monospace,
+                                        style = MaterialTheme.typography.bodyMedium,
+                                        fontWeight = FontWeight.Bold,
+                                        color = MaterialTheme.colorScheme.onSurface
+                                    )
+                                }
+                            }
+                        }
+                    }
+
 
                     if (isExpanded) {
                         Spacer(modifier = Modifier.height(16.dp))
@@ -249,36 +375,62 @@ fun ScheduleCard(
                         Box(
                             modifier = Modifier
                                 .fillMaxWidth()
-                                .padding(vertical = 4.dp)
+                                .padding(top = 8.dp, bottom = 4.dp)
                                 .background(
                                     shape = RoundedCornerShape(14.dp),
-                                    color = MaterialTheme.colorScheme.surfaceContainerHighest
+                                    color = Color.Black
                                 )
+                                .padding(horizontal = 12.dp, vertical = 10.dp)
                         ) {
-                            Column(modifier = Modifier.padding(12.dp)) {
-
-                                Row(
-                                    verticalAlignment = Alignment.CenterVertically
+                            Row(
+                                modifier = Modifier.fillMaxWidth(),
+                                verticalAlignment = Alignment.CenterVertically
+                            ) {
+                                // Red Squircle with Trophy Icon
+                                Box(
+                                    modifier = Modifier
+                                        .size(38.dp)
+                                        .background(
+                                            shape = RoundedCornerShape(10.dp),
+                                            color = F1Red
+                                        ),
+                                    contentAlignment = Alignment.Center
                                 ) {
-
                                     Icon(
-                                        imageVector = Icons.Rounded.EmojiEvents,
+                                        imageVector = Icons.Outlined.EmojiEvents,
                                         contentDescription = null,
-                                        tint = MaterialTheme.colorScheme.primary,
-                                        modifier = Modifier.size(18.dp)
-                                    )
-                                    Spacer(Modifier.width(6.dp))
-                                    Text(
-                                        "Grand Prix",
-                                        fontFamily = FontFamily.Monospace,
-                                        fontWeight = FontWeight.Bold
+                                        tint = Color.White,
+                                        modifier = Modifier.size(20.dp)
                                     )
                                 }
-                                Text(
-                                    "$date • $time",
-                                    fontFamily = FontFamily.Monospace,
-                                    color = MaterialTheme.colorScheme.primary
-                                )
+
+                                Spacer(modifier = Modifier.width(10.dp))
+
+                                // Title + Date/Time
+                                Column(
+                                    modifier = Modifier.weight(1f)
+                                ) {
+                                    Row(
+                                        verticalAlignment = Alignment.CenterVertically
+                                    ) {
+                                        Text(
+                                            text = "GRAND PRIX",
+                                            fontFamily = FontFamily.Monospace,
+                                            color = Color.White,
+                                            fontWeight = FontWeight.Bold,
+                                            style = MaterialTheme.typography.titleSmall
+                                        )
+                                    }
+
+                                    Spacer(modifier = Modifier.height(2.dp))
+
+                                    Text(
+                                        text = "$date • $time",
+                                        fontFamily = FontFamily.Monospace,
+                                        style = MaterialTheme.typography.labelSmall,
+                                        color = Color(0xFFAAAAAA)
+                                    )
+                                }
                             }
                         }
                     } else {
@@ -291,6 +443,41 @@ fun ScheduleCard(
                         )
                     }
                 }
+            }
+        }
+    }
+}
+
+@Composable
+fun CircuitTypeBadge(
+    modifier: Modifier = Modifier,
+    circuitType: String = "Street Circuit"
+) {
+    val lines = if (circuitType.equals("Street Circuit", ignoreCase = true)) {
+        listOf("STREET", "CIRCUIT")
+    } else {
+        circuitType.uppercase().split(" ")
+    }
+
+    Surface(
+        modifier = modifier,
+        shape = RoundedCornerShape(8.dp),
+        color = MaterialTheme.colorScheme.tertiaryContainer,
+        border = BorderStroke(1.dp, MaterialTheme.colorScheme.outlineVariant)
+    ) {
+        Column(
+            modifier = Modifier.padding(horizontal = 8.dp, vertical = 4.dp),
+            horizontalAlignment = Alignment.CenterHorizontally
+        ) {
+            lines.forEach { line ->
+                Text(
+                    text = line,
+                    fontFamily = FontFamily.Monospace,
+                    fontWeight = FontWeight.Bold,
+                    fontSize = 9.sp,
+                    lineHeight = 10.sp,
+                    color = MaterialTheme.colorScheme.onTertiaryContainer
+                )
             }
         }
     }

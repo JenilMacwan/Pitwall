@@ -39,17 +39,17 @@ fun SessionCard(
     dateTime: RaceSession
 ) {
     val parsedTime = LocalTime.parse(dateTime.time.removeSuffix("Z"))
-    val formatter = DateTimeFormatter.ofPattern("hh:mm a", LocalLocale.current.platformLocale)
-    val time = parsedTime.format(formatter)
+    val timeFormatter = DateTimeFormatter.ofPattern("hh:mm a", LocalLocale.current.platformLocale)
+    val time = parsedTime.format(timeFormatter)
 
     val parsedDate = LocalDate.parse(dateTime.date)
-    val dateformatter = DateTimeFormatter.ofPattern("MMMM dd, yyyy", LocalLocale.current.platformLocale)
-    val date = parsedDate.format(dateformatter)
+    val formatter = DateTimeFormatter.ofPattern("EEE, MMM dd, yyyy", LocalLocale.current.platformLocale)
+    val date = parsedDate.format(formatter)
 
     Card(
         shape = RoundedCornerShape(14.dp),
         colors = CardDefaults.cardColors(
-            containerColor = MaterialTheme.colorScheme.surfaceContainerHighest
+            containerColor = MaterialTheme.colorScheme.surfaceVariant.copy(alpha = 0.6f)
         )
     ) {
 

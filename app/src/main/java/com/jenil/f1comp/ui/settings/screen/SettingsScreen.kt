@@ -27,7 +27,6 @@ import androidx.compose.material.icons.outlined.EmojiEvents
 import androidx.compose.material.icons.outlined.Flag
 import androidx.compose.material.icons.outlined.Info
 import androidx.compose.material.icons.outlined.Language
-import androidx.compose.material.icons.outlined.MailOutline
 import androidx.compose.material.icons.outlined.NewReleases
 import androidx.compose.material.icons.outlined.Palette
 import androidx.compose.material.icons.outlined.Policy
@@ -471,25 +470,6 @@ fun SettingsScreen(
                                     "https://play.google.com/store/apps/details?id=${context.packageName}".toUri()
                                 )
                             )
-                        }
-                    }
-                )
-                SettingsItem(
-                    icon = Icons.Outlined.MailOutline,
-                    title = "Send Feedback",
-                    subtitle = "Report a bug or suggest a feature",
-                    onClick = {
-                        val intent = Intent(Intent.ACTION_SENDTO).apply {
-                            data = "mailto:".toUri()
-                            putExtra(Intent.EXTRA_EMAIL, arrayOf("jenilmacwan29@gmail.com"))
-                            putExtra(
-                                Intent.EXTRA_SUBJECT,
-                                "F1Companion Feedback (v${BuildConfig.VERSION_NAME})"
-                            )
-                        }
-                        try {
-                            context.startActivity(intent)
-                        } catch (_: Exception) {
                         }
                     }
                 )

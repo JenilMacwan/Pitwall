@@ -217,6 +217,12 @@ fun AppNavigation() {
                         navController = navController
                     )
                 }
+                composable(route = "telemetry") {
+                    SettingsDetailPlaceholder(
+                        title = "Live Telemetry",
+                        navController = navController
+                    )
+                }
             }
 
             AnimatedVisibility(

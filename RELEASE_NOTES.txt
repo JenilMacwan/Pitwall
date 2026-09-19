@@ -9,6 +9,7 @@ This major update introduces Cloud Authentication, Google OAuth, custom Password
 🔐 Cloud Authentication & Security Spectrum
 
 - Firebase Auth & Google OAuth: Full support for Email/Password sign-in, account registration, password resets, and Google Sign-In via Android Credential Manager API.
+- Fixed Google Sign-In: Resolved Google OAuth authentication issues on distributed CI/CD builds.
 - Password Security Spectrum: Interactive real-time password strength analyzer evaluating 5 security criteria (8+ Chars, A-Z, a-z, 0-9, and Special Characters) with dynamic color spectrum bars and indicator chips.
 - Targeted Field Highlighting & Telemetry Snackbars: Auth errors highlight specific input fields with F1 Red borders while displaying sleek top-anchored telemetry Snackbars.
 - Smart First-Launch Onboarding: Automatically detects first-time app installs, directing new users to the sign-in/register experience before landing on Home.

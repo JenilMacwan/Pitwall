@@ -10,6 +10,7 @@ key.properties
 apikey.properties
 *.jks
 *.keystore
+keystore_base64.txt
 *.p12
 *.bks
 *.pem

@@ -38,6 +38,18 @@ jobs:
             echo "No Google Services secret found. Using fallback template."
           fi
 
+      - name: Setup Fixed Keystore for Google Sign-In
+        env:
+          KEYSTORE_BASE64: ${{ secrets.KEYSTORE_BASE64 }}
+        run: |
+          if [ -n "$KEYSTORE_BASE64" ]; then
+            mkdir -p ~/.android/
+            echo "$KEYSTORE_BASE64" | base64 -d > ~/.android/debug.keystore
+            echo "Successfully restored fixed debug keystore for Google Sign-In."
+          else
+            echo "No KEYSTORE_BASE64 secret found. Google Sign-In may fail on CI builds."
+          fi
+
       - name: Setup local.properties
         run: |
           if [ -n "$CHAT_API_KEY" ]; then

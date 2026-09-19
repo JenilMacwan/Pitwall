@@ -3,7 +3,6 @@ package com.jenil.f1comp.viewmodel
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.google.firebase.Firebase
-import com.google.firebase.messaging.FirebaseMessagingService
 import com.google.firebase.messaging.messaging
 import com.jenil.f1comp.data.repository.DataStoreRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -50,9 +49,45 @@ class SettingsViewModel @Inject constructor(
         initialValue = null
     )
 
+    val favoriteTeam: StateFlow<String?> = repository.favoriteTeam.stateIn(
+        scope = viewModelScope,
+        started = SharingStarted.WhileSubscribed(5000),
+        initialValue = null
+    )
+
+    val favoriteDriver: StateFlow<String?> = repository.favoriteDriver.stateIn(
+        scope = viewModelScope,
+        started = SharingStarted.WhileSubscribed(5000),
+        initialValue = null
+    )
+
+    val isFirstLaunch: StateFlow<Boolean?> = repository.isFirstLaunch.stateIn(
+        scope = viewModelScope,
+        started = SharingStarted.WhileSubscribed(5000),
+        initialValue = null
+    )
+
     fun toggleDarkMode(isDarkMode: Boolean) {
         viewModelScope.launch {
             repository.setDarkMode(isDarkMode)
+        }
+    }
+
+    fun setFirstLaunchCompleted() {
+        viewModelScope.launch {
+            repository.setFirstLaunchCompleted()
+        }
+    }
+
+    fun setFavoriteTeam(team: String) {
+        viewModelScope.launch {
+            repository.setFavoriteTeam(team)
+        }
+    }
+
+    fun setFavoriteDriver(driver: String) {
+        viewModelScope.launch {
+            repository.setFavoriteDriver(driver)
         }
     }
 

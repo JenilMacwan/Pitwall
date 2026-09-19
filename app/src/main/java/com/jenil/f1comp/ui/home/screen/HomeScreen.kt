@@ -40,10 +40,10 @@ import coil.request.ImageRequest
 import com.jenil.f1comp.R
 import com.jenil.f1comp.ui.F1ScreenPadding
 import com.jenil.f1comp.ui.home.components.NextRaceCard
+import com.jenil.f1comp.ui.home.components.PodiumDriverData
+import com.jenil.f1comp.ui.home.components.PodiumHeroCard
 import com.jenil.f1comp.ui.home.components.TopStandingsCard
 import com.jenil.f1comp.ui.navigation.BottomNavItem
-import com.jenil.f1comp.ui.results.component.PodiumDriverData
-import com.jenil.f1comp.ui.results.component.PodiumHeroCard
 import com.jenil.f1comp.ui.results.screen.ResultSessionType
 import com.jenil.f1comp.viewmodel.ConstructorStandingsViewModel
 import com.jenil.f1comp.viewmodel.DriverStandingsViewModel
@@ -124,6 +124,16 @@ fun HomeScreen(
                     fontWeight = FontWeight.Bold,
                     color = MaterialTheme.colorScheme.onSurface
                 )
+                Spacer(modifier = Modifier.weight(1f))
+                IconButton(
+                    onClick = { navController.navigate("user_profile") }
+                ) {
+                    Icon(
+                        painter = painterResource(R.drawable.ic_profile),
+                        contentDescription = "Profile",
+                        tint = MaterialTheme.colorScheme.onSurface
+                    )
+                }
             }
         }
 
@@ -226,7 +236,7 @@ fun HomeScreen(
                                     p3 = p3,
                                     raceResult = raceResults,
                                     selectedSession = ResultSessionType.RACE,
-                                    onDriverClick = { driverName -> navController.navigate("profile/true/$driverName") },
+                                    onDriverClick = { driverId -> navController.navigate("profile/true/$driverId") },
                                     onConstructorClick = { teamName -> navController.navigate("profile/false/$teamName") },
                                     onResultClick = {
                                         navController.navigate("race_result/$lastRaceId/${LocalDate.now().year}")

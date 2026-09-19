@@ -43,6 +43,8 @@ import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
 import com.jenil.f1comp.ui.F1ScreenPadding
 import com.jenil.f1comp.ui.theme.F1CompTheme
+import com.jenil.f1comp.util.FlagImage
+import com.jenil.f1comp.util.ProfileUtils
 import java.util.Locale
 
 data class LanguageOption(
@@ -141,9 +143,10 @@ fun LanguageSettingsScreen(
                         horizontalArrangement = Arrangement.SpaceBetween
                     ) {
                         Row(verticalAlignment = Alignment.CenterVertically) {
-                            Text(
-                                text = language.flagEmoji,
-                                style = MaterialTheme.typography.titleLarge
+                            FlagImage(
+                                flagUrl = ProfileUtils.getFlagUrl(emoji = language.flagEmoji),
+                                width = 24.dp,
+                                height = 16.dp
                             )
                             Spacer(modifier = Modifier.width(12.dp))
                             Column {

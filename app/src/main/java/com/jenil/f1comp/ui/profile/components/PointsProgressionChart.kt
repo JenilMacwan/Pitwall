@@ -23,6 +23,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
@@ -31,6 +32,7 @@ import com.jenil.f1comp.data.model.DriverPointsProgression
 import com.patrykandpatrick.vico.compose.cartesian.CartesianChartHost
 import com.patrykandpatrick.vico.compose.cartesian.axis.HorizontalAxis
 import com.patrykandpatrick.vico.compose.cartesian.axis.VerticalAxis
+import com.patrykandpatrick.vico.compose.cartesian.axis.rememberAxisLabelComponent
 import com.patrykandpatrick.vico.compose.cartesian.data.CartesianChartModelProducer
 import com.patrykandpatrick.vico.compose.cartesian.data.CartesianValueFormatter
 import com.patrykandpatrick.vico.compose.cartesian.data.lineModel
@@ -39,6 +41,7 @@ import com.patrykandpatrick.vico.compose.cartesian.layer.rememberLine
 import com.patrykandpatrick.vico.compose.cartesian.layer.rememberLineCartesianLayer
 import com.patrykandpatrick.vico.compose.cartesian.rememberCartesianChart
 import com.patrykandpatrick.vico.compose.common.Fill
+import com.patrykandpatrick.vico.compose.common.component.rememberLineComponent
 import com.patrykandpatrick.vico.compose.common.component.rememberShapeComponent
 import java.util.Locale
 
@@ -63,7 +66,29 @@ fun PointsProgressionChart(
     }
 
     val primaryColor = MaterialTheme.colorScheme.primary
+    val textColor = MaterialTheme.colorScheme.onSurface
+    val axisLabelColor = MaterialTheme.colorScheme.onSurface
+    val axisGuidelineColor = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.20f)
+    val axisLineColor = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.40f)
 
+    val axisLabelComponent = rememberAxisLabelComponent(
+        style = TextStyle(
+            color = axisLabelColor,
+            fontFamily = FontFamily.Monospace,
+            fontSize = 11.sp,
+            fontWeight = FontWeight.Bold
+        )
+    )
+
+    val axisGuidelineComponent = rememberLineComponent(
+        fill = Fill(axisGuidelineColor),
+        thickness = 1.dp
+    )
+
+    val axisLineComponent = rememberLineComponent(
+        fill = Fill(axisLineColor),
+        thickness = 1.dp
+    )
 
     val customLineStyle = LineCartesianLayer.rememberLine(
         fill = LineCartesianLayer.LineFill.single(Fill(primaryColor)),
@@ -103,14 +128,15 @@ fun PointsProgressionChart(
                 Text(
                     text = "Points Progression",
                     style = MaterialTheme.typography.labelMedium,
-                    color = MaterialTheme.colorScheme.onSurfaceVariant
+                    fontWeight = FontWeight.SemiBold,
+                    color = textColor
                 )
                 Text(
                     text = "${formatPoints(totalPoints)} pts",
                     style = MaterialTheme.typography.titleLarge,
                     fontFamily = FontFamily.Monospace,
                     fontWeight = FontWeight.Bold,
-                    color = MaterialTheme.colorScheme.onSurface
+                    color = textColor
                 )
             }
 
@@ -119,7 +145,7 @@ fun PointsProgressionChart(
                     text = "+${formatPoints(lastRoundGain)} last round",
                     style = MaterialTheme.typography.labelSmall,
                     fontFamily = FontFamily.Monospace,
-                    fontWeight = FontWeight.SemiBold,
+                    fontWeight = FontWeight.Bold,
                     color = primaryColor
                 )
             }
@@ -140,11 +166,19 @@ fun PointsProgressionChart(
                         LineCartesianLayer.LineProvider.series(customLineStyle)
                     ),
                     startAxis = VerticalAxis.rememberStart(
+                        label = axisLabelComponent,
+                        line = axisLineComponent,
+                        tick = axisLineComponent,
+                        guideline = axisGuidelineComponent,
                         valueFormatter = remember {
                             CartesianValueFormatter { _, value: Double, _ -> formatPoints(value) }
                         }
                     ),
                     bottomAxis = HorizontalAxis.rememberBottom(
+                        label = axisLabelComponent,
+                        line = axisLineComponent,
+                        tick = axisLineComponent,
+                        guideline = axisGuidelineComponent,
                         valueFormatter = remember {
                             CartesianValueFormatter { _, value: Double, _ -> "R${value.toInt() + 1}" }
                         }
@@ -163,14 +197,15 @@ fun PointsProgressionChart(
                 Icon(
                     imageVector = Icons.AutoMirrored.Outlined.ShowChart,
                     contentDescription = null,
-                    tint = MaterialTheme.colorScheme.primary,
+                    tint = primaryColor,
                     modifier = Modifier.size(14.dp)
                 )
                 Spacer(modifier = Modifier.width(6.dp))
                 Text(
                     text = "Best round: R${bestRound.round} · ${bestRound.raceName} · +${formatPoints(bestRound.points)} pts",
                     style = MaterialTheme.typography.labelSmall.copy(fontSize = 11.sp),
-                    color = MaterialTheme.colorScheme.onSurfaceVariant,
+                    fontWeight = FontWeight.Medium,
+                    color = textColor,
                     maxLines = 1
                 )
             }

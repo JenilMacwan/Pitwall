@@ -23,6 +23,9 @@ data class Driver(
     val nationality: String?,
     val image: String?,
     val team: String?,
+    val born: String? = null,
+    val debut: String? = null,
+    val about: String? = null,
     @SerializedName("career_stats")
     val careerStats: DriverCareerStats? = null
 )
@@ -52,6 +55,7 @@ data class DriverCurrentSeason(
     val points: String,
     val wins: Int,
     val podiums: Int,
+    val poles: Int,
     @SerializedName("points_progression")
     val pointsProgression: List<DriverPointsProgression>
 )

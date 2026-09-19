@@ -46,9 +46,12 @@ import coil.compose.AsyncImage
 import com.jenil.f1comp.data.local.entity.CircuitInfoEntity
 import com.jenil.f1comp.data.local.entity.ScheduleEntity
 import com.jenil.f1comp.ui.theme.F1Red
+import com.jenil.f1comp.util.FlagImage
+import com.jenil.f1comp.util.ProfileUtils
 import java.time.LocalDate
 import java.time.LocalTime
 import java.time.format.DateTimeFormatter
+
 @Composable
 fun ScheduleCard(
     modifier: Modifier = Modifier,
@@ -114,9 +117,10 @@ fun ScheduleCard(
                     Column(modifier = Modifier.weight(1f)) {
 
                         Row(verticalAlignment = Alignment.CenterVertically) {
-                            Text(
-                                text = schedule.flag,
-                                style = MaterialTheme.typography.titleMedium
+                            FlagImage(
+                                flagUrl = ProfileUtils.getFlagUrl(emoji = schedule.flag),
+                                width = 22.dp,
+                                height = 15.dp
                             )
                             Spacer(modifier = Modifier.width(8.dp))
                             Text(

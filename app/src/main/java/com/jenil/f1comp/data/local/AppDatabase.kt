@@ -49,7 +49,7 @@ import com.jenil.f1comp.data.local.entity.TeammateHeadtoHeadEntity
         SprintQualifyingResultEntity::class,
         SprintResultEntity::class
     ],
-    version = 36,
+    version = 41,
     exportSchema = false
 )
 @TypeConverters(Converters::class)

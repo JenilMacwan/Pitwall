@@ -1,9 +1,88 @@
 package com.jenil.f1comp.util
 
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.text.SpanStyle
+import androidx.compose.ui.text.buildAnnotatedString
+import androidx.compose.ui.text.withStyle
 import com.jenil.f1comp.data.model.DriverAboutInfo
 import com.jenil.f1comp.data.model.TeamAboutInfo
+import com.jenil.f1comp.ui.theme.F1Red
 
 object ProfileUtils {
+
+    val multipleColorText = buildAnnotatedString {
+        // First part of the text
+        withStyle(style = SpanStyle(color = F1Red)) {
+            append("PIT")
+        }
+        // Second part of the text
+        withStyle(style = SpanStyle(color = Color.White)) {
+            append("WALL")
+        }
+    }
+
+    fun getCountryCode(nationality: String?): String {
+        return when (nationality?.lowercase()?.trim()) {
+            "british", "great britain", "uk" -> "gb"
+            "dutch", "netherlands" -> "nl"
+            "monégasque", "monegasque", "monaco" -> "mc"
+            "spanish", "spain" -> "es"
+            "mexican", "mexico" -> "mx"
+            "australian", "australia" -> "au"
+            "german", "germany" -> "de"
+            "french", "france" -> "fr"
+            "canadian", "canada" -> "ca"
+            "japanese", "japan" -> "jp"
+            "thai", "thailand" -> "th"
+            "danish", "denmark" -> "dk"
+            "chinese", "china" -> "cn"
+            "finnish", "finland" -> "fi"
+            "brazilian", "brazil" -> "br"
+            "italian", "italy" -> "it"
+            "american", "usa", "united states" -> "us"
+            "austrian", "austria" -> "at"
+            "swiss", "switzerland" -> "ch"
+            "new zealander", "new zealand" -> "nz"
+            "argentine", "argentina" -> "ar"
+            "belgian", "belgium" -> "be"
+            "bahrain" -> "bh"
+            "saudi arabia" -> "sa"
+            "azerbaijan" -> "az"
+            "singapore" -> "sg"
+            "qatar" -> "qa"
+            "uae", "abu dhabi" -> "ae"
+            "hungary", "hungarian" -> "hu"
+            else -> "un"
+        }
+    }
+
+    fun emojiToCountryCode(emoji: String?): String {
+        if (emoji.isNullOrBlank() || emoji.length < 4) return "un"
+        return try {
+            val firstCode = Character.codePointAt(emoji, 0) - 0x1F1E6 + 'a'.code
+            val secondOffset = Character.charCount(Character.codePointAt(emoji, 0))
+            val secondCode = Character.codePointAt(emoji, secondOffset) - 0x1F1E6 + 'a'.code
+            val code = "${firstCode.toChar()}${secondCode.toChar()}"
+            if (code.all { it in 'a'..'z' }) code else "un"
+        } catch (e: Exception) {
+            "un"
+        }
+    }
+
+    fun getFlagUrl(nationality: String? = null, emoji: String? = null): String {
+        val code = when {
+            !nationality.isNullOrBlank() -> {
+                val c = getCountryCode(nationality)
+                if (c != "un") c else emojiToCountryCode(nationality)
+            }
+            !emoji.isNullOrBlank() -> {
+                val converted = emojiToCountryCode(emoji)
+                if (converted != "un") converted else getCountryCode(emoji)
+            }
+            else -> "un"
+        }
+        return "https://flagcdn.com/w80/$code.png"
+    }
 
     fun getFlagEmoji(nationality: String?): String {
         return when (nationality?.lowercase()) {
@@ -241,7 +320,7 @@ object ProfileUtils {
             "arvid_lindblad" -> DriverAboutInfo(
                 team = "Visa Cash App Racing Bulls F1 Team",
                 country = "Great Britain",
-                number = "40",
+                number = "41",
                 about = "Red Bull’s latest teenage sensation who rocketed through junior categories with dominant race victories, entering the grid as an aggressive, high-ceiling rookie."
             )
             "ocon" -> DriverAboutInfo(

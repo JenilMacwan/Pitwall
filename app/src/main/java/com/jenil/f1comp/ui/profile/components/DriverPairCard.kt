@@ -17,9 +17,13 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
-import com.jenil.f1comp.ui.home.components.DriverProfileCircle
+import com.jenil.f1comp.util.FlagImage
+import com.jenil.f1comp.util.ProfileUtils
 
 @Composable
 fun DriverPairingCard(
@@ -27,13 +31,16 @@ fun DriverPairingCard(
     driverName: String,
     driverNumber: String,
     imageUrl: String? = null,
+    nationality: String? = null,
+    positionText: String? = null,
+    teamColor: Color = MaterialTheme.colorScheme.primary,
     onClick: () -> Unit = {},
 ) {
     Card(
         modifier = modifier,
         onClick = onClick,
-        shape = RoundedCornerShape(12.dp),
-        border = BorderStroke(1.dp, MaterialTheme.colorScheme.surfaceVariant),
+        shape = RoundedCornerShape(14.dp),
+        border = BorderStroke(1.dp, MaterialTheme.colorScheme.outlineVariant.copy(alpha = 0.5f)),
         colors = CardDefaults.cardColors(
             containerColor = MaterialTheme.colorScheme.surfaceVariant.copy(alpha = 0.35f)
         )
@@ -42,30 +49,57 @@ fun DriverPairingCard(
             modifier = Modifier
                 .fillMaxWidth()
                 .padding(12.dp),
-            verticalAlignment = Alignment.CenterVertically,
-            horizontalArrangement = Arrangement.SpaceBetween
+            verticalAlignment = Alignment.CenterVertically
         ) {
-            DriverProfileCircle(
+            DriverHeadshot(
                 imageUrl = imageUrl,
                 driverName = driverName,
-                size = 40.dp
+                modifier = Modifier
+                    .width(48.dp)
+                    .height(56.dp)
+                    .clip(RoundedCornerShape(8.dp))
             )
-            Spacer(modifier = Modifier.width(12.dp))
+            Spacer(modifier = Modifier.width(10.dp))
             Column(
                 modifier = Modifier.weight(1f)
             ) {
-                Text(
-                    text = driverName,
-                    style = MaterialTheme.typography.bodyMedium,
-                    fontWeight = FontWeight.Bold,
-                    color = MaterialTheme.colorScheme.onSurface
-                )
-                Spacer(modifier = Modifier.height(4.dp))
-                Text(
-                    text = "DRIVER #$driverNumber",
-                    style = MaterialTheme.typography.labelSmall,
-                    color = MaterialTheme.colorScheme.onSurfaceVariant
-                )
+                Row(
+                    verticalAlignment = Alignment.CenterVertically,
+                    horizontalArrangement = Arrangement.SpaceBetween,
+                    modifier = Modifier.fillMaxWidth()
+                ) {
+                    Text(
+                        text = driverName,
+                        style = MaterialTheme.typography.bodyMedium,
+                        fontWeight = FontWeight.Bold,
+                        color = MaterialTheme.colorScheme.onSurface
+                    )
+                    nationality?.let {
+                        FlagImage(flagUrl = ProfileUtils.getFlagUrl(nationality = it))
+                    }
+                }
+                Spacer(modifier = Modifier.height(2.dp))
+                Row(
+                    verticalAlignment = Alignment.CenterVertically,
+                    horizontalArrangement = Arrangement.SpaceBetween,
+                    modifier = Modifier.fillMaxWidth()
+                ) {
+                    Text(
+                        text = "CAR #$driverNumber",
+                        fontFamily = FontFamily.Monospace,
+                        style = MaterialTheme.typography.labelSmall,
+                        fontWeight = FontWeight.Bold,
+                        color = teamColor
+                    )
+                    positionText?.let {
+                        Text(
+                            text = it,
+                            fontFamily = FontFamily.Monospace,
+                            style = MaterialTheme.typography.labelSmall,
+                            color = MaterialTheme.colorScheme.onSurfaceVariant
+                        )
+                    }
+                }
             }
         }
     }

@@ -11,6 +11,7 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.items
@@ -46,10 +47,11 @@ import com.jenil.f1comp.data.local.entity.ScheduleEntity
 import com.jenil.f1comp.data.local.entity.SprintQualifyingResultEntity
 import com.jenil.f1comp.data.local.entity.SprintResultEntity
 import com.jenil.f1comp.ui.F1ScreenPadding
-import com.jenil.f1comp.ui.results.component.PodiumDriverData
+import com.jenil.f1comp.ui.home.components.PodiumDriverData
 import com.jenil.f1comp.ui.results.component.QualifyingResultRow
 import com.jenil.f1comp.ui.results.component.RaceChip
 import com.jenil.f1comp.ui.results.component.RaceResultRow
+import com.jenil.f1comp.util.FlagImage
 import com.jenil.f1comp.util.ProfileUtils
 import com.jenil.f1comp.viewmodel.QualifyingViewModel
 import com.jenil.f1comp.viewmodel.RaceResultViewModel
@@ -164,10 +166,6 @@ fun RaceResultScreen(
         .replace("Grand Prix", "GP")
         .replace("GrandPrix", "GP")
 
-    val countryFlag = currentScheduleEntry?.flag?.takeIf { it.isNotBlank() }
-        ?: currentScheduleEntry?.circuitCountry?.let { ProfileUtils.getFlagEmoji(it) }
-        ?: "🏁"
-
     Column(
         modifier = modifier
             .fillMaxSize()
@@ -194,12 +192,21 @@ fun RaceResultScreen(
             ) {
                 Row(verticalAlignment = Alignment.CenterVertically) {
                     Text(
-                        text = "$displayRaceName $countryFlag",
+                        text = "$displayRaceName ",
                         style = MaterialTheme.typography.titleLarge,
                         fontWeight = FontWeight.Bold,
                         color = MaterialTheme.colorScheme.onSurface,
                         maxLines = 1,
                         overflow = TextOverflow.Ellipsis
+                    )
+                    Spacer(modifier = Modifier.width(4.dp))
+                    FlagImage(
+                        flagUrl = ProfileUtils.getFlagUrl(
+                            nationality = currentScheduleEntry?.circuitCountry,
+                            emoji = currentScheduleEntry?.flag
+                        ),
+                        width = 24.dp,
+                        height = 16.dp
                     )
                 }
                 Spacer(modifier = Modifier.height(2.dp))

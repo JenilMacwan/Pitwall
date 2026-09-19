@@ -30,6 +30,7 @@ import androidx.compose.ui.draw.scale
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.hapticfeedback.HapticFeedbackType
 import androidx.compose.ui.platform.LocalHapticFeedback
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import dev.chrisbanes.haze.HazeState
@@ -117,8 +118,7 @@ fun CustomBottomNavItem(
         horizontalAlignment = Alignment.CenterHorizontally,
         verticalArrangement = Arrangement.Center
     ) {
-        // Selection indicator: a soft filled pill behind the icon,
-        // scaling in/out instead of hard-cutting visibility.
+
         Column(
             horizontalAlignment = Alignment.CenterHorizontally,
             modifier = Modifier
@@ -129,7 +129,7 @@ fun CustomBottomNavItem(
                 .padding(horizontal = 14.dp, vertical = 6.dp)
         ) {
             Icon(
-                imageVector = item.icon,
+                painter = (if (isSelected) painterResource(id = item.icon2) else painterResource(id = item.icon)),
                 contentDescription = item.title,
                 tint = animatedColor,
                 modifier = Modifier

@@ -30,6 +30,9 @@ class DriverProfileRepository @Inject constructor(
                 nationality = networkModel.nationality,
                 image = networkModel.image,
                 team = networkModel.team,
+                born = networkModel.born,
+                debut = networkModel.debut,
+                about = networkModel.about,
                 careerStats = networkModel.careerStats
             )
         }

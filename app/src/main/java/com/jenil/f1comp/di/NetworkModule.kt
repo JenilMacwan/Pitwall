@@ -1,5 +1,6 @@
 package com.jenil.f1comp.di
 
+import com.jenil.f1comp.BuildConfig
 import com.jenil.f1comp.data.remote.ChatApiService
 import com.jenil.f1comp.data.remote.F1ApiService
 import dagger.Module
@@ -27,7 +28,7 @@ object NetworkModule {
         return OkHttpClient.Builder()
             .addInterceptor(
                 HttpLoggingInterceptor().apply {
-                    level = HttpLoggingInterceptor.Level.BODY
+                    level = if (BuildConfig.DEBUG) HttpLoggingInterceptor.Level.BODY else HttpLoggingInterceptor.Level.NONE
                 }
             )
             .build()

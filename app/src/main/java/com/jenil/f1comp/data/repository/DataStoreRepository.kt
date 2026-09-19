@@ -37,11 +37,39 @@ class DataStoreRepository @Inject constructor(
         preferences[PreferencesKeys.STANDINGS_UPDATES]
     }
 
+    val favoriteTeam: Flow<String?> = dataStore.data.map { preferences ->
+        preferences[PreferencesKeys.FAVORITE_TEAM]
+    }
 
+    val favoriteDriver: Flow<String?> = dataStore.data.map { preferences ->
+        preferences[PreferencesKeys.FAVORITE_DRIVER]
+    }
+
+    val isFirstLaunch: Flow<Boolean?> = dataStore.data.map { preferences ->
+        preferences[PreferencesKeys.IS_FIRST_LAUNCH] ?: true
+    }
 
     suspend fun setDarkMode(isDarkMode: Boolean) {
         dataStore.edit { preferences ->
             preferences[PreferencesKeys.IS_DARK_MODE] = isDarkMode
+        }
+    }
+
+    suspend fun setFirstLaunchCompleted() {
+        dataStore.edit { preferences ->
+            preferences[PreferencesKeys.IS_FIRST_LAUNCH] = false
+        }
+    }
+
+    suspend fun setFavoriteTeam(team: String) {
+        dataStore.edit { preferences ->
+            preferences[PreferencesKeys.FAVORITE_TEAM] = team
+        }
+    }
+
+    suspend fun setFavoriteDriver(driver: String) {
+        dataStore.edit { preferences ->
+            preferences[PreferencesKeys.FAVORITE_DRIVER] = driver
         }
     }
 

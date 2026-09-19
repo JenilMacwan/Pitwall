@@ -11,5 +11,7 @@ data class DriverAboutInfo(
     val team: String,
     val country: String,
     val number: String,
-    val about: String
+    val about: String,
+//    val born: String,
+//    val debut: String
 )

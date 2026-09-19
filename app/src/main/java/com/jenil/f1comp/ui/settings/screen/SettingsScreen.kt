@@ -441,7 +441,7 @@ fun SettingsScreen(
                 SettingsItem(
                     icon = Icons.Outlined.Info,
                     title = stringResource(id = R.string.title_version),
-                    subtitle = stringResource(id = R.string.sub_title_version),
+                    subtitle = "v${BuildConfig.VERSION_NAME}",
                     showChevron = false,
                     onClick = { }
                 )

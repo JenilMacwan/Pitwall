@@ -1,4 +1,4 @@
-package com.jenil.f1comp.ui.results.component
+package com.jenil.f1comp.ui.home.components
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
@@ -38,7 +38,6 @@ import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.jenil.f1comp.data.local.entity.RaceResultEntity
-import com.jenil.f1comp.ui.home.components.DriverProfileCircle
 import com.jenil.f1comp.ui.results.screen.ResultSessionType
 import com.jenil.f1comp.ui.theme.PodiumBronze
 import com.jenil.f1comp.ui.theme.PodiumGold

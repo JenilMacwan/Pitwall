@@ -1,39 +1,48 @@
-PitWall v1.2.1 Release Notes 🏎️🏁
+PitWall v1.2.2 Release Notes 🏎️🏁
 
-This update introduces the redesigned Race Schedule experience, interactive segmented tab toggles, compact upcoming race cards, dynamic circuit telemetry & track layout mapping, expanded news card styling, and Vico chart analytics upgrades.
+This major update introduces Cloud Authentication, Google OAuth, custom Password Security Spectrum validation, Cloud Firestore synchronization, a redesigned Paddock User Profile, interactive Favorite Constructor & Driver selection, and Navigation Drawer improvements.
 
 🚀 More UI and performance updates coming soon!
 
 --------------------------------------------------------------------------------
 
-📅 Redesigned Schedule Hub & Race Cards
+🔐 Cloud Authentication & Security Spectrum
 
-- Segmented Tab Toggle: Upgraded Schedule filtering tabs into a smooth sliding segmented toggle bar ("All Races", "Upcoming", "Completed") with spring-animated pill indicators.
-- Compact Upcoming Race Cards: Introduced a sleek, compact card layout for upcoming Grands Prix featuring round numbers, sprint badges, event date ranges, and interactive "Details ⌄" / "Collapse ↑" expandable session timetables.
-- Grand Prix Session Badge: Redesigned the Grand Prix box with an F1 Red squircle trophy icon, red laps pill badge, and date/time formatting converted to the user's local device time zone.
-- Circuit Telemetry & Track Layouts: Added a 3-column telemetry section displaying LAPS, CIRCUIT LENGTH, and dynamic track layout diagrams with crisp vertical dividers.
-- Circuit Type Badges: Theme-adaptive badges ("STREET CIRCUIT", "PERMANENT CIRCUIT") positioned on race cards.
-
---------------------------------------------------------------------------------
-
-📰 News Feed & Visual Enhancements
-
-- Top Bar Surface Alignment: Refactored top bar buttons across News and Schedule screens with symmetrical 38dp circular surfaces for smooth, unclipped refresh progress spinners.
-- Expanded News Cards: Enhanced expanded news article styling with subtle outline dividers and call-to-action buttons ("Read Full Article →").
+- Firebase Auth & Google OAuth: Full support for Email/Password sign-in, account registration, password resets, and Google Sign-In via Android Credential Manager API.
+- Password Security Spectrum: Interactive real-time password strength analyzer evaluating 5 security criteria (8+ Chars, A-Z, a-z, 0-9, and Special Characters) with dynamic color spectrum bars and indicator chips.
+- Targeted Field Highlighting & Telemetry Snackbars: Auth errors highlight specific input fields with F1 Red borders while displaying sleek top-anchored telemetry Snackbars.
+- Smart First-Launch Onboarding: Automatically detects first-time app installs, directing new users to the sign-in/register experience before landing on Home.
 
 --------------------------------------------------------------------------------
 
-📊 Analytics & Performance Upgrades
+☁️ Cloud Firestore Profile Sync
 
-- Points Progression Chart: Upgraded Vico chart layer interpolation for driver and constructor points progression analytics.
-- Offline Circuit Caching: Updated local Room database schema (`CircuitInfoEntity`) to cache circuit length, total laps, circuit type, and SVG layout diagrams for instant offline viewing.
+- Cloud Synchronization: Real-time synchronization of user profiles (`users/{uid}`) across devices via Firebase Cloud Firestore.
+- Real-Time Profile Stream: Automatically updates user callsigns, avatar photo URLs, favorite teams, and drivers across sessions.
+
+--------------------------------------------------------------------------------
+
+👤 Redesigned Paddock User Profile
+
+- User Profile Hub: Redesigned profile hero card featuring verified driver badges, account email, avatar halo, and dynamic light/dark theme adaptation.
+- System Gallery Photo Picker: Integrated native Android photo picker for updating profile avatar images directly from your device gallery.
+- Favorite Constructor & Driver Selection: Interactive dropdown selectors to pick and sync your favorite F1 team (e.g. Scuderia Ferrari HP, Red Bull, McLaren) and racer (e.g. Charles Leclerc, Lewis Hamilton, Max Verstappen).
+- Help & Support Shortcuts: Direct integrations for Email Support, WhatsApp Paddock Community, Play Store Reviews, and Socials.
+- Modern Telemetry Footer: Added custom telemetry footer featuring the tagline *"Built for the fans with ❤️ in India 🇮🇳"*.
+
+--------------------------------------------------------------------------------
+
+🧭 Navigation Drawer & Layout Enhancements
+
+- Scrollable Drawer Content: Restructured navigation drawer so menu items scroll smoothly while keeping the top header and bottom footer pinned.
+- Refined Mode Toggle: Compact, touch-friendly segmented Dark/Light mode toggle switch.
 
 --------------------------------------------------------------------------------
 
 📲 Installation
-1. Download `PitWall-v1.2.1.apk`.
+1. Download `PitWall-v1.2.2.apk`.
 2. Open the file on your Android device.
-3. Enjoy the Formula 1 season with Live Team Radio, Apex AI, and Real-Time Race Intelligence!
+3. Enjoy the Formula 1 season with Live Team Radio, Apex AI, Real-Time Telemetry, and Cloud Sync!
 
 --------------------------------------------------------------------------------
 Developed with ❤️ for Formula 1 fans by Jenil Macwan.

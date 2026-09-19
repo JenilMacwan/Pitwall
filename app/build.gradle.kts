@@ -1,42 +1,6 @@
 import java.io.FileInputStream
 import java.util.Properties
 
-val googleServicesFile = file("google-services.json")
-if (!googleServicesFile.exists()) {
-    googleServicesFile.writeText(
-        """
-        {
-          "project_info": {
-            "project_number": "120285047097",
-            "project_id": "pitwall-56afa",
-            "storage_bucket": "pitwall-56afa.firebasestorage.app"
-          },
-          "client": [
-            {
-              "client_info": {
-                "mobilesdk_app_id": "1:120285047097:android:ee2cd0cb2a21c4b44be0e8",
-                "android_client_info": {
-                  "package_name": "com.jenil.f1comp"
-                }
-              },
-              "oauth_client": [],
-              "api_key": [
-                {
-                  "current_key": "AIzaSyMockKeyForCIBuilds000000000000"
-                }
-              ],
-              "services": {
-                "appinvite_service": {
-                  "other_platform_oauth_client": []
-                }
-              }
-            }
-          ],
-          "configuration_version": "1"
-        }
-        """.trimIndent()
-    )
-}
 
 plugins {
     alias(libs.plugins.android.application)
@@ -65,7 +29,7 @@ android {
         minSdk = 26
         targetSdk = 37
         versionCode = 3
-        versionName = "1.2.1"
+        versionName = "1.2.2"
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
 
@@ -114,6 +78,15 @@ dependencies {
     implementation(libs.androidx.lifecycle.viewmodel.ktx)
     implementation(libs.androidx.compose.material.icons.extended)
 
+    // Credential MaNGER
+    //noinspection LoginCredentials,UseTomlInstead
+    implementation("androidx.credentials:credentials:1.6.0")
+    //noinspection LoginCredentials,UseTomlInstead
+    implementation("androidx.credentials:credentials-play-services-auth:1.6.0")
+    //noinspection LoginCredentials,UseTomlInstead
+    implementation("com.google.android.libraries.identity.googleid:googleid:1.2.1")
+
+
     // Hilt
     implementation(libs.hilt.android)
     implementation(libs.androidx.hilt.navigation.compose)
@@ -123,6 +96,12 @@ dependencies {
     implementation(platform(libs.firebase.bom))
     implementation(libs.firebase.analytics)
     implementation(libs.firebase.messaging)
+    implementation(libs.firebase.auth)
+    implementation(libs.firebase.firestore)
+
+
+    // Google Auth
+    implementation(libs.googleid)
 
     //Image
     implementation(libs.coil.compose)

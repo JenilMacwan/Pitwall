@@ -45,6 +45,8 @@ import androidx.compose.ui.unit.sp
 import com.jenil.f1comp.data.local.entity.CircuitInfoEntity
 import com.jenil.f1comp.data.local.entity.ScheduleEntity
 import com.jenil.f1comp.ui.theme.F1Red
+import com.jenil.f1comp.util.FlagImage
+import com.jenil.f1comp.util.ProfileUtils
 import java.time.LocalDate
 import java.time.LocalTime
 import java.time.ZoneId
@@ -93,9 +95,10 @@ fun UpcomingRaceCard(
                 verticalAlignment = Alignment.Top
             ) {
                 // Flag
-                Text(
-                    text = schedule.flag,
-                    style = MaterialTheme.typography.titleLarge
+                FlagImage(
+                    flagUrl = ProfileUtils.getFlagUrl(emoji = schedule.flag),
+                    width = 24.dp,
+                    height = 16.dp
                 )
 
                 Spacer(modifier = Modifier.width(10.dp))

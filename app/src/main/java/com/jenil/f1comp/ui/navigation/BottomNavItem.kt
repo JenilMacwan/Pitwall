@@ -1,42 +1,40 @@
 package com.jenil.f1comp.ui.navigation
 
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.automirrored.filled.List
-import androidx.compose.material.icons.filled.Cloud
-import androidx.compose.material.icons.filled.DateRange
-import androidx.compose.material.icons.filled.Home
-import androidx.compose.material.icons.filled.Newspaper
-import androidx.compose.material.icons.rounded.BarChart
-import androidx.compose.material.icons.rounded.Leaderboard
-import androidx.compose.ui.graphics.vector.ImageVector
+import androidx.annotation.DrawableRes
+import com.jenil.f1comp.R
 
 sealed class BottomNavItem (
     val route: String,
     val title: String,
-    val icon: ImageVector
+    @DrawableRes val icon: Int,
+    @DrawableRes val icon2: Int
 ){
     data object Home: BottomNavItem(
         route = "home",
         title = "Home",
-        icon = Icons.Default.Home
+        icon = R.drawable.ic_home,
+        icon2 = R.drawable.ic_home_fill
     )
 
     data object Standings: BottomNavItem(
         route = "standings",
         title = "Standings",
-        icon = Icons.Rounded.Leaderboard
+        icon = R.drawable.ic_bar,
+        icon2 = R.drawable.ic_bar_fill
     )
 
     data object Schedule: BottomNavItem(
         route = "schedule",
         title = "Schedule",
-        icon = Icons.Default.DateRange
+        icon = R.drawable.ic_cal,
+        icon2 = R.drawable.ic_cal_fill
     )
 
     data object News: BottomNavItem(
         route = "news",
         title = "News",
-        icon = Icons.Default.Newspaper
+        icon = R.drawable.ic_news,
+        icon2 = R.drawable.ic_news_fill
     )
     companion object{
         val items by lazy {

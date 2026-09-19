@@ -36,6 +36,8 @@ import androidx.compose.ui.unit.dp
 import com.jenil.f1comp.data.local.entity.ScheduleEntity
 import com.jenil.f1comp.data.model.RaceCountdown
 import com.jenil.f1comp.data.model.RaceWeather
+import com.jenil.f1comp.util.FlagImage
+import com.jenil.f1comp.util.ProfileUtils
 import kotlinx.coroutines.delay
 import java.util.Locale
 import kotlin.time.Duration.Companion.milliseconds
@@ -94,7 +96,8 @@ fun NextRaceCard(
         )
 
         weather.condition.contains("Rainy", ignoreCase = true) ||
-                weather.condition.contains("Wet", ignoreCase = true) -> {
+                weather.condition.contains("Wet", ignoreCase = true) ||
+                weather.condition.contains("patchy rain nearby") -> {
             Brush.linearGradient(
                 colors = listOf(
                     Color(0xFF1E3A8A).copy(alpha = 0.25f), // Deep Blue tint
@@ -199,9 +202,10 @@ fun NextRaceCard(
                     color = MaterialTheme.colorScheme.onSurface
                 )
                 Spacer(modifier = Modifier.width(8.dp))
-                Text(
-                    text = flagEmoji,
-                    style = MaterialTheme.typography.titleLarge
+                FlagImage(
+                    flagUrl = ProfileUtils.getFlagUrl(emoji = flagEmoji),
+                    width = 24.dp,
+                    height = 18.dp
                 )
             }
 

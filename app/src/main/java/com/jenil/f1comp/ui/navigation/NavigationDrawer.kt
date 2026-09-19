@@ -5,6 +5,7 @@ import android.content.Intent
 import android.content.pm.PackageManager
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
+import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
@@ -23,8 +24,10 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.layout.widthIn
+import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.outlined.Chat
 import androidx.compose.material.icons.outlined.DarkMode
@@ -32,6 +35,7 @@ import androidx.compose.material.icons.outlined.Description
 import androidx.compose.material.icons.outlined.EmojiEvents
 import androidx.compose.material.icons.outlined.Equalizer
 import androidx.compose.material.icons.outlined.LightMode
+import androidx.compose.material.icons.outlined.Person
 import androidx.compose.material.icons.outlined.Radio
 import androidx.compose.material.icons.outlined.Settings
 import androidx.compose.material.icons.rounded.Share
@@ -75,6 +79,8 @@ import com.jenil.f1comp.data.model.RaceCountdown
 import com.jenil.f1comp.ui.chatbot.component.apexMark
 import com.jenil.f1comp.ui.state.NextRaceUiState
 import com.jenil.f1comp.ui.theme.F1CompTheme
+import com.jenil.f1comp.util.FlagImage
+import com.jenil.f1comp.util.ProfileUtils
 import com.jenil.f1comp.util.syncRacesToCalendar
 import com.jenil.f1comp.viewmodel.NextRaceViewModel
 import com.jenil.f1comp.viewmodel.ScheduleViewModel
@@ -166,8 +172,7 @@ fun PitwallDrawerContent(
                     .fillMaxSize()
                     .navigationBarsPadding()
             ) {
-
-                // Header
+                // Pinned Header
                 Spacer(modifier = Modifier.height(20.dp))
 
                 Row(
@@ -221,9 +226,10 @@ fun PitwallDrawerContent(
                             horizontalArrangement = Arrangement.SpaceBetween
                         ) {
                             Row(verticalAlignment = Alignment.CenterVertically) {
-                                Text(
-                                    text = nextRace.flagEmoji,
-                                    style = MaterialTheme.typography.bodyMedium
+                                FlagImage(
+                                    flagUrl = ProfileUtils.getFlagUrl(emoji = nextRace.flagEmoji),
+                                    width = 20.dp,
+                                    height = 14.dp
                                 )
                                 Spacer(modifier = Modifier.width(8.dp))
                                 Text(
@@ -259,8 +265,15 @@ fun PitwallDrawerContent(
                 )
                 Spacer(modifier = Modifier.height(8.dp))
 
-                // Navigation Sections
-                DrawerSectionHeader("RACE HUB")
+                // Scrollable Navigation Items (In Between Header & Footer)
+                Column(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .weight(1f)
+                        .verticalScroll(rememberScrollState())
+                ) {
+                    // Navigation Sections
+                    DrawerSectionHeader("RACE HUB")
 
                 DrawerNavItem(
                     icon = Icons.Outlined.Radio,
@@ -346,6 +359,13 @@ fun PitwallDrawerContent(
                 DrawerSectionHeader("PREFERENCES")
 
                 DrawerNavItem(
+                    icon = Icons.Outlined.Person,
+                    label = "Paddock Profile",
+                    selected = currentRoute == "user_profile",
+                    onClick = { onNavigate("user_profile") }
+                )
+
+                DrawerNavItem(
                     icon = Icons.Outlined.Settings,
                     label = "Settings",
                     selected = currentRoute == "settings",
@@ -361,13 +381,14 @@ fun PitwallDrawerContent(
                     }
                 )
 
-                Spacer(modifier = Modifier.weight(1f))
+                Spacer(modifier = Modifier.height(16.dp))
+            }
 
-                // Footer
-                HorizontalDivider(
-                    modifier = Modifier.padding(horizontal = 24.dp),
-                    color = MaterialTheme.colorScheme.outlineVariant.copy(alpha = 0.5f)
-                )
+            // Pinned Footer
+            HorizontalDivider(
+                modifier = Modifier.padding(horizontal = 24.dp),
+                color = MaterialTheme.colorScheme.outlineVariant.copy(alpha = 0.5f)
+            )
                 Column(
                     modifier = Modifier
                         .fillMaxWidth()
@@ -421,7 +442,7 @@ fun PitwallDrawerContent(
                             modifier = Modifier.clickable {
                                 val intent = Intent(Intent.ACTION_SENDTO).apply {
                                     data = "mailto:".toUri()
-                                    putExtra(Intent.EXTRA_EMAIL, arrayOf("support@pitwall.com"))
+                                    putExtra(Intent.EXTRA_EMAIL, arrayOf("support.pitwall@gmail.com"))
                                     putExtra(
                                         Intent.EXTRA_SUBJECT,
                                         "F1Companion Feedback (v${BuildConfig.VERSION_NAME})"
@@ -448,67 +469,78 @@ fun PitwallDrawerContent(
                             )
                         }
 
-                        // Right side: Custom Theme Toggle
+                        // Right side: Executive Segmented Theme Toggle
                         Surface(
-                            shape = RoundedCornerShape(50),
-                            border = androidx.compose.foundation.BorderStroke(
+                            shape = RoundedCornerShape(20.dp),
+                            border = BorderStroke(
                                 1.dp,
                                 MaterialTheme.colorScheme.outlineVariant
                             ),
-                            color = Color.Transparent
+                            color = MaterialTheme.colorScheme.surfaceVariant,
+                            modifier = Modifier.height(38.dp)
                         ) {
                             Row(
-                                modifier = Modifier.padding(2.dp),
+                                modifier = Modifier.padding(3.dp),
                                 verticalAlignment = Alignment.CenterVertically
                             ) {
                                 val haptic = LocalHapticFeedback.current
 
-                                // Dark Mode Toggle
-                                Box(
+                                // Dark Segment
+                                Surface(
+                                    shape = RoundedCornerShape(16.dp),
+                                    color = if (isDarkMode) MaterialTheme.colorScheme.primary else Color.Transparent,
                                     modifier = Modifier
-                                        .background(
-                                            color = if (isDarkMode) MaterialTheme.colorScheme.onSurface else Color.Transparent,
-                                            shape = CircleShape
-                                        )
-                                        .clip(CircleShape)
+                                        .fillMaxHeight()
+                                        .width(38.dp)
+                                        .clip(RoundedCornerShape(16.dp))
                                         .clickable {
                                             if (!isDarkMode) {
                                                 haptic.performHapticFeedback(HapticFeedbackType.TextHandleMove)
                                                 onToggleTheme(true)
                                             }
                                         }
-                                        .padding(6.dp)
                                 ) {
-                                    Icon(
-                                        imageVector = Icons.Outlined.DarkMode,
-                                        contentDescription = "Dark Mode",
-                                        tint = if (isDarkMode) MaterialTheme.colorScheme.surface else MaterialTheme.colorScheme.onSurfaceVariant,
-                                        modifier = Modifier.size(14.dp)
-                                    )
+                                    Box(
+                                        contentAlignment = Alignment.Center,
+                                        modifier = Modifier.fillMaxSize()
+                                    ) {
+                                        Icon(
+                                            imageVector = Icons.Outlined.DarkMode,
+                                            contentDescription = "Dark Mode",
+                                            tint = if (isDarkMode) MaterialTheme.colorScheme.onPrimary else MaterialTheme.colorScheme.onSurfaceVariant,
+                                            modifier = Modifier.size(18.dp)
+                                        )
+                                    }
                                 }
 
-                                // Light Mode Toggle
-                                Box(
+                                Spacer(modifier = Modifier.width(3.dp))
+
+                                // Light Segment
+                                Surface(
+                                    shape = RoundedCornerShape(16.dp),
+                                    color = if (!isDarkMode) MaterialTheme.colorScheme.primary else Color.Transparent,
                                     modifier = Modifier
-                                        .background(
-                                            color = if (!isDarkMode) MaterialTheme.colorScheme.onSurface else Color.Transparent,
-                                            shape = CircleShape
-                                        )
-                                        .clip(CircleShape)
+                                        .fillMaxHeight()
+                                        .width(38.dp)
+                                        .clip(RoundedCornerShape(16.dp))
                                         .clickable {
                                             if (isDarkMode) {
                                                 haptic.performHapticFeedback(HapticFeedbackType.TextHandleMove)
                                                 onToggleTheme(false)
                                             }
                                         }
-                                        .padding(6.dp)
                                 ) {
-                                    Icon(
-                                        imageVector = Icons.Outlined.LightMode,
-                                        contentDescription = "Light Mode",
-                                        tint = if (!isDarkMode) MaterialTheme.colorScheme.surface else MaterialTheme.colorScheme.onSurfaceVariant,
-                                        modifier = Modifier.size(14.dp)
-                                    )
+                                    Box(
+                                        contentAlignment = Alignment.Center,
+                                        modifier = Modifier.fillMaxSize()
+                                    ) {
+                                        Icon(
+                                            imageVector = Icons.Outlined.LightMode,
+                                            contentDescription = "Light Mode",
+                                            tint = if (!isDarkMode) MaterialTheme.colorScheme.onPrimary else MaterialTheme.colorScheme.onSurfaceVariant,
+                                            modifier = Modifier.size(18.dp)
+                                        )
+                                    }
                                 }
                             }
                         }

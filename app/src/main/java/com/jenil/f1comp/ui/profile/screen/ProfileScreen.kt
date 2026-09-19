@@ -34,6 +34,7 @@ import com.jenil.f1comp.ui.profile.components.TeamProfileCard
 import com.jenil.f1comp.util.ProfileUtils
 import com.jenil.f1comp.viewmodel.ConstructorProfileViewModel
 import com.jenil.f1comp.viewmodel.DriverProfileViewModel
+import com.jenil.f1comp.viewmodel.DriverStandingsViewModel
 import com.jenil.f1comp.viewmodel.TeammateHeadtoHeadViewModel
 
 @Composable
@@ -42,6 +43,7 @@ fun ProfileScreen(
     navController: NavController,
     isDriver: Boolean,
     profileId: String,
+    driverStandingsViewModel: DriverStandingsViewModel = hiltViewModel(),
     driverViewModel: DriverProfileViewModel = hiltViewModel(),
     constructorViewModel: ConstructorProfileViewModel = hiltViewModel(),
     h2hViewModel: TeammateHeadtoHeadViewModel = hiltViewModel(),
@@ -50,8 +52,10 @@ fun ProfileScreen(
     val constructorProfiles by constructorViewModel.constructorProfiles.collectAsStateWithLifecycle()
     val h2hDataList by h2hViewModel.headToHeadData.collectAsStateWithLifecycle()
 
+    val driverStandings by driverStandingsViewModel.driverStandings.collectAsStateWithLifecycle()
+
     val driverProfile = remember(driverProfiles, profileId) {
-        driverProfiles.find { it.driverId == profileId || it.fullName == profileId || it.lastName == profileId }
+        driverProfiles.find { it.driverId == profileId || it.fullName == profileId }
     }
     val constructorProfile = remember(constructorProfiles, profileId) {
         constructorProfiles.find { it.constructorId == profileId || it.name == profileId }
@@ -93,6 +97,16 @@ fun ProfileScreen(
                 color = MaterialTheme.colorScheme.onSurface,
                 maxLines = 1
             )
+//            Spacer(modifier = Modifier.weight(1f))
+//            IconButton(
+//                onClick = { /* Handle more button click */ }
+//            ) {
+//                Icon(
+//                    imageVector = Icons.Outlined.FavoriteBorder,
+//                    contentDescription = "Favorite Icons",
+//                    tint = MaterialTheme.colorScheme.onSurface
+//                )
+//            }
         }
 
         // Scrollable Content
@@ -120,7 +134,12 @@ fun ProfileScreen(
                             wins = driverProfile.careerStats?.currentSeason?.wins?.toString() ?: "0",
                             podiums = driverProfile.careerStats?.currentSeason?.podiums?.toString() ?: "0",
                             points = driverProfile.careerStats?.currentSeason?.points ?: "0",
+                            poles = driverProfile.careerStats?.currentSeason?.poles?.toString() ?: "0",
+                            about = driverProfile.about ?: "No information available.",
+                            born = driverProfile.born ?: "No information available.",
+                            debut = driverProfile.debut ?: "No information available.",
                             pointsProgression = driverProfile.careerStats?.currentSeason?.pointsProgression ?: emptyList(),
+                            position = driverStandings,
                             h2hData = h2hData
                         )
                     }
@@ -153,10 +172,14 @@ fun ProfileScreen(
                             standing = constructorProfile.careerStats?.currentSeason?.position ?: "0",
                             points = constructorProfile.careerStats?.currentSeason?.points ?: "0",
                             podiums = constructorProfile.careerStats?.currentSeason?.podiums?.toString() ?: "0",
+                            wins = constructorProfile.careerStats?.wins?.toString() ?: "0",
+                            totalRaces = constructorProfile.careerStats?.totalRaces?.toString() ?: "0",
                             wdc = constructorProfile.careerStats?.driverChampionships?.toString() ?: "0",
                             wcc = constructorProfile.careerStats?.constructorChampionships?.toString() ?: "0",
                             leaderPoints = leaderPoints,
+                            pointsProgression = constructorProfile.careerStats?.currentSeason?.pointsProgression ?: emptyList(),
                             drivers = teamDrivers,
+                            driverStandings = driverStandings,
                             onDriverClick = { driverId ->
                                 navController.navigate("profile/true/$driverId")
                             }

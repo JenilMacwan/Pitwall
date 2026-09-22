@@ -16,9 +16,7 @@ class DriverStandingsRepository @Inject constructor (
     }
 
     suspend fun refreshDriverStandings() {
-        Log.d("F1Debug", "1. Repository: Starting API fetch...")
         val response = apiService.getDriverStandings()
-        Log.d("F1Debug", "2. Repository: API Success! Fetched  drivers.")
         val driverStandingsEntities = response.driversStandings.map { networkModel ->
             DriverStandingsEntity(
                 driverId = networkModel.driverId ?: "unknown",

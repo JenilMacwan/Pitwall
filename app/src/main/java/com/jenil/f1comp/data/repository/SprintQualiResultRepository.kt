@@ -25,6 +25,7 @@ class SprintQualiResultRepository @Inject constructor(
                 position = networkModel.position,
                 driver = networkModel.driver,
                 driverImage = networkModel.driverImage,
+                headshotUrl = networkModel.headshotUrl,
                 constructor = networkModel.constructor,
                 q1 = networkModel.q1 ?: "",
                 q2 = networkModel.q2 ?: "",

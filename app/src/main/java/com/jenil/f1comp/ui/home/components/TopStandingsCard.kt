@@ -21,8 +21,10 @@ import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
+import com.jenil.f1comp.R
 import com.jenil.f1comp.data.local.entity.ConstructorStandingsEntity
 import com.jenil.f1comp.data.local.entity.DriverStandingsEntity
 
@@ -55,7 +57,7 @@ fun TopStandingsCard(
                 modifier = Modifier.fillMaxWidth(),
             ) {
                 Text(
-                    text = "Standings",
+                    text = stringResource(R.string.title_standings),
                     style = MaterialTheme.typography.titleMedium,
                     color = MaterialTheme.colorScheme.onSurface
                 )
@@ -86,7 +88,7 @@ fun TopStandingsCard(
                 contentAlignment = Alignment.Center
             ) {
                 Text(
-                    text = "View More →",
+                    text = stringResource(R.string.home_view_full_standings),
                     style = MaterialTheme.typography.labelLarge,
                     color = MaterialTheme.colorScheme.primary,
                     modifier = Modifier.clickable {

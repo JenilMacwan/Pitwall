@@ -174,7 +174,7 @@ fun Driver3Card(
         LeaderDriverCard(
             driverName = p1.name,
             teamName = p1.team ?: "F1",
-            imageUrl = p1.driverImage,
+            imageUrl = p1.headshotUrl,
             points = p1Pts,
             gapText = "+$p1Gap PTS GAP",
             teamColor = TeamUtils.getTeamColor(p1.team),
@@ -200,7 +200,7 @@ fun Driver3Card(
                     position = 2,
                     driverName = p2.name,
                     teamName = p2.team ?: "F1",
-                    imageUrl = p2.driverImage,
+                    imageUrl = p2.headshotUrl,
                     points = p2Pts,
                     gapText = "-$p2Gap PTS",
                     indexPercentage = p2IndexPct,
@@ -215,7 +215,7 @@ fun Driver3Card(
                         position = 3,
                         driverName = p3.name,
                         teamName = p3.team ?: "F1",
-                        imageUrl = p3.driverImage,
+                        imageUrl = p3.headshotUrl,
                         points = p3Pts,
                         gapText = "-$p3Gap PTS",
                         indexPercentage = p3IndexPct,
@@ -265,8 +265,8 @@ fun LeaderDriverCard(
                             .padding(4.dp),
                         contentAlignment = Alignment.Center
                     ) {
-                        DriverProfileCircle(
-                            imageUrl = imageUrl,
+                        DriverHeadshotCircle(
+                            headshotUrl = imageUrl,
                             driverName = driverName,
                             size = 42.dp
                         )
@@ -403,8 +403,8 @@ fun ContenderDriverCard(
                         .padding(4.dp),
                     contentAlignment = Alignment.Center
                 ) {
-                    DriverProfileCircle(
-                        imageUrl = imageUrl,
+                    DriverHeadshotCircle(
+                        headshotUrl = imageUrl,
                         driverName = driverName,
                         size = 38.dp
                     )

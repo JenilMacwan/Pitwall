@@ -11,6 +11,7 @@ data class RaceResultEntity(
     val driver: String,
     val driverId: String? = null,
     val driverImage: String? = null,
+    val headshotUrl: String? = null,
     val constructor: String,
     val points: String,
     val grid: String,

@@ -26,6 +26,7 @@ class RaceResultRepository @Inject constructor(
                 driver = networkModel.driver,
                 driverId = null,
                 driverImage = networkModel.driverImage,
+                headshotUrl = networkModel.headshotUrl,
                 constructor = networkModel.constructor,
                 points = networkModel.points,
                 grid = networkModel.grid,

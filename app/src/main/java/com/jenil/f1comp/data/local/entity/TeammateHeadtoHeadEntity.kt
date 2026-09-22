@@ -23,7 +23,8 @@ data class DriverInfo(
     val driverId: String,
     val name: String,
     val code: String,
-    val image: String
+    val image: String,
+    val headshotUrl: String? = null,
 )
 
 data class ComparisonSet(

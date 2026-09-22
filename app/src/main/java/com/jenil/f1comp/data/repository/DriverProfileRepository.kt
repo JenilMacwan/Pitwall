@@ -16,9 +16,7 @@ class DriverProfileRepository @Inject constructor(
     }
 
     suspend fun refreshDriverProfiles() {
-        Log.d("DriverProfileRepo", "Refreshing drivers from API: https://f1companion-api.vercel.app/drivers_profile")
         val response = apiService.getDriverProfile()
-        Log.d("DriverProfileRepo", "Fetched ${response.drivers.size} drivers")
         val profileEntities = response.drivers.map { networkModel ->
             DriverProfileEntity(
                 driverId = networkModel.driverId,
@@ -29,6 +27,7 @@ class DriverProfileRepository @Inject constructor(
                 code = networkModel.code,
                 nationality = networkModel.nationality,
                 image = networkModel.image,
+                headshotUrl = networkModel.headshotUrl,
                 team = networkModel.team,
                 born = networkModel.born,
                 debut = networkModel.debut,

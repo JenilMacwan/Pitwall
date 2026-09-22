@@ -104,4 +104,14 @@ class DataStoreRepository @Inject constructor(
         }
     }
 
+    val selectedThemeId: Flow<String?> = dataStore.data.map { preferences ->
+        preferences[PreferencesKeys.SELECTED_THEME_ID]
+    }
+
+    suspend fun setSelectedThemeId(id: String) {
+        dataStore.edit { preferences ->
+            preferences[PreferencesKeys.SELECTED_THEME_ID] = id
+        }
+    }
+
 }

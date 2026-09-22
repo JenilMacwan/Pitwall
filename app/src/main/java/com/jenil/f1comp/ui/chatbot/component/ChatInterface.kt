@@ -33,15 +33,16 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.semantics.contentDescription
 import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.unit.dp
+import com.jenil.f1comp.R
 import com.jenil.f1comp.ui.chatbot.screen.UiMessage
 
 @Composable
@@ -181,14 +182,12 @@ fun QuickPromptBar(
     onPromptClick: (String) -> Unit,
     modifier: Modifier = Modifier
 ) {
-    val prompts = remember {
-        listOf(
-            "🏎️ 2026 Active Aero Rules",
-            "📊 Driver Standings",
-            "🏁 Next Race Schedule",
-            "⏱️ Teammate H2H Battles"
-        )
-    }
+    val prompts = listOf(
+        stringResource(R.string.prompt_aero_rules),
+        stringResource(R.string.prompt_driver_standings),
+        stringResource(R.string.prompt_next_race),
+        stringResource(R.string.prompt_teammate_h2h)
+    )
 
     LazyRow(
         modifier = modifier

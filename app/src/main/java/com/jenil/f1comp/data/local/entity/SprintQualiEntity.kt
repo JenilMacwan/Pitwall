@@ -13,6 +13,7 @@ data class SprintQualifyingResultEntity(
     val position: String,
     val driver: String,
     val driverImage: String? = null,
+    val headshotUrl: String? = null,
     val constructor: String,
     val q1: String? = null,
     val q2: String? = null,

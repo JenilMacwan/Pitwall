@@ -87,7 +87,7 @@ fun RaceResultCard(
                     name = result.driver,
                     team = result.constructor,
                     points = result.points,
-                    imageUrl = result.driverImage
+                    imageUrl = result.headshotUrl
                 )
             }
             Box(

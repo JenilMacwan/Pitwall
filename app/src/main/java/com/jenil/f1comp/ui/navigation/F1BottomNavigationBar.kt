@@ -31,6 +31,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.hapticfeedback.HapticFeedbackType
 import androidx.compose.ui.platform.LocalHapticFeedback
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import dev.chrisbanes.haze.HazeState
@@ -107,6 +108,8 @@ fun CustomBottomNavItem(
         label = "pillWidth"
     )
 
+    val itemTitle = stringResource(id = item.titleRes)
+
     Column(
         modifier = modifier
             .clickable(
@@ -130,7 +133,7 @@ fun CustomBottomNavItem(
         ) {
             Icon(
                 painter = (if (isSelected) painterResource(id = item.icon2) else painterResource(id = item.icon)),
-                contentDescription = item.title,
+                contentDescription = itemTitle,
                 tint = animatedColor,
                 modifier = Modifier
                     .size(20.dp)
@@ -141,7 +144,7 @@ fun CustomBottomNavItem(
         Spacer(modifier = Modifier.height(3.dp))
 
         Text(
-            text = item.title,
+            text = itemTitle,
             color = animatedColor,
             style = MaterialTheme.typography.labelSmall,
             fontWeight = if (isSelected) FontWeight.Bold else FontWeight.Normal

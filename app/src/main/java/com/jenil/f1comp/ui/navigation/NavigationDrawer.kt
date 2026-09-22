@@ -62,6 +62,7 @@ import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.platform.LocalHapticFeedback
 import androidx.compose.ui.platform.LocalWindowInfo
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
@@ -273,42 +274,42 @@ fun PitwallDrawerContent(
                         .verticalScroll(rememberScrollState())
                 ) {
                     // Navigation Sections
-                    DrawerSectionHeader("RACE HUB")
+                    DrawerSectionHeader(stringResource(R.string.drawer_race_hub))
 
                 DrawerNavItem(
                     icon = Icons.Outlined.Radio,
-                    label = "Team Radio",
+                    label = stringResource(R.string.title_radio),
                     selected = currentRoute == "team_radio",
                     onClick = { onNavigate("team_radio") }
                 )
 
                 DrawerNavItem(
                     icon = Icons.Outlined.EmojiEvents,
-                    label = "Race Results",
+                    label = stringResource(R.string.title_results),
                     selected = currentRoute?.startsWith("race_result") == true,
                     onClick = { onNavigate("race_result/last/${LocalDate.now().year}") }
                 )
 
                 DrawerNavItem(
                     icon = apexMark,
-                    label = "Apex AI Assistant",
+                    label = stringResource(R.string.title_chatbot),
                     selected = currentRoute == "chatbot",
                     onClick = { onNavigate("chatbot") }
                 )
 
                 DrawerNavItem(
                     icon = Icons.Outlined.Equalizer,
-                    label = "Live Telemetry",
+                    label = stringResource(R.string.title_telemetry),
                     selected = currentRoute == "telemetry",
                     onClick = { onNavigate("telemetry") }
                 )
 
                 Spacer(modifier = Modifier.height(8.dp))
-                DrawerSectionHeader("UTILITIES")
+                DrawerSectionHeader(stringResource(R.string.drawer_utilities))
 
                 DrawerNavItem(
                     icon = calendar_add_on,
-                    label = "Sync Calendar",
+                    label = stringResource(R.string.drawer_sync_calendar),
                     info = totalRaces.toString(),
                     selected = false,
                     onClick = {
@@ -338,7 +339,7 @@ fun PitwallDrawerContent(
 
                 DrawerNavItem(
                     icon = Icons.Rounded.Share,
-                    label = "Share Pitwall",
+                    label = stringResource(R.string.drawer_share_app),
                     selected = false,
                     onClick = {
                         val uri =
@@ -356,25 +357,25 @@ fun PitwallDrawerContent(
                 )
 
                 Spacer(modifier = Modifier.height(8.dp))
-                DrawerSectionHeader("PREFERENCES")
+                DrawerSectionHeader(stringResource(R.string.drawer_preferences))
 
                 DrawerNavItem(
                     icon = Icons.Outlined.Person,
-                    label = "Paddock Profile",
+                    label = stringResource(R.string.drawer_paddock_profile),
                     selected = currentRoute == "user_profile",
                     onClick = { onNavigate("user_profile") }
                 )
 
                 DrawerNavItem(
                     icon = Icons.Outlined.Settings,
-                    label = "Settings",
+                    label = stringResource(R.string.title_settings),
                     selected = currentRoute == "settings",
                     onClick = { onNavigate("settings") }
                 )
 
                 DrawerNavItem(
                     icon = Icons.Outlined.Description,
-                    label = "Data Attribution",
+                    label = stringResource(R.string.title_attribution),
                     selected = false,
                     onClick = {
                         onNavigate("data_attribution")
@@ -637,7 +638,7 @@ private fun DrawerNavItem(
 
             if (info != null) {
                 Text(
-                    text = "$info Races",
+                    text = "$info ${stringResource(R.string.drawer_races)}",
                     style = MaterialTheme.typography.labelSmall,
                     fontWeight = if (selected) FontWeight.Bold else FontWeight.Medium,
                     color = contentColor

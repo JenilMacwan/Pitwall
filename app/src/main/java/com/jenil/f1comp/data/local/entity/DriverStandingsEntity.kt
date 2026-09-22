@@ -13,6 +13,7 @@ data class DriverStandingsEntity(
     val name: String,
     val nationality: String,
     val driverImage: String?,
+    val headshotUrl: String? = null,
     val url: String,
     val team: String?
 )

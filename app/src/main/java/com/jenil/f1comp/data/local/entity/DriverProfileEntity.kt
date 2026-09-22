@@ -15,6 +15,7 @@ data class DriverProfileEntity(
     val code: String?,
     val nationality: String?,
     val image: String?,
+    val headshotUrl: String?,
     val team: String?,
     val born: String?,
     val debut: String?,

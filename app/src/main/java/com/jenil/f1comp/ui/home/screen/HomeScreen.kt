@@ -177,17 +177,17 @@ fun HomeScreen(
 
                     val p1 = remember(podium) {
                         podium.firstOrNull { it.position == "1" }?.let {
-                            PodiumDriverData("1", it.driver, it.driverImage, it.constructor, "${it.points} pts")
+                            PodiumDriverData("1", it.driver, it.headshotUrl, it.constructor, "${it.points} pts")
                         }
                     }
                     val p2 = remember(podium) {
                         podium.firstOrNull { it.position == "2" }?.let {
-                            PodiumDriverData("2", it.driver, it.driverImage, it.constructor, if (it.time.isNotBlank()) it.time else "${it.points} pts")
+                            PodiumDriverData("2", it.driver, it.headshotUrl, it.constructor, if (it.time.isNotBlank()) it.time else "${it.points} pts")
                         }
                     }
                     val p3 = remember(podium) {
                         podium.firstOrNull { it.position == "3" }?.let {
-                            PodiumDriverData("3", it.driver, it.driverImage, it.constructor, if (it.time.isNotBlank()) it.time else "${it.points} pts")
+                            PodiumDriverData("3", it.driver, it.headshotUrl, it.constructor, if (it.time.isNotBlank()) it.time else "${it.points} pts")
                         }
                     }
 

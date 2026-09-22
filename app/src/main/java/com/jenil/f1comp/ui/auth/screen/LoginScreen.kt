@@ -332,6 +332,11 @@ fun LoginScreen(
                     authUiState = authUiState,
                     navController = navController,
                     onSignInClick = { selectedTab = "Sign-In" },
+                    onGoogleClick = {
+                        launchGoogleSignIn(context) { idToken ->
+                            viewModel.signInWithGoogle(idToken)
+                        }
+                    },
                     onRegisterClick = { email, password, callsign ->
                         viewModel.registerWithEmailAndPassword(email, password, callsign)
                     }

@@ -13,4 +13,5 @@ object PreferencesKeys {
     val FAVORITE_TEAM = stringPreferencesKey("favorite_team")
     val FAVORITE_DRIVER = stringPreferencesKey("favorite_driver")
     val IS_FIRST_LAUNCH = booleanPreferencesKey("is_first_launch")
+    val SELECTED_THEME_ID = stringPreferencesKey("selected_theme_id")
 }

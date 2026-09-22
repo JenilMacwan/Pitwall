@@ -61,7 +61,7 @@ fun StandingsCard(
                         name = driver.name.toDriverName(),
                         team = driver.team,
                         points = driver.points.toInt(),
-                        imageUrl = driver.driverImage,
+                        imageUrl = driver.headshotUrl,
                         isConstructor = false,
                         onClick = { navController.navigate("profile/true/${driver.name}") }
                     )

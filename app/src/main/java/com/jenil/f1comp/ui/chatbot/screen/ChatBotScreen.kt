@@ -51,6 +51,7 @@ import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.graphicsLayer
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardCapitalization
@@ -59,6 +60,7 @@ import androidx.compose.ui.unit.dp
 import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavController
+import com.jenil.f1comp.R
 import com.jenil.f1comp.ui.F1ScreenPadding
 import com.jenil.f1comp.ui.chatbot.component.ChatBubble
 import com.jenil.f1comp.ui.chatbot.component.QuickPromptBar
@@ -88,12 +90,16 @@ fun ChatbotScreen(
     val uiState by viewModel.uiState.collectAsStateWithLifecycle()
     val sessionId = remember { UUID.randomUUID().toString() }
 
+    val welcomeText = stringResource(R.string.chatbot_welcome)
+    val resetText = stringResource(R.string.chatbot_reset_msg)
+    val errorPrefixText = stringResource(R.string.chatbot_error)
+
     var text by remember { mutableStateOf("") }
-    var messages by remember {
+    var messages by remember(welcomeText) {
         mutableStateOf(
             listOf(
                 UiMessage(
-                    text = "Apex initialized. Live telemetry link active. How can I assist your race strategy?",
+                    text = welcomeText,
                     isUser = false
                 )
             )
@@ -118,7 +124,7 @@ fun ChatbotScreen(
                 isThinking = false
                 Log.e(TAG, "[UI ERROR] Chat failed: ${state.message}")
                 messages = messages + UiMessage(
-                    text = "Sorry, I encountered an issue connecting to Apex. ${state.message}",
+                    text = "$errorPrefixText ${state.message}",
                     isUser = false
                 )
             }
@@ -212,7 +218,7 @@ fun ChatbotScreen(
                 ) {
                     Row(verticalAlignment = Alignment.CenterVertically) {
                         Text(
-                            text = "Apex",
+                            text = stringResource(R.string.title_chatbot),
                             style = MaterialTheme.typography.titleLarge.copy(fontWeight = FontWeight.Bold),
                             color = MaterialTheme.colorScheme.onSurface
                         )
@@ -222,7 +228,7 @@ fun ChatbotScreen(
                             shape = RoundedCornerShape(4.dp)
                         ) {
                             Text(
-                                text = "BETA",
+                                text = stringResource(R.string.chatbot_beta),
                                 style = MaterialTheme.typography.labelSmall.copy(fontWeight = FontWeight.Bold),
                                 color = MaterialTheme.colorScheme.onPrimaryContainer,
                                 modifier = Modifier.padding(horizontal = 4.dp, vertical = 2.dp)
@@ -250,7 +256,7 @@ fun ChatbotScreen(
                         }
                     }
                     Text(
-                        text = "Powered by Pitwall",
+                        text = stringResource(R.string.chatbot_powered_by),
                         style = MaterialTheme.typography.bodySmall,
                         color = MaterialTheme.colorScheme.onSurfaceVariant
                     )
@@ -261,7 +267,7 @@ fun ChatbotScreen(
                         Log.d(TAG, "[UI USER ACTION] Resetting chat session | SessionID: $sessionId")
                         messages = listOf(
                             UiMessage(
-                                text = "Pitwall link reset. Standby for new telemetry instructions.",
+                                text = resetText,
                                 isUser = false
                             )
                         )
@@ -270,7 +276,7 @@ fun ChatbotScreen(
                 ) {
                     Icon(
                         imageVector = Icons.Rounded.Refresh,
-                        contentDescription = "Clear Chat",
+                        contentDescription = stringResource(R.string.chatbot_clear_chat),
                         tint = MaterialTheme.colorScheme.onSurfaceVariant
                     )
                 }
@@ -323,7 +329,7 @@ fun ChatbotScreen(
                     OutlinedTextField(
                         value = text,
                         onValueChange = { text = it },
-                        placeholder = { Text("Ask Apex anything...") },
+                        placeholder = { Text(stringResource(R.string.chatbot_placeholder)) },
                         modifier = Modifier.weight(1f),
                         shape = RoundedCornerShape(24.dp),
                         colors = OutlinedTextFieldDefaults.colors(
@@ -359,7 +365,7 @@ fun ChatbotScreen(
                     }
                 }
                 Text(
-                    text = "Apex is in beta, response maybe slow. AI-generated answers may be inaccurate.",
+                    text = stringResource(R.string.chatbot_disclaimer),
                     style = MaterialTheme.typography.labelSmall,
                     color = MaterialTheme.colorScheme.onSurfaceVariant.copy(alpha = 0.7f),
                     textAlign = TextAlign.Center,

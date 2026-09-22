@@ -16,11 +16,16 @@ private const val TAG = "ChatRepository"
 class ChatRepository @Inject constructor(
     private val apiService: ChatApiService
 ) {
-    fun sendMessage(sessionId: String, query: String, apiKey: String = BuildConfig.CHAT_API_KEY): Flow<Resource<String>> = flow {
-        Log.d(TAG, "[API REQUEST] Endpoint: POST api/v1/chat | SessionID: $sessionId | Query: \"$query\" | ApiKeyProvided: ${apiKey.isNotBlank()}")
+    fun sendMessage(
+        sessionId: String,
+        query: String,
+        lang: String = "en",
+        apiKey: String = BuildConfig.CHAT_API_KEY
+    ): Flow<Resource<String>> = flow {
+        Log.d(TAG, "[API REQUEST] Endpoint: POST api/v1/chat | SessionID: $sessionId | Lang: $lang | Query: \"$query\" | ApiKeyProvided: ${apiKey.isNotBlank()}")
         emit(Resource.Loading)
         try {
-            val response = apiService.sendChatMessage(apiKey, ChatRequest(sessionId, query))
+            val response = apiService.sendChatMessage(apiKey, ChatRequest(sessionId = sessionId, query = query, lang = lang))
             if (response.isSuccessful && response.body() != null) {
                 val chatResponse = response.body()!!.response
                 Log.d(TAG, "[API SUCCESS] Status: ${response.code()} | Response: \"$chatResponse\"")

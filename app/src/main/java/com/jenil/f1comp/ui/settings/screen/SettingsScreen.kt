@@ -24,11 +24,8 @@ import androidx.compose.material.icons.outlined.DarkMode
 import androidx.compose.material.icons.outlined.DeleteOutline
 import androidx.compose.material.icons.outlined.Description
 import androidx.compose.material.icons.outlined.EmojiEvents
-import androidx.compose.material.icons.outlined.Flag
 import androidx.compose.material.icons.outlined.Info
-import androidx.compose.material.icons.outlined.Language
 import androidx.compose.material.icons.outlined.NewReleases
-import androidx.compose.material.icons.outlined.Palette
 import androidx.compose.material.icons.outlined.Policy
 import androidx.compose.material.icons.outlined.RadioButtonChecked
 import androidx.compose.material.icons.outlined.StarRate
@@ -249,16 +246,10 @@ fun SettingsScreen(
                 .padding(horizontal = 16.dp)
         ) {
             // Appearance
-            SettingsSection(title = "Appearance") {
-                SettingsItem(
-                    icon = Icons.Outlined.Palette,
-                    title = stringResource(id = R.string.title_theme),
-                    subtitle = stringResource(id = R.string.sub_title_theme),
-                    onClick = { navController.navigate("theme_settings") }
-                )
+            SettingsSection(title = stringResource(R.string.settings_appearance)) {
                 SettingsSwitchItem(
                     icon = Icons.Outlined.DarkMode,
-                    title = stringResource(id = R.string.title_mode),
+                    title = stringResource(R.string.settings_dark_mode),
                     subtitle = dynamicSubtitle,
                     isChecked = isDarkMode,
                     onCheckedChange = { newValue ->
@@ -266,27 +257,15 @@ fun SettingsScreen(
                         settingsViewModel.toggleDarkMode(newValue)
                     }
                 )
-                SettingsItem(
-                    icon = Icons.Outlined.Flag,
-                    title = "Favorite Team",
-                    subtitle = "Theme the app around your constructor",
-                    onClick = { navController.navigate("theme_settings") }
-                )
-                SettingsItem(
-                    icon = Icons.Outlined.Language,
-                    title = "Language & Region",
-                    subtitle = "Date format, driver name display",
-                    onClick = { navController.navigate("language_settings") }
-                )
             }
 
             Spacer(modifier = Modifier.height(24.dp))
 
-            SettingsSection(title = "Calendar Sync") {
+            SettingsSection(title = stringResource(R.string.settings_calendar_sync)) {
                 SettingsItem(
                     icon = Icons.Outlined.Sync,
-                    title = "Sync All Races",
-                    subtitle = "Add all season races to your calendar",
+                    title = stringResource(R.string.settings_sync_all),
+                    subtitle = stringResource(R.string.settings_sync_all_sub),
                     trailing = if (isSyncing) {
                         {
                             CircularProgressIndicator(
@@ -305,8 +284,8 @@ fun SettingsScreen(
                 )
                 SettingsItem(
                     icon = Icons.Outlined.CalendarMonth,
-                    title = "Sync Upcoming Races",
-                    subtitle = "Add only future races to your calendar",
+                    title = stringResource(R.string.settings_sync_upcoming),
+                    subtitle = stringResource(R.string.settings_sync_upcoming_sub),
                     onClick = {
                         runWithPermission {
                             val upcoming = raceSchedule.filter { !it.isCompleted }
@@ -318,8 +297,8 @@ fun SettingsScreen(
                 )
                 SettingsItem(
                     icon = Icons.Outlined.DeleteOutline,
-                    title = "Clear F1 Events",
-                    subtitle = "Remove all F1 races from your calendar",
+                    title = stringResource(R.string.settings_clear_calendar),
+                    subtitle = stringResource(R.string.settings_clear_calendar_sub),
                     onClick = { showClearConfirm = true }
                 )
             }
@@ -327,15 +306,15 @@ fun SettingsScreen(
             Spacer(modifier = Modifier.height(24.dp))
 
             // Notifications
-            SettingsSection(title = "Notifications") {
+            SettingsSection(title = stringResource(R.string.settings_notifications)) {
                 SettingsSwitchItem(
                     icon = Icons.Outlined.CalendarMonth,
-                    title = "Race Start Reminders",
-                    subtitle = "Get notified before lights out",
+                    title = stringResource(R.string.settings_race_reminders),
+                    subtitle = stringResource(R.string.settings_race_reminders_sub),
                     isChecked = raceReminders ?: false,
                     onCheckedChange = { newValue ->
                         haptic.performHapticFeedback(HapticFeedbackType.TextHandleMove)
-                        if(newValue) {
+                        if (newValue) {
                             runWithNotificationPermission {
                                 settingsViewModel.setRaceRemindersEnabled(true)
                                 RaceNotificationCoordinator.syncAllAlarms(
@@ -346,6 +325,7 @@ fun SettingsScreen(
                                 )
                             }
                         } else {
+                            settingsViewModel.setRaceRemindersEnabled(false)
                             RaceNotificationCoordinator.syncAllAlarms(
                                 context = context,
                                 schedule = raceSchedule,
@@ -357,12 +337,12 @@ fun SettingsScreen(
                 )
                 SettingsSwitchItem(
                     icon = Icons.Outlined.Timeline,
-                    title = "Practice & Qualifying Reminders",
-                    subtitle = "Alerts before FP1-3 and Qualifying",
+                    title = stringResource(R.string.settings_session_reminders),
+                    subtitle = stringResource(R.string.settings_session_reminders_sub),
                     isChecked = sessionReminders ?: false,
-                    onCheckedChange = {
+                    onCheckedChange = { newValue ->
                         haptic.performHapticFeedback(HapticFeedbackType.TextHandleMove)
-                        if(it) {
+                        if (newValue) {
                             runWithNotificationPermission {
                                 settingsViewModel.setSessionRemindersEnabled(true)
                                 RaceNotificationCoordinator.syncAllAlarms(
@@ -373,6 +353,7 @@ fun SettingsScreen(
                                 )
                             }
                         } else {
+                            settingsViewModel.setSessionRemindersEnabled(false)
                             RaceNotificationCoordinator.syncAllAlarms(
                                 context = context,
                                 schedule = raceSchedule,
@@ -384,8 +365,8 @@ fun SettingsScreen(
                 )
                 SettingsSwitchItem(
                     icon = Icons.Outlined.NewReleases,
-                    title = "Breaking News",
-                    subtitle = "Driver transfers, penalties, big stories",
+                    title = stringResource(R.string.settings_breaking_news),
+                    subtitle = stringResource(R.string.settings_breaking_news_sub),
                     isChecked = breakingNews ?: false,
                     onCheckedChange = {
                         haptic.performHapticFeedback(HapticFeedbackType.TextHandleMove)
@@ -400,8 +381,8 @@ fun SettingsScreen(
                 )
                 SettingsSwitchItem(
                     icon = Icons.Outlined.RadioButtonChecked,
-                    title = "Live Race Events",
-                    subtitle = "Safety car, red flags, fastest lap — during races",
+                    title = stringResource(R.string.settings_live_events),
+                    subtitle = stringResource(R.string.settings_live_events_sub),
                     isChecked = liveRaceEvents ?: false,
                     onCheckedChange = {
                         haptic.performHapticFeedback(HapticFeedbackType.TextHandleMove)
@@ -417,8 +398,8 @@ fun SettingsScreen(
                 )
                 SettingsSwitchItem(
                     icon = Icons.Outlined.EmojiEvents,
-                    title = "Standings Updates",
-                    subtitle = "When the Drivers' or Constructors' standings change",
+                    title = stringResource(R.string.settings_standings_updates),
+                    subtitle = stringResource(R.string.settings_standings_updates_sub),
                     isChecked = standingsUpdates ?: false,
                     onCheckedChange = {
                         haptic.performHapticFeedback(HapticFeedbackType.TextHandleMove)
@@ -437,7 +418,7 @@ fun SettingsScreen(
             Spacer(modifier = Modifier.height(24.dp))
 
             // About
-            SettingsSection(title = "About") {
+            SettingsSection(title = stringResource(R.string.settings_about)) {
                 SettingsItem(
                     icon = Icons.Outlined.Info,
                     title = stringResource(id = R.string.title_version),
@@ -454,8 +435,8 @@ fun SettingsScreen(
                 )
                 SettingsItem(
                     icon = Icons.Outlined.StarRate,
-                    title = "Rate the App",
-                    subtitle = "Enjoying F1Companion? Leave a review",
+                    title = stringResource(R.string.settings_rate_app),
+                    subtitle = "Enjoying Pitwall? Leave a review",
                     onClick = {
                         val uri = "market://details?id=${context.packageName}".toUri()
                         val intent = Intent(Intent.ACTION_VIEW, uri).apply {
@@ -475,13 +456,13 @@ fun SettingsScreen(
                 )
                 SettingsItem(
                     icon = Icons.Outlined.Description,
-                    title = "Open Source Licenses",
+                    title = stringResource(R.string.title_licenses),
                     subtitle = "Third-party libraries used in this app",
                     onClick = { navController.navigate("licenses") }
                 )
                 SettingsItem(
                     icon = Icons.Outlined.Policy,
-                    title = "Privacy Policy",
+                    title = stringResource(R.string.title_privacy),
                     subtitle = "How your data is handled",
                     onClick = { navController.navigate("privacy_policy") }
                 )
@@ -500,7 +481,7 @@ fun SettingsScreen(
                 )
                 Spacer(modifier = Modifier.height(4.dp))
                 Text(
-                    text = "F1Companion v${BuildConfig.VERSION_NAME} • Made for Fans",
+                    text = "Pitwall v${BuildConfig.VERSION_NAME} • Made for Fans",
                     style = MaterialTheme.typography.labelSmall,
                     color = MaterialTheme.colorScheme.onSurfaceVariant.copy(alpha = 0.4f)
                 )

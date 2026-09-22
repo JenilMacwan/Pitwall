@@ -21,6 +21,8 @@ data class RaceResult(
     val driverId: String? = null,
     @SerializedName("driver_image")
     val driverImage: String? = null,
+    @SerializedName("headshot_url")
+    val headshotUrl: String? = null,
     val constructor: String,
     val points: String,
     val grid: String,
@@ -45,6 +47,8 @@ data class QualiResult(
     val driver: String,
     @SerializedName("driver_image")
     val driverImage: String? = null,
+    @SerializedName("headshot_url")
+    val headshotUrl: String? = null,
     val constructor: String,
     val q1: String? = null,
     val q2: String? = null,

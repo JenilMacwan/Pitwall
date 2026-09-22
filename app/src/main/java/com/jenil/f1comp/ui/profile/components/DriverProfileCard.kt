@@ -42,7 +42,7 @@ import coil.request.ImageRequest
 import com.jenil.f1comp.data.local.entity.DriverStandingsEntity
 import com.jenil.f1comp.data.local.entity.TeammateHeadtoHeadEntity
 import com.jenil.f1comp.data.model.DriverPointsProgression
-import com.jenil.f1comp.ui.home.components.DriverProfileCircle
+import com.jenil.f1comp.ui.home.components.DriverHeadshotCircle
 import com.jenil.f1comp.util.FlagImage
 import com.jenil.f1comp.util.ProfileUtils
 import com.jenil.f1comp.util.TeamUtils
@@ -287,8 +287,8 @@ fun DriverProfileCard(
                     ) {
                         // Teammate Header
                         Row(verticalAlignment = Alignment.CenterVertically) {
-                            DriverProfileCircle(
-                                imageUrl = teammate.image,
+                            DriverHeadshotCircle(
+                                headshotUrl = teammate.headshotUrl,
                                 driverName = teammate.name,
                                 size = 36.dp
                             )

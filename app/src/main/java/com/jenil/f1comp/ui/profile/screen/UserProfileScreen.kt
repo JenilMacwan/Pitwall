@@ -28,6 +28,7 @@ import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.outlined.ExitToApp
 import androidx.compose.material.icons.automirrored.outlined.HelpOutline
+import androidx.compose.material.icons.automirrored.outlined.KeyboardArrowRight
 import androidx.compose.material.icons.automirrored.rounded.ArrowBack
 import androidx.compose.material.icons.outlined.Edit
 import androidx.compose.material.icons.outlined.Email
@@ -77,6 +78,7 @@ import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -89,8 +91,9 @@ import coil.request.ImageRequest
 import com.jenil.f1comp.BuildConfig
 import com.jenil.f1comp.R
 import com.jenil.f1comp.ui.F1ScreenPadding
-import com.jenil.f1comp.ui.theme.F1Red
-import com.jenil.f1comp.ui.theme.PodiumGold
+import com.jenil.f1comp.ui.home.components.DriverProfileCircle
+import com.jenil.f1comp.ui.home.components.TeamLogoCircle
+import com.jenil.f1comp.util.TeamUtils
 import com.jenil.f1comp.viewmodel.AuthUiState
 import com.jenil.f1comp.viewmodel.AuthViewModel
 import com.jenil.f1comp.viewmodel.SettingsViewModel
@@ -101,7 +104,7 @@ fun UserProfileScreen(
     navController: NavController,
     modifier: Modifier = Modifier,
     authViewModel: AuthViewModel = hiltViewModel(),
-    settingsViewModel: SettingsViewModel = hiltViewModel()
+    settingsViewModel: SettingsViewModel = hiltViewModel(),
 ) {
     val currentUser by authViewModel.currentUser.collectAsStateWithLifecycle()
     val authUiState by authViewModel.authUiState.collectAsStateWithLifecycle()
@@ -109,6 +112,9 @@ fun UserProfileScreen(
 
     val favoriteTeamPref by settingsViewModel.favoriteTeam.collectAsStateWithLifecycle()
     val favoriteDriverPref by settingsViewModel.favoriteDriver.collectAsStateWithLifecycle()
+
+    val constructorProfiles by settingsViewModel.constructorProfiles.collectAsStateWithLifecycle()
+    val driverProfiles by settingsViewModel.driverProfiles.collectAsStateWithLifecycle()
 
     val context = LocalContext.current
     val scrollState = rememberScrollState()
@@ -151,13 +157,14 @@ fun UserProfileScreen(
         "Scuderia Ferrari HP",
         "Oracle Red Bull Racing",
         "Mercedes-AMG Petronas F1 Team",
-        "McLaren Formula 1 Team",
+        "McLaren Mastercard F1 Team",
         "Aston Martin Aramco F1 Team",
         "BWT Alpine F1 Team",
-        "Williams Racing",
-        "Visa Cash App RB F1 Team",
-        "Stake F1 Team Kick Sauber",
-        "MoneyGram Haas F1 Team"
+        "Atlassian Williams F1 Team",
+        "Visa Cash App Racing Bulls F1 Team",
+        "Audi Revolut F1 Team",
+        "TGR Haas F1 Team",
+        "Cadillac F1 Team"
     )
 
     val drivers = listOf(
@@ -171,7 +178,6 @@ fun UserProfileScreen(
         "George Russell #63",
         "Fernando Alonso #14",
         "Liam Lawson #30",
-        "Yuki Tsunoda #22",
         "Valtteri Bottas #77",
         "Pierre Gasly #10",
         "Alexander Albon #23",
@@ -233,7 +239,7 @@ fun UserProfileScreen(
                         onValueChange = { editCallsign = it },
                         shape = RoundedCornerShape(10.dp),
                         colors = OutlinedTextFieldDefaults.colors(
-                            focusedBorderColor = F1Red,
+                            focusedBorderColor = MaterialTheme.colorScheme.primary,
                             unfocusedBorderColor = MaterialTheme.colorScheme.outline
                         ),
                         singleLine = true,
@@ -280,7 +286,7 @@ fun UserProfileScreen(
                         }
                     }
                 ) {
-                    Text("SAVE CHANGES", color = F1Red, fontWeight = FontWeight.Bold)
+                    Text("SAVE CHANGES", color = MaterialTheme.colorScheme.primary, fontWeight = FontWeight.Bold)
                 }
             },
             dismissButton = {
@@ -300,7 +306,7 @@ fun UserProfileScreen(
                 Icon(
                     imageVector = Icons.Rounded.WarningAmber,
                     contentDescription = null,
-                    tint = F1Red
+                    tint = MaterialTheme.colorScheme.error
                 )
             },
             title = {
@@ -328,7 +334,7 @@ fun UserProfileScreen(
                         }
                     }
                 ) {
-                    Text("SIGN OUT", color = F1Red, fontWeight = FontWeight.Bold)
+                    Text("SIGN OUT", color = MaterialTheme.colorScheme.error, fontWeight = FontWeight.Bold)
                 }
             },
             dismissButton = {
@@ -364,7 +370,7 @@ fun UserProfileScreen(
                 }
                 Spacer(modifier = Modifier.width(4.dp))
                 Text(
-                    text = "PADDOCK DRIVER PROFILE",
+                    text = stringResource(R.string.profile_title),
                     style = MaterialTheme.typography.titleLarge,
                     fontWeight = FontWeight.Bold,
                     color = MaterialTheme.colorScheme.onSurface
@@ -420,8 +426,8 @@ fun UserProfileScreen(
                                         .background(
                                             brush = Brush.radialGradient(
                                                 colors = listOf(
-                                                    F1Red.copy(alpha = 0.8f),
-                                                    F1Red.copy(alpha = 0.3f),
+                                                    MaterialTheme.colorScheme.primary.copy(alpha = 0.8f),
+                                                    MaterialTheme.colorScheme.primary.copy(alpha = 0.3f),
                                                     Color.Transparent
                                                 )
                                             ),
@@ -431,7 +437,7 @@ fun UserProfileScreen(
                                 Surface(
                                     shape = CircleShape,
                                     color = MaterialTheme.colorScheme.surface,
-                                    border = BorderStroke(2.dp, F1Red),
+                                    border = BorderStroke(2.dp, MaterialTheme.colorScheme.primary),
                                     modifier = Modifier.size(76.dp)
                                 ) {
                                     if (photoUrl != null) {
@@ -493,8 +499,8 @@ fun UserProfileScreen(
                             // Badge Row (PADDOCK PASS ACTIVE)
                             Surface(
                                 shape = RoundedCornerShape(20.dp),
-                                color = F1Red.copy(alpha = 0.12f),
-                                border = BorderStroke(1.dp, F1Red.copy(alpha = 0.4f))
+                                color = MaterialTheme.colorScheme.primary.copy(alpha = 0.12f),
+                                border = BorderStroke(1.dp, MaterialTheme.colorScheme.primary.copy(alpha = 0.4f))
                             ) {
                                 Row(
                                     modifier = Modifier.padding(horizontal = 14.dp, vertical = 6.dp),
@@ -507,7 +513,7 @@ fun UserProfileScreen(
                                     )
                                     Spacer(modifier = Modifier.width(8.dp))
                                     Text(
-                                        text = "PADDOCK PASS ACTIVE",
+                                        text = stringResource(R.string.profile_paddock_pass),
                                         style = MaterialTheme.typography.labelSmall,
                                         fontWeight = FontWeight.Bold,
                                         color = MaterialTheme.colorScheme.onSurface,
@@ -539,27 +545,34 @@ fun UserProfileScreen(
                                         modifier = Modifier.size(16.dp)
                                     )
                                     Spacer(modifier = Modifier.width(6.dp))
-                                    Text("Edit Profile", style = MaterialTheme.typography.labelMedium)
+                                    Text(
+                                        stringResource(R.string.profile_edit_profile),
+                                        style = MaterialTheme.typography.labelMedium
+                                    )
                                 }
 
                                 OutlinedButton(
                                     onClick = { showSignOutConfirm = true },
                                     modifier = Modifier.weight(1f),
                                     shape = RoundedCornerShape(12.dp),
-                                    border = BorderStroke(1.dp, F1Red.copy(alpha = 0.6f)),
+                                    border = BorderStroke(1.dp, MaterialTheme.colorScheme.error.copy(alpha = 0.6f)),
                                     colors = ButtonDefaults.outlinedButtonColors(
-                                        containerColor = F1Red.copy(alpha = 0.1f),
-                                        contentColor = F1Red
+                                        containerColor = MaterialTheme.colorScheme.error.copy(alpha = 0.1f),
+                                        contentColor = MaterialTheme.colorScheme.error
                                     )
                                 ) {
                                     Icon(
                                         imageVector = Icons.AutoMirrored.Outlined.ExitToApp,
                                         contentDescription = null,
-                                        tint = F1Red,
+                                        tint = MaterialTheme.colorScheme.error,
                                         modifier = Modifier.size(16.dp)
                                     )
                                     Spacer(modifier = Modifier.width(6.dp))
-                                    Text("Sign Out", style = MaterialTheme.typography.labelMedium, color = F1Red)
+                                    Text(
+                                        stringResource(R.string.profile_sign_out),
+                                        style = MaterialTheme.typography.labelMedium,
+                                        color = MaterialTheme.colorScheme.error
+                                    )
                                 }
                             }
                         } else {
@@ -612,7 +625,7 @@ fun UserProfileScreen(
                                 modifier = Modifier.fillMaxWidth(),
                                 shape = RoundedCornerShape(12.dp),
                                 colors = ButtonDefaults.buttonColors(
-                                    containerColor = F1Red,
+                                    containerColor = MaterialTheme.colorScheme.primary,
                                     contentColor = Color.White
                                 )
                             ) {
@@ -664,15 +677,16 @@ fun UserProfileScreen(
                                 Row(
                                     modifier = Modifier
                                         .fillMaxWidth()
-                                        .padding(horizontal = 14.dp, vertical = 12.dp),
+                                        .padding(horizontal = 14.dp, vertical = 10.dp),
                                     verticalAlignment = Alignment.CenterVertically
                                 ) {
-                                    Box(
-                                        modifier = Modifier
-                                            .size(10.dp)
-                                            .background(F1Red, CircleShape)
+                                    TeamLogoCircle(
+                                        logoUrl = TeamUtils.getTeamLogoUrl(selectedTeam, constructorProfiles),
+                                        teamName = selectedTeam,
+                                        size = 28.dp,
+                                        containerColor = Color.White
                                     )
-                                    Spacer(modifier = Modifier.width(10.dp))
+                                    Spacer(modifier = Modifier.width(12.dp))
                                     Text(
                                         text = selectedTeam,
                                         style = MaterialTheme.typography.bodyMedium,
@@ -695,7 +709,16 @@ fun UserProfileScreen(
                                     .background(MaterialTheme.colorScheme.surface)
                             ) {
                                 teams.forEach { team ->
+                                    val logoUrl = TeamUtils.getTeamLogoUrl(team, constructorProfiles)
                                     DropdownMenuItem(
+                                        leadingIcon = {
+                                            TeamLogoCircle(
+                                                logoUrl = logoUrl,
+                                                teamName = team,
+                                                size = 24.dp,
+                                                containerColor = Color.White
+                                            )
+                                        },
                                         text = { Text(team, color = MaterialTheme.colorScheme.onSurface) },
                                         onClick = {
                                             selectedTeam = team
@@ -733,15 +756,16 @@ fun UserProfileScreen(
                                 Row(
                                     modifier = Modifier
                                         .fillMaxWidth()
-                                        .padding(horizontal = 14.dp, vertical = 12.dp),
+                                        .padding(horizontal = 14.dp, vertical = 10.dp),
                                     verticalAlignment = Alignment.CenterVertically
                                 ) {
-                                    Box(
-                                        modifier = Modifier
-                                            .size(10.dp)
-                                            .background(PodiumGold, CircleShape)
+                                    DriverProfileCircle(
+                                        imageUrl = TeamUtils.getDriverImageUrl(selectedDriver, driverProfiles),
+                                        driverName = selectedDriver,
+                                        size = 28.dp,
+                                        driverProfiles = driverProfiles
                                     )
-                                    Spacer(modifier = Modifier.width(10.dp))
+                                    Spacer(modifier = Modifier.width(12.dp))
                                     Text(
                                         text = selectedDriver,
                                         style = MaterialTheme.typography.bodyMedium,
@@ -764,7 +788,16 @@ fun UserProfileScreen(
                                     .background(MaterialTheme.colorScheme.surface)
                             ) {
                                 drivers.forEach { driver ->
+                                    val driverImg = TeamUtils.getDriverImageUrl(driver, driverProfiles)
                                     DropdownMenuItem(
+                                        leadingIcon = {
+                                            DriverProfileCircle(
+                                                imageUrl = driverImg,
+                                                driverName = driver,
+                                                size = 24.dp,
+                                                driverProfiles = driverProfiles
+                                            )
+                                        },
                                         text = { Text(driver, color = MaterialTheme.colorScheme.onSurface) },
                                         onClick = {
                                             selectedDriver = driver
@@ -787,32 +820,32 @@ fun UserProfileScreen(
                 // ==========================================
                 // 3. QUICK PREFERENCES & APP SETTINGS
                 // ==========================================
-                ProfileSectionHeader(title = "PREFERENCES & SETTINGS")
+                ProfileSectionHeader(title = stringResource(R.string.profile_preferences))
 
                 ProfileMenuItem(
                     icon = Icons.Outlined.Settings,
-                    title = "App Settings",
+                    title = stringResource(R.string.title_settings),
                     subtitle = "Notifications, Calendar Sync, & Local Data",
                     onClick = { navController.navigate("settings") }
                 )
 
                 ProfileMenuItem(
                     icon = Icons.Outlined.Palette,
-                    title = "Appearance & Theme",
+                    title = stringResource(R.string.title_theme),
                     subtitle = "Theme colors, constructor branding, dark mode",
                     onClick = { navController.navigate("theme_settings") }
                 )
 
                 ProfileMenuItem(
                     icon = Icons.Outlined.Language,
-                    title = "Language & Region",
+                    title = stringResource(R.string.title_language),
                     subtitle = "Driver name display & date formatting",
                     onClick = { navController.navigate("language_settings") }
                 )
 
                 ProfileMenuItem(
                     icon = Icons.Outlined.Security,
-                    title = "Live Telemetry & Security",
+                    title = stringResource(R.string.title_telemetry),
                     subtitle = "Paddock security passkeys & telemetry options",
                     onClick = { navController.navigate("telemetry") }
                 )
@@ -822,12 +855,12 @@ fun UserProfileScreen(
                 // ==========================================
                 // 4. HELP, SUPPORT & COMMUNITY
                 // ==========================================
-                ProfileSectionHeader(title = "HELP & SUPPORT")
+                ProfileSectionHeader(title = stringResource(R.string.profile_help_support))
 
                 // Email Support
                 ProfileMenuItem(
                     icon = Icons.Outlined.Email,
-                    title = "Email Support",
+                    title = stringResource(R.string.profile_email_support),
                     subtitle = "Contact PitWall development team via email",
                     onClick = {
                         val intent = Intent(Intent.ACTION_SENDTO).apply {
@@ -845,7 +878,7 @@ fun UserProfileScreen(
                 // WhatsApp Support / Community
                 ProfileMenuItem(
                     icon = Icons.Outlined.SupportAgent,
-                    title = "WhatsApp Support & Community",
+                    title = stringResource(R.string.profile_whatsapp_support),
                     subtitle = "Join WhatsApp paddock channel or chat with support",
                     onClick = {
                         val uri = "https://wa.me/?text=Hello%20PitWall%20Support!".toUri()
@@ -861,7 +894,7 @@ fun UserProfileScreen(
                 // Rate App
                 ProfileMenuItem(
                     icon = Icons.Outlined.StarRate,
-                    title = "Rate PitWall on Play Store",
+                    title = stringResource(R.string.profile_rate_app),
                     subtitle = "Enjoying the app? Leave us a 5-star review",
                     onClick = {
                         val uri = "market://details?id=${context.packageName}".toUri()
@@ -884,7 +917,7 @@ fun UserProfileScreen(
                 // Open Source Licenses
                 ProfileMenuItem(
                     icon = Icons.AutoMirrored.Outlined.HelpOutline,
-                    title = "Open Source Licenses",
+                    title = stringResource(R.string.title_licenses),
                     subtitle = "Third-party libraries & license attributions",
                     onClick = { navController.navigate("licenses") }
                 )
@@ -951,7 +984,7 @@ fun UserProfileScreen(
                 Surface(
                     shape = RoundedCornerShape(16.dp),
                     color = MaterialTheme.colorScheme.surface,
-                    border = BorderStroke(1.dp, F1Red.copy(alpha = 0.3f)),
+                    border = BorderStroke(1.dp, MaterialTheme.colorScheme.primary.copy(alpha = 0.3f)),
                     modifier = Modifier.fillMaxWidth()
                 ) {
                     Column(
@@ -967,11 +1000,11 @@ fun UserProfileScreen(
                             Box(
                                 modifier = Modifier
                                     .size(8.dp)
-                                    .background(F1Red, CircleShape)
+                                    .background(MaterialTheme.colorScheme.primary, CircleShape)
                             )
                             Spacer(modifier = Modifier.width(8.dp))
                             Text(
-                                text = "PITWALL TELEMETRY ENGINE",
+                                text = "PITWALL",
                                 style = MaterialTheme.typography.labelSmall,
                                 fontWeight = FontWeight.Bold,
                                 color = MaterialTheme.colorScheme.onSurface,
@@ -1016,7 +1049,7 @@ fun UserProfileScreen(
                         Spacer(modifier = Modifier.height(12.dp))
 
                         Text(
-                            text = "F1Companion v${BuildConfig.VERSION_NAME} • All Rights Reserved",
+                            text = "v${BuildConfig.VERSION_NAME} • All Rights Reserved",
                             style = MaterialTheme.typography.labelSmall,
                             color = MaterialTheme.colorScheme.onSurfaceVariant.copy(alpha = 0.6f)
                         )
@@ -1039,7 +1072,7 @@ private fun ProfileSectionHeader(title: String) {
     ) {
         Text(
             text = "◆",
-            color = F1Red,
+            color = MaterialTheme.colorScheme.primary,
             fontSize = 10.sp,
             fontWeight = FontWeight.Bold
         )
@@ -1048,7 +1081,7 @@ private fun ProfileSectionHeader(title: String) {
             text = title,
             style = MaterialTheme.typography.labelMedium,
             fontWeight = FontWeight.Bold,
-            color = F1Red,
+            color = MaterialTheme.colorScheme.primary,
             letterSpacing = 1.5.sp
         )
     }
@@ -1108,12 +1141,12 @@ private fun ProfileMenuItem(
                 )
             }
 
-            Text(
-                text = "->",
-                style = MaterialTheme.typography.bodySmall,
-                fontWeight = FontWeight.Bold,
-                color = F1Red
+            Icon(
+                imageVector = Icons.AutoMirrored.Outlined.KeyboardArrowRight,
+                contentDescription = null,
+                tint = MaterialTheme.colorScheme.primary
             )
+
         }
     }
 }

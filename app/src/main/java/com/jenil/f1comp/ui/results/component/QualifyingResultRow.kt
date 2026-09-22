@@ -38,7 +38,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.jenil.f1comp.data.local.entity.QualifyingResultEntity
 import com.jenil.f1comp.data.local.entity.SprintQualifyingResultEntity
-import com.jenil.f1comp.ui.home.components.DriverProfileCircle
+import com.jenil.f1comp.ui.home.components.DriverHeadshotCircle
 import com.jenil.f1comp.ui.theme.PodiumBronze
 import com.jenil.f1comp.ui.theme.PodiumGold
 import com.jenil.f1comp.ui.theme.PodiumSilver
@@ -53,7 +53,7 @@ fun QualifyingResultRow(
     QualifyingResultRowContent(
         position = result.position,
         driver = result.driver,
-        driverImage = result.driverImage,
+        driverImage = result.headshotUrl,
         constructor = result.constructor,
         q1 = result.q1,
         q2 = result.q2,
@@ -73,7 +73,7 @@ fun QualifyingResultRow(
     QualifyingResultRowContent(
         position = result.position,
         driver = result.driver,
-        driverImage = result.driverImage,
+        driverImage = result.headshotUrl,
         constructor = result.constructor,
         q1 = result.q1,
         q2 = result.q2,
@@ -217,8 +217,8 @@ private fun QualifyingResultRowContent(
                         .background(teamColor.copy(alpha = 0.15f))
                         .padding(2.dp)
                 ) {
-                    DriverProfileCircle(
-                        imageUrl = driverImage,
+                    DriverHeadshotCircle(
+                        headshotUrl = driverImage,
                         driverName = driver,
                         size = 38.dp,
                     )

@@ -22,11 +22,13 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import com.jenil.f1comp.ui.home.components.DriverProfileCircle
+import com.jenil.f1comp.R
+import com.jenil.f1comp.ui.home.components.DriverHeadshotCircle
 import com.jenil.f1comp.ui.home.components.StandingPositionCircle
 import com.jenil.f1comp.ui.home.components.TeamLogoCircle
 import com.jenil.f1comp.util.TeamUtils
@@ -105,8 +107,8 @@ fun StandingRowItem(
                         .padding(2.dp),
                     contentAlignment = Alignment.Center
                 ) {
-                    DriverProfileCircle(
-                        imageUrl = imageUrl,
+                    DriverHeadshotCircle(
+                        headshotUrl = imageUrl,
                         driverName = name,
                         size = 40.dp
                     )
@@ -199,7 +201,7 @@ fun StandingRowItem(
                 color = MaterialTheme.colorScheme.onSurface
             )
             Text(
-                text = "pts",
+                text = stringResource(R.string.standings_pts),
                 style = MaterialTheme.typography.labelSmall,
                 fontFamily = FontFamily.Monospace,
                 color = MaterialTheme.colorScheme.onSurfaceVariant

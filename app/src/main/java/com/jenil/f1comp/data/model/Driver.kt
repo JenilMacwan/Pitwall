@@ -22,6 +22,8 @@ data class Driver(
     val code: String?,
     val nationality: String?,
     val image: String?,
+    @SerializedName("headshot_url")
+    val headshotUrl: String?,
     val team: String?,
     val born: String? = null,
     val debut: String? = null,

@@ -45,7 +45,6 @@ import androidx.compose.ui.unit.sp
 import coil.compose.AsyncImage
 import com.jenil.f1comp.data.local.entity.CircuitInfoEntity
 import com.jenil.f1comp.data.local.entity.ScheduleEntity
-import com.jenil.f1comp.ui.theme.F1Red
 import com.jenil.f1comp.util.FlagImage
 import com.jenil.f1comp.util.ProfileUtils
 import java.time.LocalDate
@@ -396,7 +395,7 @@ fun ScheduleCard(
                                         .size(38.dp)
                                         .background(
                                             shape = RoundedCornerShape(10.dp),
-                                            color = F1Red
+                                            color = MaterialTheme.colorScheme.primary
                                         ),
                                     contentAlignment = Alignment.Center
                                 ) {

@@ -77,6 +77,7 @@ dependencies {
     implementation(libs.androidx.lifecycle.runtime.ktx)
     implementation(libs.androidx.lifecycle.viewmodel.ktx)
     implementation(libs.androidx.compose.material.icons.extended)
+    implementation(libs.androidx.appcompat)
 
     // Credential MaNGER
     //noinspection LoginCredentials,UseTomlInstead

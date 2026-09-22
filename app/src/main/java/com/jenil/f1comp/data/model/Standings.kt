@@ -23,6 +23,8 @@ data class Standings(
     val constructorLogo: String?,
     @SerializedName("driver_image")
     val driverImage: String?,
+    @SerializedName("headshot_url")
+    val headshotUrl: String? = null,
     val url: String?,
     @SerializedName("team_name")
     val team: String?,

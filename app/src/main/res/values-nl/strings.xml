@@ -1,0 +1,210 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- App & General Titles -->
+    <string name="app_name">PitWall</string>
+    <string name="title_home">Start</string>
+    <string name="title_schedule">Kalender</string>
+    <string name="title_news">Nieuws</string>
+    <string name="title_standings">Standen</string>
+    <string name="title_settings">Instellingen</string>
+    <string name="title_chatbot">Apex AI</string>
+    <string name="title_profile">Paddock Profiel</string>
+    <string name="title_radio">Teamradio</string>
+    <string name="title_results">Raceresultaten</string>
+    <string name="title_telemetry">Live Telemetrie</string>
+    <string name="title_language">Taal en Regio</string>
+    <string name="title_theme">Vormgeving en Thema</string>
+    <string name="sub_title_theme">Systeemstandaard</string>
+    <string name="title_attribution">Gegevensbronnen</string>
+    <string name="title_privacy">Privacybeleid</string>
+    <string name="title_licenses">Open Source Licenties</string>
+    <string name="title_alerts">Meldingen</string>
+    <string name="sub_title_alerts">15 minuten voor start van evenement</string>
+    <string name="title_version">Versie</string>
+    <string name="sub_title_version">1.2.2</string>
+    <string name="title_developer">Ontwikkelaar</string>
+    <string name="sub_title_developer">Jenil Macwan</string>
+    <string name="title_mode">Donkere Modus</string>
+    <string name="sub_title_mode">Uit</string>
+
+    <!-- Navigation Drawer -->
+    <string name="drawer_tagline">Gemaakt voor de echte F1-fan.</string>
+    <string name="drawer_race_hub">RACE CENTRUM</string>
+    <string name="drawer_utilities">EXTRA\'S</string>
+    <string name="drawer_preferences">VOORKEUREN</string>
+    <string name="drawer_sync_calendar">Kalender Synchroniseren</string>
+    <string name="drawer_share_app">Pitwall Delen</string>
+    <string name="drawer_feedback">Feedback Sturen</string>
+    <string name="drawer_paddock_profile">Paddock Profiel</string>
+    <string name="drawer_live_soon">Binnenkort live</string>
+    <string name="drawer_races">Races</string>
+
+    <!-- Home Screen -->
+    <string name="home_next_race">VOLGENDE RACE</string>
+    <string name="home_lights_out">START OVER</string>
+    <string name="home_days">DAGEN</string>
+    <string name="home_hours">UUR</string>
+    <string name="home_mins">MIN</string>
+    <string name="home_secs">SEC</string>
+    <string name="home_top_drivers">BESTE COUREURS</string>
+    <string name="home_top_constructors">BESTE TEAMS</string>
+    <string name="home_view_full_standings">BEKIJK VOLLEDIGE STAND -&gt;</string>
+    <string name="home_race_calendar">RACEKALENDER</string>
+    <string name="home_view_all_races">BEKIJK ALLE RACES -&gt;</string>
+    <string name="home_latest_news">LAATSTE NIEUWS</string>
+    <string name="home_view_all_news">BEKIJK AL HET NIEUWS -&gt;</string>
+    <string name="home_live_now">NU LIVE</string>
+    <string name="home_completed">AFGEROND</string>
+    <string name="home_upcoming">BINNENKORT</string>
+    <string name="home_season_overview">SEIZOENSOVERZICHT</string>
+
+    <!-- Schedule Screen -->
+    <string name="schedule_title">RACEKALENDER</string>
+    <string name="schedule_subtitle">Volledige Formule 1 Seizoenskalender</string>
+    <string name="schedule_all_races">ALLE RACES</string>
+    <string name="schedule_upcoming">BINNENKORT</string>
+    <string name="schedule_completed">AFGEROND</string>
+    <string name="schedule_round">RONDE</string>
+    <string name="schedule_sprint_weekend">SPRINTWEEKEND</string>
+    <string name="schedule_view_details">RACEDETAILS</string>
+    <string name="schedule_circuit">Circuit</string>
+    <string name="schedule_date">Datum</string>
+
+    <!-- Standings Screen -->
+    <string name="standings_title">F1 STANDEN</string>
+    <string name="standings_drivers">COUREURS</string>
+    <string name="standings_constructors">CONSTRUCTEURS</string>
+    <string name="standings_pos">POS</string>
+    <string name="standings_driver">COUREUR</string>
+    <string name="standings_constructor">CONSTRUCTEUR / TEAM</string>
+    <string name="standings_pts">PTN</string>
+    <string name="standings_wins">ZEGES</string>
+    <string name="standings_podiums">PODIA</string>
+
+    <!-- News Screen -->
+    <string name="news_title">F1 NIEUWS &amp; KOPPEN</string>
+    <string name="news_subtitle">Laatste Paddockverslagen &amp; Updates</string>
+    <string name="news_read_more">LEES VOLLEDIG ARTIKEL</string>
+
+    <!-- Profile Screen -->
+    <string name="profile_title">PADDOCK COUREURSPROFIEL</string>
+    <string name="profile_paddock_pass">PADDOCK PAS ACTIEF</string>
+    <string name="profile_guest_pass">GAST PADDOCK PAS</string>
+    <string name="profile_guest_desc">Meld u aan of activeer uw profiel om telemetrie en meldingen te synchroniseren.</string>
+    <string name="profile_sign_in_pass">/// INLOGGEN / PAS ACTIVEREN -&gt;</string>
+    <string name="profile_fav_constructor">FAVORIET TEAM &amp; COUREUR</string>
+    <string name="profile_select_constructor">FAVORIET TEAM / CONSTRUCTEUR</string>
+    <string name="profile_select_driver">FAVORIETE COUREUR</string>
+    <string name="profile_edit_profile">Profiel Bewerken</string>
+    <string name="profile_sign_out">Uitloggen</string>
+    <string name="profile_preferences">VOORKEUREN &amp; INSTELLINGEN</string>
+    <string name="profile_help_support">HELP &amp; ONDERSTEUNING</string>
+    <string name="profile_socials">SOCIAL MEDIA &amp; COMMUNITY</string>
+    <string name="profile_built_with_love">Met ❤️ in India gemaakt voor fans 🇮🇳</string>
+    <string name="profile_email_support">E-mail Ondersteuning</string>
+    <string name="profile_whatsapp_support">WhatsApp Ondersteuning &amp; Community</string>
+    <string name="profile_rate_app">Beoordeel PitWall in de Play Store</string>
+    <string name="profile_callsign">GEBRUIKERSNAAM / WEERGAVENAAM</string>
+    <string name="profile_avatar">PROFIELAFBEELDING</string>
+    <string name="profile_select_image">KIES AFBEELDING UIT GALERIJ</string>
+    <string name="profile_save_changes">WIJZIGINGEN OPSLAAN</string>
+    <string name="profile_cancel">ANNULLEREN</string>
+    <string name="profile_disconnect_title">UITLOGGEN BIJ PITWALL?</string>
+    <string name="profile_disconnect_desc">Uitloggen wist actieve sessietokens op dit apparaat.</string>
+
+    <!-- Settings Screen -->
+    <string name="settings_appearance">Vormgeving</string>
+    <string name="settings_dark_mode">Donkere Modus</string>
+    <string name="settings_dark_active">Donker thema is momenteel actief</string>
+    <string name="settings_light_active">Licht thema is momenteel actief</string>
+    <string name="settings_fav_team">Favoriet Team</string>
+    <string name="settings_fav_team_sub">Personaliseer de app met de kleuren van jouw team</string>
+    <string name="settings_lang_subtitle">Kies de taal van de applicatie</string>
+    <string name="settings_calendar_sync">Kalender Synchroniseren</string>
+    <string name="settings_sync_all">Alle Races Synchroniseren</string>
+    <string name="settings_sync_all_sub">Voeg alle seizoensraces toe aan jouw kalender</string>
+    <string name="settings_sync_upcoming">Toekomstige Races Synchroniseren</string>
+    <string name="settings_sync_upcoming_sub">Voeg alleen toekomstige races toe aan jouw kalender</string>
+    <string name="settings_clear_calendar">F1-evenementen Wissen</string>
+    <string name="settings_clear_calendar_sub">Verwijder alle F1-races uit jouw kalender</string>
+    <string name="settings_notifications">Meldingen</string>
+    <string name="settings_race_reminders">Herinneringen voor Racestart</string>
+    <string name="settings_race_reminders_sub">Ontvang een melding voor de start</string>
+    <string name="settings_session_reminders">Training- &amp; Kwalificatie-herinneringen</string>
+    <string name="settings_session_reminders_sub">Meldingen voor VT1-3 en Kwalificatie</string>
+    <string name="settings_breaking_news">Laatste Nieuws</string>
+    <string name="settings_breaking_news_sub">Coureurs-transfers, straffen en belangrijk nieuws</string>
+    <string name="settings_live_events">Live Race-evenementen</string>
+    <string name="settings_live_events_sub">Safety car, rode vlaggen en snelste ronde</string>
+    <string name="settings_standings_updates">Standen-updates</string>
+    <string name="settings_standings_updates_sub">Meldingen wanneer punten veranderen</string>
+    <string name="settings_about">Over</string>
+    <string name="settings_version">Versie</string>
+    <string name="settings_developer">Ontwikkelaar</string>
+    <string name="settings_rate_app">Beoordeel de App</string>
+
+    <!-- Language Settings Screen -->
+    <string name="lang_title">Taal en Regio</string>
+    <string name="lang_select_prompt">Kies jouw gewenste app-taal:</string>
+    <string name="lang_en">Engels</string>
+    <string name="lang_es">Spaans</string>
+    <string name="lang_fr">Frans</string>
+    <string name="lang_de">Duits</string>
+    <string name="lang_it">Italiaans</string>
+    <string name="lang_nl">Nederlands</string>
+
+    <!-- Team Radio & ChatBot -->
+    <string name="radio_title">TEAMRADIO</string>
+    <string name="radio_subtitle">Live Paddock- &amp; Coureurscommunicatie</string>
+    <string name="chatbot_title">Apex AI-assistent</string>
+    <string name="chatbot_subtitle">Jouw F1-telemetrie &amp; Strategiespecialist</string>
+    <string name="chatbot_placeholder">Vraag Apex van alles...</string>
+    <string name="chatbot_welcome">Apex geïnitialiseerd. Live telemetrie actief. Hoe kan ik je racestrategie ondersteunen?</string>
+    <string name="chatbot_error">Sorry, er is een probleem opgetreden bij het verbinden met Apex.</string>
+    <string name="chatbot_beta">BETA</string>
+    <string name="chatbot_powered_by">Aangedreven door Pitwall</string>
+    <string name="chatbot_clear_chat">Chat Wissen</string>
+    <string name="chatbot_reset_msg">Pitwall-link gereset. Stand-by voor nieuwe instructies.</string>
+    <string name="chatbot_disclaimer">Apex is in beta. AI-gegenereerde antwoorden kunnen onnauwkeurig zijn.</string>
+    <string name="prompt_aero_rules">🏎️ Aero-regels 2026</string>
+    <string name="prompt_driver_standings">📊 Coureursstand</string>
+    <string name="prompt_next_race">🏁 Volgende Race</string>
+    <string name="prompt_teammate_h2h">⏱️ Teamgenoten H2H</string>
+
+    <!-- Race Results -->
+    <string name="results_title">RACERESULTATEN</string>
+    <string name="results_qualifying">KWALIFICATIE</string>
+    <string name="results_sprint">SPRINT</string>
+    <string name="results_race">RACE</string>
+    <string name="results_laps">RONDEN</string>
+    <string name="results_time_retired">TIJD / UITGEVALLEN</string>
+    <string name="results_grid">STARTOPSTELLING</string>
+    <string name="results_fastest_lap">SNELSTE RONDE</string>
+
+    <!-- Statuses -->
+    <string name="status_completed">Afgerond</string>
+    <string name="status_upcoming">Binnenkort</string>
+    <string name="status_live">Nu Live</string>
+    <string name="status_finished">Gefinisht</string>
+    <string name="status_retired">Uitgevallen</string>
+    <string name="status_disqualified">Gediskwalificeerd</string>
+
+    <!-- Nationalities -->
+    <string name="nationality_british">Brits</string>
+    <string name="nationality_spanish">Spaans</string>
+    <string name="nationality_monegasque">Monegaskisch</string>
+    <string name="nationality_dutch">Nederlands</string>
+    <string name="nationality_german">Duits</string>
+    <string name="nationality_french">Frans</string>
+    <string name="nationality_italian">Italiaans</string>
+    <string name="nationality_australian">Australisch</string>
+    <string name="nationality_mexican">Mexicaans</string>
+    <string name="nationality_canadian">Canadees</string>
+    <string name="nationality_japanese">Japans</string>
+    <string name="nationality_finnish">Fins</string>
+    <string name="nationality_thai">Thais</string>
+    <string name="nationality_chinese">Chinees</string>
+    <string name="nationality_american">Amerikaans</string>
+    <string name="nationality_danish">Deens</string>
+    <string name="nationality_kiwi">Nieuw-Zeelands</string>
+</resources>

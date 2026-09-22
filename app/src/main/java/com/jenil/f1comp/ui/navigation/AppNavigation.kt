@@ -45,6 +45,7 @@ import com.jenil.f1comp.ui.settings.screen.LicensesScreen
 import com.jenil.f1comp.ui.settings.screen.PrivacyPolicyScreen
 import com.jenil.f1comp.ui.settings.screen.SettingsDetailPlaceholder
 import com.jenil.f1comp.ui.settings.screen.SettingsScreen
+import com.jenil.f1comp.ui.settings.screen.ThemeSettingsScreen
 import com.jenil.f1comp.ui.standings.screen.StandingsScreen
 import com.jenil.f1comp.viewmodel.SettingsViewModel
 import dev.chrisbanes.haze.HazeState
@@ -200,10 +201,7 @@ fun AppNavigation(
                     SettingsScreen(navController = navController)
                 }
                 composable(route = "theme_settings") {
-                    SettingsDetailPlaceholder(
-                        title = "Appearance & Theme",
-                        navController = navController
-                    )
+                    ThemeSettingsScreen(navController = navController)
                 }
                 composable(route = "language_settings") {
                     LanguageSettingsScreen(navController = navController)

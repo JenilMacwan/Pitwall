@@ -25,10 +25,12 @@ import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.IntOffset
 import androidx.compose.ui.unit.dp
+import com.jenil.f1comp.R
 
 @Composable
 fun StandingToggle(
@@ -89,7 +91,7 @@ fun StandingToggle(
                     contentAlignment = Alignment.Center
                 ) {
                     Text(
-                        text = "Constructors",
+                        text = stringResource(R.string.standings_constructors),
                         color = constructorsColor,
                         style = MaterialTheme.typography.labelMedium,
                         maxLines = 1,
@@ -117,7 +119,7 @@ fun StandingToggle(
                     contentAlignment = Alignment.Center
                 ) {
                     Text(
-                        text = "Drivers",
+                        text = stringResource(R.string.standings_drivers),
                         color = driversColor,
                         style = MaterialTheme.typography.labelMedium,
                         fontWeight = if (!isConstructorSelected) FontWeight.Bold else FontWeight.Normal,

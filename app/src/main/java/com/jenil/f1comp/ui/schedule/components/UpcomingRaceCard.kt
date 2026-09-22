@@ -235,7 +235,7 @@ fun UpcomingRaceCard(
                         fontFamily = FontFamily.Monospace,
                         style = MaterialTheme.typography.labelMedium,
                         fontWeight = FontWeight.Bold,
-                        color = F1Red
+                        color = MaterialTheme.colorScheme.primary
                     )
                 }
             }

@@ -31,8 +31,10 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.unit.dp
+import com.jenil.f1comp.R
 import com.jenil.f1comp.data.local.entity.ScheduleEntity
 import com.jenil.f1comp.data.model.RaceCountdown
 import com.jenil.f1comp.data.model.RaceWeather
@@ -180,7 +182,7 @@ fun NextRaceCard(
                 horizontalArrangement = Arrangement.SpaceBetween
             ) {
                 Text(
-                    text = "NEXT RACE • ROUND $round",
+                    text = "${stringResource(R.string.home_next_race)} • ROUND $round",
                     fontFamily = FontFamily.Monospace,
                     style = MaterialTheme.typography.labelSmall,
                     color = MaterialTheme.colorScheme.onSurfaceVariant
@@ -243,7 +245,7 @@ fun NextRaceCard(
             ) {
                 DayCard(
                     value = daysStr,
-                    unit = "Days",
+                    unit = stringResource(R.string.home_days),
                     progress = daysProgress,
                     modifier = Modifier.weight(0.45f)
                 )
@@ -255,9 +257,9 @@ fun NextRaceCard(
                         modifier = Modifier.fillMaxWidth(),
                         horizontalArrangement = Arrangement.spacedBy(8.dp)
                     ) {
-                        SmallCountdown(value = hoursStr, unit = "Hrs", modifier = Modifier.weight(1f))
-                        SmallCountdown(value = minutesStr, unit = "Min", modifier = Modifier.weight(1f))
-                        SmallCountdown(value = secondsStr, unit = "Sec", modifier = Modifier.weight(1f))
+                        SmallCountdown(value = hoursStr, unit = stringResource(R.string.home_hours), modifier = Modifier.weight(1f))
+                        SmallCountdown(value = minutesStr, unit = stringResource(R.string.home_mins), modifier = Modifier.weight(1f))
+                        SmallCountdown(value = secondsStr, unit = stringResource(R.string.home_secs), modifier = Modifier.weight(1f))
                     }
                     Spacer(modifier = Modifier.height(12.dp))
                     Surface(

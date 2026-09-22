@@ -4,7 +4,11 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.google.firebase.Firebase
 import com.google.firebase.messaging.messaging
+import com.jenil.f1comp.data.local.entity.ConstructorProfileEntity
+import com.jenil.f1comp.data.local.entity.DriverProfileEntity
+import com.jenil.f1comp.data.repository.ConstructorProfileRepository
 import com.jenil.f1comp.data.repository.DataStoreRepository
+import com.jenil.f1comp.data.repository.DriverProfileRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
@@ -14,8 +18,31 @@ import javax.inject.Inject
 
 @HiltViewModel
 class SettingsViewModel @Inject constructor(
-    private val repository: DataStoreRepository
+    private val repository: DataStoreRepository,
+    private val constructorProfileRepository: ConstructorProfileRepository,
+    private val driverProfileRepository: DriverProfileRepository
 ) : ViewModel() {
+
+    init {
+        viewModelScope.launch {
+            runCatching { constructorProfileRepository.refreshConstructorProfiles() }
+            runCatching { driverProfileRepository.refreshDriverProfiles() }
+        }
+    }
+
+    val constructorProfiles: StateFlow<List<ConstructorProfileEntity>> = constructorProfileRepository.getCachedConstructorProfiles()
+        .stateIn(
+            scope = viewModelScope,
+            started = SharingStarted.WhileSubscribed(5000),
+            initialValue = emptyList()
+        )
+
+    val driverProfiles: StateFlow<List<DriverProfileEntity>> = driverProfileRepository.getCachedDriverProfiles()
+        .stateIn(
+            scope = viewModelScope,
+            started = SharingStarted.WhileSubscribed(5000),
+            initialValue = emptyList()
+        )
 
     val isDarkMode: StateFlow<Boolean?> = repository.isDarkMode.stateIn(
         scope = viewModelScope,
@@ -67,6 +94,12 @@ class SettingsViewModel @Inject constructor(
         initialValue = null
     )
 
+    val selectedThemeId: StateFlow<String?> = repository.selectedThemeId.stateIn(
+        scope = viewModelScope,
+        started = SharingStarted.WhileSubscribed(5000),
+        initialValue = null
+    )
+
     fun toggleDarkMode(isDarkMode: Boolean) {
         viewModelScope.launch {
             repository.setDarkMode(isDarkMode)
@@ -88,6 +121,12 @@ class SettingsViewModel @Inject constructor(
     fun setFavoriteDriver(driver: String) {
         viewModelScope.launch {
             repository.setFavoriteDriver(driver)
+        }
+    }
+
+    fun setSelectedThemeId(id: String) {
+        viewModelScope.launch {
+            repository.setSelectedThemeId(id)
         }
     }
 

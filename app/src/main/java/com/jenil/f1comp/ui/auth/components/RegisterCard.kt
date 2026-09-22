@@ -2,6 +2,7 @@ package com.jenil.f1comp.ui.auth.components
 
 import androidx.compose.animation.animateContentSize
 import androidx.compose.foundation.BorderStroke
+import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
@@ -15,7 +16,6 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.layout.widthIn
-import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.icons.Icons
@@ -33,9 +33,11 @@ import androidx.compose.material3.CheckboxDefaults
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.DropdownMenu
 import androidx.compose.material3.DropdownMenuItem
+import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.OutlinedButton
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.OutlinedTextFieldDefaults
 import androidx.compose.material3.Surface
@@ -50,6 +52,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.SpanStyle
 import androidx.compose.ui.text.buildAnnotatedString
 import androidx.compose.ui.text.font.FontWeight
@@ -62,7 +65,13 @@ import androidx.compose.ui.text.withStyle
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
+import com.jenil.f1comp.R
+import com.jenil.f1comp.data.local.entity.ConstructorProfileEntity
+import com.jenil.f1comp.data.local.entity.DriverProfileEntity
+import com.jenil.f1comp.ui.home.components.DriverProfileCircle
+import com.jenil.f1comp.ui.home.components.TeamLogoCircle
 import com.jenil.f1comp.ui.theme.F1Red
+import com.jenil.f1comp.util.TeamUtils
 import com.jenil.f1comp.viewmodel.AuthErrorField
 import com.jenil.f1comp.viewmodel.AuthUiState
 
@@ -72,7 +81,10 @@ fun RegisterCard(
     authUiState: AuthUiState = AuthUiState.Idle,
     navController: NavController? = null,
     onSignInClick: () -> Unit = {},
-    onRegisterClick: (email: String, pass: String, callsign: String) -> Unit = { _, _, _ -> }
+    onGoogleClick: () -> Unit = {},
+    onRegisterClick: (email: String, pass: String, callsign: String) -> Unit = { _, _, _ -> },
+    drivers: List<DriverProfileEntity> = emptyList(),
+    teams: List<ConstructorProfileEntity> = emptyList()
 ) {
     var callsignState by remember { mutableStateOf("") }
     var emailState by remember { mutableStateOf("") }
@@ -82,10 +94,10 @@ fun RegisterCard(
     val isEmailError = authUiState is AuthUiState.Error && (authUiState.targetField == AuthErrorField.EMAIL || authUiState.targetField == AuthErrorField.GENERAL)
     val isPasswordError = authUiState is AuthUiState.Error && (authUiState.targetField == AuthErrorField.PASSWORD || authUiState.targetField == AuthErrorField.GENERAL)
 
-    var selectedTeam by remember { mutableStateOf("Scuderia Ferrari HP") }
+    var selectedTeam by remember { mutableStateOf<String?>(null) }
     var teamExpanded by remember { mutableStateOf(false) }
 
-    var selectedDriver by remember { mutableStateOf("Charles Leclerc #16") }
+    var selectedDriver by remember { mutableStateOf<String?>(null) }
     var driverExpanded by remember { mutableStateOf(false) }
 
     var audioAlertsChecked by remember { mutableStateOf(true) }
@@ -292,19 +304,20 @@ fun RegisterCard(
                         Row(
                             modifier = Modifier
                                 .fillMaxWidth()
-                                .padding(horizontal = 16.dp, vertical = 14.dp),
+                                .padding(horizontal = 16.dp, vertical = 10.dp),
                             verticalAlignment = Alignment.CenterVertically
                         ) {
-                            Box(
-                                modifier = Modifier
-                                    .size(10.dp)
-                                    .background(F1Red, CircleShape)
+                            TeamLogoCircle(
+                                logoUrl = TeamUtils.getTeamLogoUrl(selectedTeam),
+                                teamName = selectedTeam ?: "Team",
+                                size = 28.dp,
+                                containerColor = Color.White
                             )
                             Spacer(modifier = Modifier.width(12.dp))
                             Text(
-                                text = selectedTeam,
+                                text = selectedTeam ?: "Select Team",
                                 style = MaterialTheme.typography.bodyMedium,
-                                color = Color.White,
+                                color = if (selectedTeam != null) Color.White else Color.White.copy(alpha = 0.5f),
                                 fontWeight = FontWeight.SemiBold
                             )
                             Spacer(modifier = Modifier.weight(1f))
@@ -323,7 +336,16 @@ fun RegisterCard(
                             .background(Color(0xFF1A1A22))
                     ) {
                         teams.forEach { team ->
+                            val logoUrl = TeamUtils.getTeamLogoUrl(team,)
                             DropdownMenuItem(
+                                leadingIcon = {
+                                    TeamLogoCircle(
+                                        logoUrl = logoUrl,
+                                        teamName = team,
+                                        size = 24.dp,
+                                        containerColor = Color.White
+                                    )
+                                },
                                 text = { Text(team, color = Color.White) },
                                 onClick = {
                                     selectedTeam = team
@@ -364,19 +386,19 @@ fun RegisterCard(
                         Row(
                             modifier = Modifier
                                 .fillMaxWidth()
-                                .padding(horizontal = 16.dp, vertical = 14.dp),
+                                .padding(horizontal = 16.dp, vertical = 10.dp),
                             verticalAlignment = Alignment.CenterVertically
                         ) {
-                            Box(
-                                modifier = Modifier
-                                    .size(10.dp)
-                                    .background(Color(0xFFFFD700), CircleShape)
+                            DriverProfileCircle(
+                                imageUrl = TeamUtils.getDriverImageUrl(selectedDriver),
+                                driverName = selectedDriver ?: "Driver",
+                                size = 28.dp
                             )
                             Spacer(modifier = Modifier.width(12.dp))
                             Text(
-                                text = selectedDriver,
+                                text = selectedDriver ?: "Select Driver",
                                 style = MaterialTheme.typography.bodyMedium,
-                                color = Color.White,
+                                color = if (selectedDriver != null) Color.White else Color.White.copy(alpha = 0.5f),
                                 fontWeight = FontWeight.SemiBold
                             )
                             Spacer(modifier = Modifier.weight(1f))
@@ -395,7 +417,15 @@ fun RegisterCard(
                             .background(Color(0xFF1A1A22))
                     ) {
                         drivers.forEach { driver ->
+                            val driverImg = TeamUtils.getDriverImageUrl(driver)
                             DropdownMenuItem(
+                                leadingIcon = {
+                                    DriverProfileCircle(
+                                        imageUrl = driverImg,
+                                        driverName = driver,
+                                        size = 24.dp
+                                    )
+                                },
                                 text = { Text(driver, color = Color.White) },
                                 onClick = {
                                     selectedDriver = driver
@@ -674,6 +704,68 @@ fun RegisterCard(
                                 letterSpacing = 1.sp
                             )
                         }
+                    }
+                }
+                
+                // Divider: // OR CONNECT VIA TELEMETRY //
+                Row(
+                    modifier = Modifier
+                        .widthIn(max = 488.dp)
+                        .fillMaxWidth()
+                        .padding(vertical = 16.dp),
+                    verticalAlignment = Alignment.CenterVertically
+                ) {
+                    HorizontalDivider(
+                        modifier = Modifier.weight(1f),
+                        color = Color.White.copy(alpha = 0.2f),
+                        thickness = 1.dp
+                    )
+                    Text(
+                        text = "//  OR CONNECT VIA TELEMETRY  //",
+                        style = MaterialTheme.typography.bodySmall,
+                        color = Color.White.copy(alpha = 0.5f),
+                        modifier = Modifier.padding(horizontal = 8.dp)
+                    )
+                    HorizontalDivider(
+                        modifier = Modifier.weight(1f),
+                        color = Color.White.copy(alpha = 0.2f),
+                        thickness = 1.dp
+                    )
+                }
+
+                // Social Login Button: Google
+                val isLoadingG = authUiState is AuthUiState.Loading
+                OutlinedButton(
+                    onClick = {
+                        onGoogleClick()
+                    },
+                    enabled = !isLoadingG,
+                    modifier = Modifier
+                        .align(Alignment.CenterHorizontally)
+                        .height(44.dp),
+                    shape = RoundedCornerShape(22.dp),
+                    border = BorderStroke(1.dp, Color.White.copy(alpha = 0.2f)),
+                    colors = ButtonDefaults.outlinedButtonColors(
+                        containerColor = Color.White.copy(alpha = 0.06f),
+                        contentColor = Color.White
+                    )
+                ) {
+                    Row(
+                        verticalAlignment = Alignment.CenterVertically,
+                        modifier = Modifier.padding(horizontal = 8.dp)
+                    ) {
+                        Image(
+                            painter = painterResource(id = R.drawable.ic_google),
+                            contentDescription = "Google",
+                            modifier = Modifier.size(20.dp)
+                        )
+                        Spacer(modifier = Modifier.width(10.dp))
+                        Text(
+                            text = "Continue with Google",
+                            style = MaterialTheme.typography.bodyMedium,
+                            fontWeight = FontWeight.SemiBold,
+                            color = Color.White
+                        )
                     }
                 }
             }

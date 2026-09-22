@@ -38,7 +38,9 @@ data class TeammateDriverInfo(
     val driverId: String,
     val name: String,
     val code: String,
-    val image: String
+    val image: String,
+    @SerializedName("headshot_url")
+    val headshotUrl: String? = null,
 )
 
 data class SessionComparison(

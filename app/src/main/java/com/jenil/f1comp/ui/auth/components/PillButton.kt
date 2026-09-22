@@ -40,6 +40,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.IntOffset
 import androidx.compose.ui.unit.dp
+import com.jenil.f1comp.ui.theme.F1Red
 
 @Composable
 fun PillButton(
@@ -101,7 +102,7 @@ fun PillButton(
                         .width(segmentWidth)
                         .fillMaxHeight()
                         .background(
-                            color = MaterialTheme.colorScheme.primary,
+                            color = F1Red,
                             shape = RoundedCornerShape(25)
                         )
                 )

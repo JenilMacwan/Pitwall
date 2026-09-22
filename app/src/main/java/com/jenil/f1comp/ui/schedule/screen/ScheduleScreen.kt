@@ -23,7 +23,7 @@ import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
@@ -31,6 +31,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
@@ -57,10 +58,9 @@ fun ScheduleScreen(
     val raceSchedule by viewModel.schedule.collectAsStateWithLifecycle()
     val circuitsMap by viewModel.circuitsMap.collectAsStateWithLifecycle()
 
-    var selectedTab by remember { mutableStateOf("All") }
+    var selectedTabIndex by remember { mutableIntStateOf(0) }
 
     val scrollState = rememberScrollState()
-
 
     val upcomingRaces = remember(raceSchedule) {
         raceSchedule.filter { !it.isCompleted }
@@ -116,7 +116,7 @@ fun ScheduleScreen(
                     }
                     Spacer(modifier = Modifier.width(12.dp))
                     Text(
-                        text = "Schedule",
+                        text = stringResource(R.string.schedule_title),
                         style = MaterialTheme.typography.titleLarge,
                         fontWeight = FontWeight.Bold,
                         color = MaterialTheme.colorScheme.onSurface
@@ -124,8 +124,8 @@ fun ScheduleScreen(
                 }
             }
             TabPill(
-                selectedTab = selectedTab,
-                onTabSelected = { selectedTab = it },
+                selectedTabIndex = selectedTabIndex,
+                onTabSelected = { selectedTabIndex = it },
                 modifier = Modifier.padding(top = 20.dp, start = 16.dp, end = 16.dp)
             )
             Spacer(modifier = Modifier.height(20.dp))
@@ -137,8 +137,8 @@ fun ScheduleScreen(
                     .padding(bottom = F1ScreenPadding.bottomPadding()),
                 verticalArrangement = Arrangement.spacedBy(4.dp)
             ) {
-                when (selectedTab) {
-                    "All" -> {
+                when (selectedTabIndex) {
+                    0 -> { // All Races
                         allRaces.forEach { race ->
                             ScheduleCard(
                                 schedule = race, circuit = circuitsMap[race.circuitId],
@@ -148,10 +148,10 @@ fun ScheduleScreen(
                         }
                     }
 
-                    "Upcoming" -> {
+                    1 -> { // Upcoming
                         upcomingRaces.forEachIndexed { index, race ->
                             if (index == 0) {
-                                SectionLabel(text = "NEXT UP — ROUND ${race.round}")
+                                SectionLabel(text = "${stringResource(R.string.home_next_race)} — ${stringResource(R.string.schedule_round)} ${race.round}")
                                 ScheduleCard(
                                     schedule = race,
                                     circuit = circuitsMap[race.circuitId],
@@ -172,14 +172,14 @@ fun ScheduleScreen(
                                         verticalAlignment = Alignment.CenterVertically
                                     ) {
                                         Text(
-                                            text = "UPCOMING GRAND PRIX",
+                                            text = stringResource(R.string.schedule_upcoming),
                                             fontFamily = FontFamily.Monospace,
                                             style = MaterialTheme.typography.labelSmall,
                                             fontWeight = FontWeight.Bold,
                                             color = MaterialTheme.colorScheme.onSurfaceVariant
                                         )
                                         Text(
-                                            text = "${upcomingRaces.size - 1} Rounds Left",
+                                            text = "${upcomingRaces.size - 1} ${stringResource(R.string.drawer_races)}",
                                             fontFamily = FontFamily.Monospace,
                                             style = MaterialTheme.typography.labelSmall,
                                             color = MaterialTheme.colorScheme.onSurfaceVariant
@@ -194,7 +194,7 @@ fun ScheduleScreen(
                         }
                     }
 
-                    "Completed" -> {
+                    2 -> { // Completed
                         completedRaces.forEach { race ->
                             ScheduleCard(
                                 schedule = race, circuit = circuitsMap[race.circuitId],

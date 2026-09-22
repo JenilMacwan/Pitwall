@@ -5,11 +5,15 @@ import com.google.gson.annotations.SerializedName
 data class ChatRequest(
     @SerializedName("session_id")
     val sessionId: String,
-    val query: String
+    val query: String,
+    @SerializedName("lang")
+    val lang: String = "en"
 )
+
 data class ChatResponse(
     val response: String
 )
+
 sealed class Resource<out T> {
     object Loading : Resource<Nothing>()
     data class Success<out T>(val data: T) : Resource<T>()

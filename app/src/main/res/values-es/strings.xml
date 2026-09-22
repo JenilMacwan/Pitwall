@@ -1,4 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
 <resources>
+    <!-- App & General Titles -->
     <string name="app_name">PitWall</string>
     <string name="title_home">Inicio</string>
     <string name="title_schedule">Calendario</string>
@@ -6,15 +8,203 @@
     <string name="title_standings">Clasificación</string>
     <string name="title_settings">Ajustes</string>
     <string name="title_chatbot">Apex IA</string>
-
-    <string name="title_theme">Tema</string>
+    <string name="title_profile">Perfil del Paddock</string>
+    <string name="title_radio">Radio de Equipo</string>
+    <string name="title_results">Resultados de Carrera</string>
+    <string name="title_telemetry">Telemetría en Vivo</string>
+    <string name="title_language">Idioma y Región</string>
+    <string name="title_theme">Apariencia y Tema</string>
     <string name="sub_title_theme">Predeterminado del sistema</string>
+    <string name="title_attribution">Atribución de Datos</string>
+    <string name="title_privacy">Política de Privacidad</string>
+    <string name="title_licenses">Licencias de Código Abierto</string>
     <string name="title_alerts">Alertas</string>
     <string name="sub_title_alerts">15 minutos antes del evento</string>
     <string name="title_version">Versión</string>
-    <string name="sub_title_version">1.1.3</string>
+    <string name="sub_title_version">1.2.2</string>
     <string name="title_developer">Desarrollador</string>
     <string name="sub_title_developer">Jenil Macwan</string>
     <string name="title_mode">Modo Oscuro</string>
     <string name="sub_title_mode">Desactivado</string>
+
+    <!-- Navigation Drawer -->
+    <string name="drawer_tagline">Creado para los apasionados.</string>
+    <string name="drawer_race_hub">CENTRO DE CARRERAS</string>
+    <string name="drawer_utilities">UTILIDADES</string>
+    <string name="drawer_preferences">PREFERENCIAS</string>
+    <string name="drawer_sync_calendar">Sincronizar Calendario</string>
+    <string name="drawer_share_app">Compartir Pitwall</string>
+    <string name="drawer_feedback">Comentarios</string>
+    <string name="drawer_paddock_profile">Perfil del Paddock</string>
+    <string name="drawer_live_soon">En vivo pronto</string>
+    <string name="drawer_races">Carreras</string>
+
+    <!-- Home Screen -->
+    <string name="home_next_race">PRÓXIMA CARRERA</string>
+    <string name="home_lights_out">LUCES FUERA EN</string>
+    <string name="home_days">DÍAS</string>
+    <string name="home_hours">HORAS</string>
+    <string name="home_mins">MINS</string>
+    <string name="home_secs">SEGS</string>
+    <string name="home_top_drivers">MEJORES PILOTOS</string>
+    <string name="home_top_constructors">MEJORES CONSTRUCTORES</string>
+    <string name="home_view_full_standings">VER CLASIFICACIÓN COMPLETA -&gt;</string>
+    <string name="home_race_calendar">CALENDARIO DE CARRERAS</string>
+    <string name="home_view_all_races">VER TODAS LAS CARRERAS -&gt;</string>
+    <string name="home_latest_news">ÚLTIMAS NOTICIAS</string>
+    <string name="home_view_all_news">VER TODAS LAS NOTICIAS -&gt;</string>
+    <string name="home_live_now">EN VIVO AHORA</string>
+    <string name="home_completed">COMPLETADO</string>
+    <string name="home_upcoming">PRÓXIMAMENTE</string>
+    <string name="home_season_overview">RESUMEN DE TEMPORADA</string>
+
+    <!-- Schedule Screen -->
+    <string name="schedule_title">CALENDARIO DE CARRERAS</string>
+    <string name="schedule_subtitle">Calendario Completo Temporada Fórmula 1</string>
+    <string name="schedule_all_races">TODAS LAS CARRERAS</string>
+    <string name="schedule_upcoming">PRÓXIMAMENTE</string>
+    <string name="schedule_completed">COMPLETADO</string>
+    <string name="schedule_round">RONDA</string>
+    <string name="schedule_sprint_weekend">FIN DE SEMANA SPRINT</string>
+    <string name="schedule_view_details">DETALLES DE CARRERA</string>
+    <string name="schedule_circuit">Circuito</string>
+    <string name="schedule_date">Fecha</string>
+
+    <!-- Standings Screen -->
+    <string name="standings_title">CLASIFICACIÓN F1</string>
+    <string name="standings_drivers">PILOTOS</string>
+    <string name="standings_constructors">CONSTRUCTORES</string>
+    <string name="standings_pos">POS</string>
+    <string name="standings_driver">PILOTO</string>
+    <string name="standings_constructor">CONSTRUCTOR / EQUIPO</string>
+    <string name="standings_pts">PTS</string>
+    <string name="standings_wins">VICTORIAS</string>
+    <string name="standings_podiums">PODIOS</string>
+
+    <!-- News Screen -->
+    <string name="news_title">NOTICIAS Y TITULARES F1</string>
+    <string name="news_subtitle">Últimos Informes y Novedades del Paddock</string>
+    <string name="news_read_more">LEER ARTÍCULO COMPLETO</string>
+
+    <!-- Profile Screen -->
+    <string name="profile_title">PERFIL DE PILOTO DEL PADDOCK</string>
+    <string name="profile_paddock_pass">PASE DE PADDOCK ACTIVO</string>
+    <string name="profile_guest_pass">PASE DE PADDOCK INVITADO</string>
+    <string name="profile_guest_desc">Inicia sesión o inicializa tu perfil de piloto para sincronizar telemetría, alertas y preferencias.</string>
+    <string name="profile_sign_in_pass">/// INICIAR SESIÓN / ACTIVAR PASE -&gt;</string>
+    <string name="profile_fav_constructor">CONSTRUCTOR Y PILOTO FAVORITO</string>
+    <string name="profile_select_constructor">CONSTRUCTOR / EQUIPO FAVORITO</string>
+    <string name="profile_select_driver">PILOTO FAVORITO</string>
+    <string name="profile_edit_profile">Editar Perfil</string>
+    <string name="profile_sign_out">Cerrar Sesión</string>
+    <string name="profile_preferences">PREFERENCIAS Y AJUSTES</string>
+    <string name="profile_help_support">AYUDA Y SOPORTE</string>
+    <string name="profile_socials">REDES SOCIALES Y COMUNIDAD</string>
+    <string name="profile_built_with_love">Creado para los fans con ❤️ en India 🇮🇳</string>
+    <string name="profile_email_support">Soporte por Correo</string>
+    <string name="profile_whatsapp_support">Soporte y Comunidad en WhatsApp</string>
+    <string name="profile_rate_app">Valorar PitWall en Play Store</string>
+    <string name="profile_callsign">NOMBRE DE USUARIO / APODO</string>
+    <string name="profile_avatar">AVATAR DEL PERFIL</string>
+    <string name="profile_select_image">SELECCIONAR IMAGEN DE LA GALERÍA</string>
+    <string name="profile_save_changes">GUARDAR CAMBIOS</string>
+    <string name="profile_cancel">CANCELAR</string>
+    <string name="profile_disconnect_title">¿DESCONECTAR DEL PITWALL?</string>
+    <string name="profile_disconnect_desc">Cerrar sesión borrará los tokens activos en este dispositivo.</string>
+
+    <!-- Settings Screen -->
+    <string name="settings_appearance">Apariencia</string>
+    <string name="settings_dark_mode">Modo Oscuro</string>
+    <string name="settings_dark_active">El tema oscuro está activo</string>
+    <string name="settings_light_active">El tema claro está activo</string>
+    <string name="settings_fav_team">Equipo Favorito</string>
+    <string name="settings_fav_team_sub">Personaliza la app con los colores de tu escudería</string>
+    <string name="settings_lang_subtitle">Selecciona el idioma de la aplicación</string>
+    <string name="settings_calendar_sync">Sincronización de Calendario</string>
+    <string name="settings_sync_all">Sincronizar Todas las Carreras</string>
+    <string name="settings_sync_all_sub">Añade todas las carreras de la temporada a tu calendario</string>
+    <string name="settings_sync_upcoming">Sincronizar Próximas Carreras</string>
+    <string name="settings_sync_upcoming_sub">Añade solo carreras futuras a tu calendario</string>
+    <string name="settings_clear_calendar">Borrar Eventos de F1</string>
+    <string name="settings_clear_calendar_sub">Elimina todas las carreras de F1 de tu calendario</string>
+    <string name="settings_notifications">Notificaciones</string>
+    <string name="settings_race_reminders">Recordatorios de Carrera</string>
+    <string name="settings_race_reminders_sub">Recibe avisos antes de la salida</string>
+    <string name="settings_session_reminders">Recordatorios de Prácticas y Clasificación</string>
+    <string name="settings_session_reminders_sub">Alertas antes de FP1-3 y Clasificación</string>
+    <string name="settings_breaking_news">Noticias de Última Hora</string>
+    <string name="settings_breaking_news_sub">Fichajes de pilotos, sanciones y grandes noticias</string>
+    <string name="settings_live_events">Eventos en Vivo</string>
+    <string name="settings_live_events_sub">Safety car, banderas rojas y vuelta rápida</string>
+    <string name="settings_standings_updates">Actualización de Clasificación</string>
+    <string name="settings_standings_updates_sub">Alertas cuando cambien los puntos</string>
+    <string name="settings_about">Acerca de</string>
+    <string name="settings_version">Versión</string>
+    <string name="settings_developer">Desarrollador</string>
+    <string name="settings_rate_app">Valorar la Aplicación</string>
+
+    <!-- Language Settings Screen -->
+    <string name="lang_title">Idioma y Región</string>
+    <string name="lang_select_prompt">Selecciona tu idioma preferido para la aplicación:</string>
+    <string name="lang_en">Inglés</string>
+    <string name="lang_es">Español</string>
+    <string name="lang_fr">Francés</string>
+    <string name="lang_de">Alemán</string>
+    <string name="lang_it">Italiano</string>
+    <string name="lang_nl">Holandés</string>
+
+    <!-- Team Radio & ChatBot -->
+    <string name="radio_title">RADIO DE EQUIPO</string>
+    <string name="radio_subtitle">Comunicaciones del Paddock y Pilotos en Vivo</string>
+    <string name="chatbot_title">Asistente Apex IA</string>
+    <string name="chatbot_subtitle">Tu Especialista en Telemetría y Estrategia de F1</string>
+    <string name="chatbot_placeholder">Pregunta a Apex lo que quieras...</string>
+    <string name="chatbot_welcome">Apex inicializado. Enlace de telemetría activo. ¿Cómo puedo ayudarte con tu estrategia?</string>
+    <string name="chatbot_error">Lo siento, encontré un problema al conectar con Apex.</string>
+    <string name="chatbot_beta">BETA</string>
+    <string name="chatbot_powered_by">Desarrollado por Pitwall</string>
+    <string name="chatbot_clear_chat">Limpiar Chat</string>
+    <string name="chatbot_reset_msg">Enlace con Pitwall reiniciado. En espera de instrucciones.</string>
+    <string name="chatbot_disclaimer">Apex está en beta, las respuestas pueden tardar. La IA puede cometer errores.</string>
+    <string name="prompt_aero_rules">🏎️ Reglas Aerodinámicas 2026</string>
+    <string name="prompt_driver_standings">📊 Clasificación de Pilotos</string>
+    <string name="prompt_next_race">🏁 Próxima Carrera</string>
+    <string name="prompt_teammate_h2h">⏱️ Duelos entre Compañeros</string>
+
+    <!-- Race Results -->
+    <string name="results_title">RESULTADOS DE CARRERA</string>
+    <string name="results_qualifying">CLASIFICACIÓN</string>
+    <string name="results_sprint">SPRINT</string>
+    <string name="results_race">CARRERA</string>
+    <string name="results_laps">VUELTAS</string>
+    <string name="results_time_retired">TIEMPO / RETIRADO</string>
+    <string name="results_grid">PARRILLA</string>
+    <string name="results_fastest_lap">VUELTA RÁPIDA</string>
+
+    <!-- Statuses -->
+    <string name="status_completed">Completado</string>
+    <string name="status_upcoming">Próximamente</string>
+    <string name="status_live">En Vivo</string>
+    <string name="status_finished">Finalizado</string>
+    <string name="status_retired">Retirado</string>
+    <string name="status_disqualified">Descalificado</string>
+
+    <!-- Nationalities -->
+    <string name="nationality_british">Británico</string>
+    <string name="nationality_spanish">Español</string>
+    <string name="nationality_monegasque">Monegasco</string>
+    <string name="nationality_dutch">Neerlandés</string>
+    <string name="nationality_german">Alemán</string>
+    <string name="nationality_french">Francés</string>
+    <string name="nationality_italian">Italiano</string>
+    <string name="nationality_australian">Australiano</string>
+    <string name="nationality_mexican">Mexicano</string>
+    <string name="nationality_canadian">Canadiense</string>
+    <string name="nationality_japanese">Japonés</string>
+    <string name="nationality_finnish">Finlandés</string>
+    <string name="nationality_thai">Tailandés</string>
+    <string name="nationality_chinese">Chino</string>
+    <string name="nationality_american">Estadounidense</string>
+    <string name="nationality_danish">Danés</string>
+    <string name="nationality_kiwi">Neozelandés</string>
 </resources>

@@ -224,8 +224,8 @@ private fun PodiumColumnItem(
                         shape = CircleShape
                     )
             ) {
-                DriverProfileCircle(
-                    imageUrl = data.driverImage,
+                DriverHeadshotCircle(
+                    headshotUrl = data.driverImage,
                     driverName = data.driver,
                     size = avatarSize
                 )

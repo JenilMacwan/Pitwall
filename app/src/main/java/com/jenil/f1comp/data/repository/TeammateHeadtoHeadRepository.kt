@@ -33,13 +33,15 @@ class TeammateHeadtoHeadRepository @Inject constructor(
                     driverId = networkModel.drivers.driverA.driverId,
                     name = networkModel.drivers.driverA.name,
                     code = networkModel.drivers.driverA.code,
-                    image = networkModel.drivers.driverA.image
+                    image = networkModel.drivers.driverA.image,
+                    headshotUrl = networkModel.drivers.driverA.headshotUrl
                 ),
                 driverB = DriverInfo(
                     driverId = networkModel.drivers.driverB.driverId,
                     name = networkModel.drivers.driverB.name,
                     code = networkModel.drivers.driverB.code,
-                    image = networkModel.drivers.driverB.image
+                    image = networkModel.drivers.driverB.image,
+                    headshotUrl = networkModel.drivers.driverB.headshotUrl
                 ),
                 qualifying = mapSession(networkModel.qualifying),
                 sprintQualifying = networkModel.sprintQualifying?.let { mapSession(it) },

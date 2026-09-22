@@ -25,23 +25,25 @@ import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.IntOffset
 import androidx.compose.ui.unit.dp
+import com.jenil.f1comp.R
 
 @Composable
 fun TabPill(
-    selectedTab: String,
-    onTabSelected: (String) -> Unit,
+    selectedTabIndex: Int,
+    onTabSelected: (Int) -> Unit,
     modifier: Modifier = Modifier,
-    tabs: List<Pair<String, String>> = listOf(
-        "All" to "All Races",
-        "Upcoming" to "Upcoming",
-        "Completed" to "Completed"
+    tabLabels: List<String> = listOf(
+        stringResource(R.string.schedule_all_races),
+        stringResource(R.string.schedule_upcoming),
+        stringResource(R.string.schedule_completed)
     )
 ) {
-    val selectedIndex = tabs.indexOfFirst { it.first == selectedTab }.coerceAtLeast(0)
+    val selectedIndex = selectedTabIndex.coerceIn(0, (tabLabels.size - 1).coerceAtLeast(0))
 
     Surface(
         modifier = modifier,
@@ -54,7 +56,7 @@ fun TabPill(
                 .padding(4.dp)
         ) {
             BoxWithConstraints(modifier = Modifier.matchParentSize()) {
-                val segmentWidth = maxWidth / tabs.size
+                val segmentWidth = maxWidth / tabLabels.size
                 val offset by animateDpAsState(
                     targetValue = segmentWidth * selectedIndex,
                     animationSpec = spring(
@@ -80,11 +82,11 @@ fun TabPill(
                 modifier = Modifier.fillMaxWidth(),
                 verticalAlignment = Alignment.CenterVertically
             ) {
-                tabs.forEach { (tabKey, tabLabel) ->
-                    val isSelected = selectedTab == tabKey
+                tabLabels.forEachIndexed { index, tabLabel ->
+                    val isSelected = selectedIndex == index
                     val textColor by animateColorAsState(
                         targetValue = if (isSelected) MaterialTheme.colorScheme.primary else MaterialTheme.colorScheme.onSurfaceVariant,
-                        label = "tabTextColor_$tabKey"
+                        label = "tabTextColor_$index"
                     )
 
                     Box(
@@ -94,7 +96,7 @@ fun TabPill(
                             .clickable(
                                 interactionSource = remember { MutableInteractionSource() },
                                 indication = null,
-                                onClick = { onTabSelected(tabKey) }
+                                onClick = { onTabSelected(index) }
                             )
                             .padding(vertical = 8.dp, horizontal = 12.dp),
                         contentAlignment = Alignment.Center

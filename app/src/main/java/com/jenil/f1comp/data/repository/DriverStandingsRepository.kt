@@ -28,7 +28,8 @@ class DriverStandingsRepository @Inject constructor (
                 nationality = networkModel.nationality,
                 url = networkModel.url ?: "unknown",
                 team = networkModel.team ?: "N/A",
-                driverImage = networkModel.driverImage
+                driverImage = networkModel.driverImage,
+                headshotUrl = networkModel.headshotUrl
             )
         }
         Log.d("F1Debug", "3. Repository: Saving to Room Database...")

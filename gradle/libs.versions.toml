@@ -1,5 +1,6 @@
 [versions]
 agp = "9.4.1"
+appcompat = "1.8.0"
 coilCompose = "2.7.0"
 coreKtx = "1.19.0"
 firebaseBom = "34.18.0"
@@ -27,6 +28,7 @@ datastore = "1.2.1"
 haze = "1.7.3"
 
 [libraries]
+androidx-appcompat = { module = "androidx.appcompat:appcompat", version.ref = "appcompat" }
 androidx-compose-material-icons-extended = { group = "androidx.compose.material", name = "material-icons-extended" }
 androidx-core-ktx = { group = "androidx.core", name = "core-ktx", version.ref = "coreKtx" }
 androidx-credentials = { module = "androidx.credentials:credentials" }

@@ -34,6 +34,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
@@ -41,6 +42,7 @@ import androidx.compose.ui.unit.dp
 import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavController
+import com.jenil.f1comp.R
 import com.jenil.f1comp.data.local.entity.QualifyingResultEntity
 import com.jenil.f1comp.data.local.entity.RaceResultEntity
 import com.jenil.f1comp.data.local.entity.ScheduleEntity
@@ -66,6 +68,16 @@ enum class ResultSessionType(val label: String) {
     QUALIFYING("Quali Result"),
     SPRINT("Sprint Result"),
     SPRINT_QUALIFYING("Sprint Quali")
+}
+
+@Composable
+fun ResultSessionType.getLocalizedLabel(): String {
+    return when (this) {
+        ResultSessionType.RACE -> stringResource(R.string.results_race)
+        ResultSessionType.QUALIFYING -> stringResource(R.string.results_qualifying)
+        ResultSessionType.SPRINT -> stringResource(R.string.results_sprint)
+        ResultSessionType.SPRINT_QUALIFYING -> "${stringResource(R.string.results_sprint)} ${stringResource(R.string.results_qualifying)}"
+    }
 }
 
 @Composable
@@ -277,14 +289,14 @@ fun RaceResultScreen(
         ) {
             item {
                 RaceChip(
-                    label = ResultSessionType.RACE.label,
+                    label = ResultSessionType.RACE.getLocalizedLabel(),
                     isSelected = selectedSession == ResultSessionType.RACE,
                     onClick = { selectedSession = ResultSessionType.RACE }
                 )
             }
             item {
                 RaceChip(
-                    label = ResultSessionType.QUALIFYING.label,
+                    label = ResultSessionType.QUALIFYING.getLocalizedLabel(),
                     isSelected = selectedSession == ResultSessionType.QUALIFYING,
                     onClick = { selectedSession = ResultSessionType.QUALIFYING }
                 )
@@ -292,14 +304,14 @@ fun RaceResultScreen(
             if (hasSprint) {
                 item {
                     RaceChip(
-                        label = ResultSessionType.SPRINT.label,
+                        label = ResultSessionType.SPRINT.getLocalizedLabel(),
                         isSelected = selectedSession == ResultSessionType.SPRINT,
                         onClick = { selectedSession = ResultSessionType.SPRINT }
                     )
                 }
                 item {
                     RaceChip(
-                        label = ResultSessionType.SPRINT_QUALIFYING.label,
+                        label = ResultSessionType.SPRINT_QUALIFYING.getLocalizedLabel(),
                         isSelected = selectedSession == ResultSessionType.SPRINT_QUALIFYING,
                         onClick = { selectedSession = ResultSessionType.SPRINT_QUALIFYING }
                     )
@@ -350,7 +362,7 @@ fun RaceResultScreen(
                         CircularProgressIndicator(color = MaterialTheme.colorScheme.primary)
                         Spacer(modifier = Modifier.height(12.dp))
                         Text(
-                            text = "Loading ${selectedSession.label}...",
+                            text = "${selectedSession.getLocalizedLabel()}...",
                             style = MaterialTheme.typography.bodySmall,
                             color = MaterialTheme.colorScheme.onSurfaceVariant
                         )

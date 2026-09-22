@@ -5,10 +5,10 @@ import android.content.Intent
 import android.content.pm.PackageManager
 import android.os.Build
 import android.os.Bundle
-import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
 import androidx.activity.result.contract.ActivityResultContracts
+import androidx.appcompat.app.AppCompatActivity
 import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.material3.MaterialTheme
@@ -22,11 +22,12 @@ import com.google.firebase.Firebase
 import com.google.firebase.analytics.analytics
 import com.jenil.f1comp.ui.navigation.AppNavigation
 import com.jenil.f1comp.ui.theme.F1CompTheme
+import com.jenil.f1comp.ui.theme.resolveThemePrimary
 import com.jenil.f1comp.viewmodel.SettingsViewModel
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
-class MainActivity : ComponentActivity() {
+class MainActivity : AppCompatActivity() {
 
     private val requestNotificationPermissionLauncher = registerForActivityResult(
         ActivityResultContracts.RequestPermission()
@@ -44,10 +45,12 @@ class MainActivity : ComponentActivity() {
         setContent {
             val settingsViewModel: SettingsViewModel = hiltViewModel()
             val isDarkModePref by settingsViewModel.isDarkMode.collectAsStateWithLifecycle()
+            val selectedThemeId by settingsViewModel.selectedThemeId.collectAsStateWithLifecycle()
 
             val isDarkMode = isDarkModePref ?: isSystemInDarkTheme()
+            val primaryColor = resolveThemePrimary(selectedThemeId)
 
-            F1CompTheme(darkTheme = isDarkMode) {
+            F1CompTheme(darkTheme = isDarkMode, primaryColor = primaryColor) {
                 Surface(
                     modifier = Modifier.fillMaxSize(),
                     color = MaterialTheme.colorScheme.background

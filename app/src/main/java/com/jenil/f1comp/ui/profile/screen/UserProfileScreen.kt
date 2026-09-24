@@ -93,6 +93,8 @@ import com.jenil.f1comp.R
 import com.jenil.f1comp.ui.F1ScreenPadding
 import com.jenil.f1comp.ui.home.components.DriverProfileCircle
 import com.jenil.f1comp.ui.home.components.TeamLogoCircle
+import com.jenil.f1comp.util.ProfileUtils.defaultFallBackDrivers
+import com.jenil.f1comp.util.ProfileUtils.defaultFallBackTeams
 import com.jenil.f1comp.util.TeamUtils
 import com.jenil.f1comp.viewmodel.AuthUiState
 import com.jenil.f1comp.viewmodel.AuthViewModel
@@ -115,6 +117,24 @@ fun UserProfileScreen(
 
     val constructorProfiles by settingsViewModel.constructorProfiles.collectAsStateWithLifecycle()
     val driverProfiles by settingsViewModel.driverProfiles.collectAsStateWithLifecycle()
+
+    val teams = remember(constructorProfiles) {
+        if (constructorProfiles.isNotEmpty()) {
+            constructorProfiles.map { it.fullName }
+        } else {
+            defaultFallBackTeams
+        }
+    }
+
+    val drivers = remember(driverProfiles) {
+        if (driverProfiles.isNotEmpty()) {
+            driverProfiles.map { driver ->
+                if (driver.number.isNotBlank()) "${driver.fullName} #${driver.number}" else driver.fullName
+            }
+        } else {
+            defaultFallBackDrivers
+        }
+    }
 
     val context = LocalContext.current
     val scrollState = rememberScrollState()
@@ -153,38 +173,7 @@ fun UserProfileScreen(
         }
     }
 
-    val teams = listOf(
-        "Scuderia Ferrari HP",
-        "Oracle Red Bull Racing",
-        "Mercedes-AMG Petronas F1 Team",
-        "McLaren Mastercard F1 Team",
-        "Aston Martin Aramco F1 Team",
-        "BWT Alpine F1 Team",
-        "Atlassian Williams F1 Team",
-        "Visa Cash App Racing Bulls F1 Team",
-        "Audi Revolut F1 Team",
-        "TGR Haas F1 Team",
-        "Cadillac F1 Team"
-    )
 
-    val drivers = listOf(
-        "Charles Leclerc #16",
-        "Lewis Hamilton #44",
-        "Max Verstappen #1",
-        "Isack Hadjar #6",
-        "Lando Norris #4",
-        "Oscar Piastri #81",
-        "Carlos Sainz #55",
-        "George Russell #63",
-        "Fernando Alonso #14",
-        "Liam Lawson #30",
-        "Valtteri Bottas #77",
-        "Pierre Gasly #10",
-        "Alexander Albon #23",
-        "Lance Stroll #18",
-        "Sergio Pérez #11",
-        "Esteban Ocon #31"
-    )
 
     val neonGreen = Color(0xFF00E676)
 
@@ -763,7 +752,8 @@ fun UserProfileScreen(
                                         imageUrl = TeamUtils.getDriverImageUrl(selectedDriver, driverProfiles),
                                         driverName = selectedDriver,
                                         size = 28.dp,
-                                        driverProfiles = driverProfiles
+                                        driverProfiles = driverProfiles,
+                                        containerColor = Color.White
                                     )
                                     Spacer(modifier = Modifier.width(12.dp))
                                     Text(
@@ -795,7 +785,8 @@ fun UserProfileScreen(
                                                 imageUrl = driverImg,
                                                 driverName = driver,
                                                 size = 24.dp,
-                                                driverProfiles = driverProfiles
+                                                driverProfiles = driverProfiles,
+                                                containerColor = Color.White
                                             )
                                         },
                                         text = { Text(driver, color = MaterialTheme.colorScheme.onSurface) },
@@ -952,13 +943,13 @@ fun UserProfileScreen(
                             SocialButton(
                                 label = "Twitter / X",
                                 onClick = {
-                                    openUrl(context, "https://x.com/f1")
+                                    openUrl(context, "https://x.com/")
                                 }
                             )
                             SocialButton(
                                 label = "Instagram",
                                 onClick = {
-                                    openUrl(context, "https://instagram.com/f1")
+                                    openUrl(context, "https://instagram.com/")
                                 }
                             )
                             SocialButton(

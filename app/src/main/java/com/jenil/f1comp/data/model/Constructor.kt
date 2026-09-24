@@ -13,6 +13,8 @@ data class Constructor(
     @SerializedName("constructor_id")
     val constructorId: String,
     val name: String,
+    @SerializedName("full_name")
+    val fullName: String,
     val nationality: String,
     val logo: String,
     val car: String,

@@ -9,6 +9,7 @@ data class ConstructorProfileEntity(
     @PrimaryKey
     val constructorId: String,
     val name: String,
+    val fullName: String,
     val nationality: String,
     val logo: String,
     val car: String,

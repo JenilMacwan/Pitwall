@@ -23,6 +23,7 @@ class ConstructorProfileRepository @Inject constructor(
             ConstructorProfileEntity(
                 constructorId = networkModel.constructorId,
                 name = networkModel.name,
+                fullName = networkModel.fullName,
                 nationality = networkModel.nationality,
                 logo = networkModel.logo,
                 car = networkModel.car,

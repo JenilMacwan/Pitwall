@@ -47,7 +47,8 @@ class DriverProfileRepositoryTest {
                     code = "HAM",
                     nationality = "British",
                     image = "url",
-                    team = "Ferrari"
+                    team = "Ferrari",
+                    headshotUrl = "url",
                 )
             )
         )

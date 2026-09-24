@@ -96,7 +96,8 @@ fun DriverProfileCircle(
     size: Dp,
     modifier: Modifier = Modifier,
     numberDrawableRes: Int? = null,
-    driverProfiles: List<DriverProfileEntity> = emptyList()
+    driverProfiles: List<DriverProfileEntity> = emptyList(),
+    containerColor: Color = MaterialTheme.colorScheme.surfaceVariant
 ) {
     val context = LocalContext.current
     val numRes = numberDrawableRes ?: TeamUtils.getDriverDrawableRes(driverName, context, driverProfiles)
@@ -105,7 +106,7 @@ fun DriverProfileCircle(
         modifier = modifier
             .size(size)
             .clip(CircleShape)
-            .background(MaterialTheme.colorScheme.surfaceVariant),
+            .background(containerColor),
         contentAlignment = Alignment.Center
     ) {
         if (numRes != null && numRes != 0) {

@@ -10,6 +10,46 @@ import com.jenil.f1comp.ui.theme.F1Red
 
 object ProfileUtils {
 
+    val defaultFallBackTeams = listOf(
+        "Scuderia Ferrari HP",
+        "Oracle Red Bull Racing",
+        "Mercedes-AMG Petronas F1 Team",
+        "McLaren Mastercard F1 Team",
+        "Aston Martin Aramco F1 Team",
+        "BWT Alpine F1 Team",
+        "Atlassian Williams F1 Team",
+        "Visa Cash App Racing Bulls F1 Team",
+        "Audi Revolut F1 Team",
+        "TGR Haas F1 Team",
+        "Cadillac F1 Team"
+    )
+
+    val defaultFallBackDrivers = listOf(
+        "Charles Leclerc #16",
+        "Lewis Hamilton #44",
+        "Max Verstappen #1",
+        "Isack Hadjar #6",
+        "Lando Norris #4",
+        "Oscar Piastri #81",
+        "George Russell #63",
+        "Kimi Antonelli #12",
+        "Liam Lawson #30",
+        "Arvid Lindblad #41",
+        "Pierre Gasly #10",
+        "Franco Colapinto #48",
+        "Carlos Sainz #55",
+        "Alexander Albon #23",
+        "Lance Stroll #18",
+        "Fernando Alonso #14",
+        "Sergio Pérez #11",
+        "Valtteri Bottas #77",
+        "Esteban Ocon #31",
+        "Oliver Bearman #87",
+        "Nico Hulkenberg #27",
+        "Gabriel Bortoleto #5"
+    )
+
+
     val multipleColorText = buildAnnotatedString {
         // First part of the text
         withStyle(style = SpanStyle(color = F1Red)) {

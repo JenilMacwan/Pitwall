@@ -4,6 +4,7 @@ import androidx.compose.animation.animateContentSize
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
+import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -19,6 +20,7 @@ import androidx.compose.foundation.layout.widthIn
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Check
 import androidx.compose.material.icons.outlined.Email
 import androidx.compose.material.icons.outlined.KeyboardArrowDown
 import androidx.compose.material.icons.outlined.Lock
@@ -28,8 +30,6 @@ import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
-import androidx.compose.material3.Checkbox
-import androidx.compose.material3.CheckboxDefaults
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.DropdownMenu
 import androidx.compose.material3.DropdownMenuItem
@@ -62,6 +62,7 @@ import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.ui.text.style.TextDecoration
 import androidx.compose.ui.text.withStyle
+import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
@@ -71,6 +72,8 @@ import com.jenil.f1comp.data.local.entity.DriverProfileEntity
 import com.jenil.f1comp.ui.home.components.DriverProfileCircle
 import com.jenil.f1comp.ui.home.components.TeamLogoCircle
 import com.jenil.f1comp.ui.theme.F1Red
+import com.jenil.f1comp.util.ProfileUtils.defaultFallBackDrivers
+import com.jenil.f1comp.util.ProfileUtils.defaultFallBackTeams
 import com.jenil.f1comp.util.TeamUtils
 import com.jenil.f1comp.viewmodel.AuthErrorField
 import com.jenil.f1comp.viewmodel.AuthUiState
@@ -83,8 +86,8 @@ fun RegisterCard(
     onSignInClick: () -> Unit = {},
     onGoogleClick: () -> Unit = {},
     onRegisterClick: (email: String, pass: String, callsign: String) -> Unit = { _, _, _ -> },
-    drivers: List<DriverProfileEntity> = emptyList(),
-    teams: List<ConstructorProfileEntity> = emptyList()
+    driverProfiles: List<DriverProfileEntity> = emptyList(),
+    constructorProfiles: List<ConstructorProfileEntity> = emptyList()
 ) {
     var callsignState by remember { mutableStateOf("") }
     var emailState by remember { mutableStateOf("") }
@@ -100,41 +103,26 @@ fun RegisterCard(
     var selectedDriver by remember { mutableStateOf<String?>(null) }
     var driverExpanded by remember { mutableStateOf(false) }
 
-    var audioAlertsChecked by remember { mutableStateOf(true) }
+    var alertsChecked by remember { mutableStateOf(true) }
     var termsChecked by remember { mutableStateOf(true) }
 
-    val teams = listOf(
-        "Scuderia Ferrari HP",
-        "Oracle Red Bull Racing",
-        "Mercedes-AMG Petronas F1 Team",
-        "McLaren Formula 1 Team",
-        "Aston Martin Aramco F1 Team",
-        "BWT Alpine F1 Team",
-        "Williams Racing",
-        "Visa Cash App RB F1 Team",
-        "Stake F1 Team Kick Sauber",
-        "MoneyGram Haas F1 Team"
-    )
+    val teams = remember(constructorProfiles) {
+        if (constructorProfiles.isNotEmpty()) {
+            constructorProfiles.map { it.fullName }
+        } else {
+            defaultFallBackTeams
+        }
+    }
 
-    val drivers = listOf(
-        "Charles Leclerc #16",
-        "Lewis Hamilton #44",
-        "Max Verstappen #1",
-        "Isack Hadjar #6",
-        "Lando Norris #4",
-        "Oscar Piastri #81",
-        "Carlos Sainz #55",
-        "George Russell #63",
-        "Fernando Alonso #14",
-        "Liam Lawson #30",
-        "Yuki Tsunoda #22",
-        "Valtteri Bottas #77",
-        "Pierre Gasly #10",
-        "Alexander Albon #23",
-        "Lance Stroll #18",
-        "Sergio Pérez #11",
-        "Esteban Ocon #31",
-    )
+    val drivers = remember(driverProfiles) {
+        if (driverProfiles.isNotEmpty()) {
+            driverProfiles.map { driver ->
+                if (driver.number.isNotBlank()) "${driver.fullName} #${driver.number}" else driver.fullName
+            }
+        } else {
+            defaultFallBackDrivers
+        }
+    }
 
     val neonGreen = Color(0xFF00E676)
 
@@ -308,7 +296,7 @@ fun RegisterCard(
                             verticalAlignment = Alignment.CenterVertically
                         ) {
                             TeamLogoCircle(
-                                logoUrl = TeamUtils.getTeamLogoUrl(selectedTeam),
+                                logoUrl = TeamUtils.getTeamLogoUrl(selectedTeam, constructorProfiles),
                                 teamName = selectedTeam ?: "Team",
                                 size = 28.dp,
                                 containerColor = Color.White
@@ -336,7 +324,7 @@ fun RegisterCard(
                             .background(Color(0xFF1A1A22))
                     ) {
                         teams.forEach { team ->
-                            val logoUrl = TeamUtils.getTeamLogoUrl(team,)
+                            val logoUrl = TeamUtils.getTeamLogoUrl(team, constructorProfiles)
                             DropdownMenuItem(
                                 leadingIcon = {
                                     TeamLogoCircle(
@@ -390,7 +378,7 @@ fun RegisterCard(
                             verticalAlignment = Alignment.CenterVertically
                         ) {
                             DriverProfileCircle(
-                                imageUrl = TeamUtils.getDriverImageUrl(selectedDriver),
+                                imageUrl = TeamUtils.getDriverImageUrl(selectedDriver,driverProfiles),
                                 driverName = selectedDriver ?: "Driver",
                                 size = 28.dp
                             )
@@ -417,13 +405,14 @@ fun RegisterCard(
                             .background(Color(0xFF1A1A22))
                     ) {
                         drivers.forEach { driver ->
-                            val driverImg = TeamUtils.getDriverImageUrl(driver)
+                            val driverImg = TeamUtils.getDriverImageUrl(driver, driverProfiles)
                             DropdownMenuItem(
                                 leadingIcon = {
                                     DriverProfileCircle(
                                         imageUrl = driverImg,
                                         driverName = driver,
-                                        size = 24.dp
+                                        size = 24.dp,
+                                        containerColor = Color.White
                                     )
                                 },
                                 text = { Text(driver, color = Color.White) },
@@ -586,66 +575,56 @@ fun RegisterCard(
                 Row(
                     modifier = Modifier
                         .widthIn(max = 488.dp)
-                        .fillMaxWidth(),
-                    verticalAlignment = Alignment.Top
+                        .fillMaxWidth()
+                        .padding(vertical = 4.dp),
+                    verticalAlignment = Alignment.CenterVertically
                 ) {
-                    Checkbox(
-                        modifier = Modifier.clip(RoundedCornerShape(4.dp)),
-                        checked = audioAlertsChecked,
-                        onCheckedChange = { audioAlertsChecked = it },
-                        colors = CheckboxDefaults.colors(
-                            checkedColor = F1Red,
-                            uncheckedColor = Color.White.copy(alpha = 0.7f),
-                            checkmarkColor = Color.White
-                        )
+                    RoundedCheckbox(
+                        checked = alertsChecked,
+                        onCheckedChange = { alertsChecked = it },
+                        modifier = Modifier.padding(start = 2.dp)
                     )
-                    Spacer(modifier = Modifier.width(4.dp))
+                    Spacer(modifier = Modifier.width(10.dp))
                     val audioText = buildAnnotatedString {
                         append("Receive ")
                         withStyle(SpanStyle(fontWeight = FontWeight.Bold, color = Color.White)) {
-                            append("updates , promotions and other information")
+                            append("updates, promotions and other information")
                         }
-                        append(" about the app on mail.")
+                        append(" about the app over mail.")
                     }
                     Text(
                         text = audioText,
                         style = MaterialTheme.typography.bodySmall,
-                        color = Color.White.copy(alpha = 0.85f),
-                        modifier = Modifier.padding(top = 12.dp)
+                        color = Color.White.copy(alpha = 0.85f)
                     )
                 }
-                Spacer(modifier = Modifier.height(4.dp))
+                Spacer(modifier = Modifier.height(6.dp))
 
                 // Checkbox 2: Terms & Regulations
                 Row(
                     modifier = Modifier
                         .widthIn(max = 488.dp)
-                        .fillMaxWidth(),
-                    verticalAlignment = Alignment.Top
+                        .fillMaxWidth()
+                        .padding(vertical = 4.dp),
+                    verticalAlignment = Alignment.CenterVertically
                 ) {
-                    Checkbox(
-                        modifier = Modifier.clip(RoundedCornerShape(4.dp)),
+                    RoundedCheckbox(
                         checked = termsChecked,
                         onCheckedChange = { termsChecked = it },
-                        colors = CheckboxDefaults.colors(
-                            checkedColor = F1Red,
-                            uncheckedColor = Color.White.copy(alpha = 0.7f),
-                            checkmarkColor = Color.White
-                        )
+                        modifier = Modifier.padding(start = 2.dp)
                     )
-                    Spacer(modifier = Modifier.width(4.dp))
+                    Spacer(modifier = Modifier.width(10.dp))
                     val termsText = buildAnnotatedString {
                         append("I accept the ")
                         withStyle(SpanStyle(fontWeight = FontWeight.Bold, textDecoration = TextDecoration.Underline, color = Color.White)) {
-                            append("PitWall Telemetry Terms")
+                            append("PitWall Terms")
                         }
-                        append(" & FIA Data Regulations.")
+                        append(" & Data Regulations.")
                     }
                     Text(
                         text = termsText,
                         style = MaterialTheme.typography.bodySmall,
-                        color = Color.White.copy(alpha = 0.85f),
-                        modifier = Modifier.padding(top = 12.dp)
+                        color = Color.White.copy(alpha = 0.85f)
                     )
                 }
                 Spacer(modifier = Modifier.height(16.dp))
@@ -773,24 +752,32 @@ fun RegisterCard(
 
         Spacer(modifier = Modifier.height(16.dp))
 
-        // 9. FOOTER LINK (Centered Outside Card)
-        Row(
-            modifier = Modifier.fillMaxWidth(),
-            horizontalArrangement = Arrangement.Center,
-            verticalAlignment = Alignment.CenterVertically
+        // 9. FOOTER LINK (Highlighted Surface Container)
+        Surface(
+            shape = RoundedCornerShape(20.dp),
+            color = Color(0xFF141418).copy(alpha = 0.90f),
+            border = BorderStroke(1.dp, Color.White.copy(alpha = 0.2f)),
+            modifier = Modifier.clickable { onSignInClick() }
         ) {
-            Text(
-                text = "Already holding paddock credentials? ",
-                style = MaterialTheme.typography.bodySmall,
-                color = Color.White.copy(alpha = 0.7f)
-            )
-            Text(
-                text = "SIGN IN",
-                style = MaterialTheme.typography.bodySmall,
-                fontWeight = FontWeight.Bold,
-                color = F1Red,
-                modifier = Modifier.clickable { onSignInClick() }
-            )
+            Row(
+                modifier = Modifier.padding(horizontal = 20.dp, vertical = 10.dp),
+                horizontalArrangement = Arrangement.Center,
+                verticalAlignment = Alignment.CenterVertically
+            ) {
+                Text(
+                    text = "Already holding paddock credentials? ",
+                    style = MaterialTheme.typography.bodySmall,
+                    color = Color.White.copy(alpha = 0.85f)
+                )
+                Spacer(modifier = Modifier.width(4.dp))
+                Text(
+                    text = "SIGN IN",
+                    style = MaterialTheme.typography.bodySmall,
+                    fontWeight = FontWeight.Bold,
+                    color = F1Red,
+                    letterSpacing = 0.5.sp
+                )
+            }
         }
 
         Spacer(modifier = Modifier.height(24.dp))
@@ -866,4 +853,40 @@ private fun RequirementChip(label: String, isMet: Boolean) {
         fontWeight = if (isMet) FontWeight.Bold else FontWeight.Normal,
         color = if (isMet) activeColor else inactiveColor
     )
+}
+
+
+@Composable
+fun RoundedCheckbox(
+    checked: Boolean,
+    onCheckedChange: (Boolean) -> Unit,
+    modifier: Modifier = Modifier,
+    checkedColor: Color = F1Red,
+    uncheckedBorderColor: Color = Color.White.copy(alpha = 0.6f),
+    cornerRadius: Dp = 6.dp
+) {
+    val shape = RoundedCornerShape(cornerRadius)
+
+    Box(
+        contentAlignment = Alignment.Center,
+        modifier = modifier
+            .size(20.dp)
+            .clip(shape)
+            .background(if (checked) checkedColor else Color.Transparent)
+            .border(
+                width = if (checked) 0.dp else 1.5.dp,
+                color = if (checked) Color.Transparent else uncheckedBorderColor,
+                shape = shape
+            )
+            .clickable { onCheckedChange(!checked) }
+    ) {
+        if (checked) {
+            Icon(
+                imageVector = Icons.Default.Check,
+                contentDescription = null,
+                tint = Color.White,
+                modifier = Modifier.size(14.dp)
+            )
+        }
+    }
 }

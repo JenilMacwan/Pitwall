@@ -240,7 +240,6 @@ object TeamUtils {
             else -> null
         }
     }
-
     /**
      * Extracts or resolves racing number for a driver.
      */

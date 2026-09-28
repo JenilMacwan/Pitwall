@@ -154,6 +154,10 @@ fun PrivacyPolicyScreen(
         }
     }
 
+    val shareSubject = stringResource(R.string.privacy_share_subject)
+    val shareText = stringResource(R.string.privacy_share_text)
+    val shareChooser = stringResource(R.string.privacy_share_chooser)
+
     Column(
         modifier = modifier
             .fillMaxSize()
@@ -164,10 +168,10 @@ fun PrivacyPolicyScreen(
             onShare = {
                 val shareIntent = Intent(Intent.ACTION_SEND).apply {
                     type = "text/plain"
-                    putExtra(Intent.EXTRA_SUBJECT, context.getString(R.string.privacy_share_subject))
-                    putExtra(Intent.EXTRA_TEXT, context.getString(R.string.privacy_share_text))
+                    putExtra(Intent.EXTRA_SUBJECT, shareSubject)
+                    putExtra(Intent.EXTRA_TEXT, shareText)
                 }
-                context.startActivity(Intent.createChooser(shareIntent, context.getString(R.string.privacy_share_chooser)))
+                context.startActivity(Intent.createChooser(shareIntent, shareChooser))
             }
         )
 
@@ -549,6 +553,9 @@ private fun PolicySectionCard(
 
 @Composable
 private fun DocumentFooter(context: android.content.Context) {
+    val webUrl = stringResource(R.string.privacy_web_url)
+    val contactEmailUri = stringResource(R.string.privacy_contact_email_uri)
+
     Card(
         modifier = Modifier.fillMaxWidth(),
         shape = RoundedCornerShape(16.dp),
@@ -579,7 +586,7 @@ private fun DocumentFooter(context: android.content.Context) {
 
             OutlinedButton(
                 onClick = {
-                    val intent = Intent(Intent.ACTION_VIEW, context.getString(R.string.privacy_web_url).toUri())
+                    val intent = Intent(Intent.ACTION_VIEW, webUrl.toUri())
                     context.startActivity(intent)
                 },
                 modifier = Modifier.fillMaxWidth(),
@@ -597,7 +604,7 @@ private fun DocumentFooter(context: android.content.Context) {
             TextButton(
                 onClick = {
                     val intent = Intent(Intent.ACTION_SENDTO).apply {
-                        data = context.getString(R.string.privacy_contact_email_uri).toUri()
+                        data = contactEmailUri.toUri()
                     }
                     context.startActivity(intent)
                 },

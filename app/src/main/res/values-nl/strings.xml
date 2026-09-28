@@ -282,4 +282,16 @@
     <string name="auth_required_title">Account Vereist</string>
     <string name="auth_required_favorites_msg">Om meldingen voor je favoriete teams en coureurs te ontvangen, moet je je eerst aanmelden of een account aanmaken.</string>
     <string name="auth_sign_in_register">Inloggen / Registreren</string>
+
+    <!-- Telemetry Settings -->
+    <string name="title_telemetry_settings">Telemetrie-instellingen</string>
+    <string name="telemetry_settings_header_style_label">HEADER-LAYOUTSTIJL</string>
+    <string name="telemetry_settings_header_style_desc">Kies je gewenste headerstijl voor live sessie-telemetriegegevens.</string>
+    <string name="telemetry_settings_default_header_title">Standaard header</string>
+    <string name="telemetry_settings_default_header_subtitle">Volledig telemetriedashboard met sessie-info, baanstatus, weergegevens (lucht, baan, luchtvochtigheid, wind), rondeteller en resterende tijd.</string>
+    <string name="telemetry_settings_compact_header_title">Compacte header</string>
+    <string name="telemetry_settings_compact_header_subtitle">Gestroomlijnde 2-rijige header met sessietype, baanstatus-badge, baantemperatuur, huidige ronde en resterende tijd.</string>
+    <string name="telemetry_settings_stream_sync_label">STREAM-SYNCHRONISATIE</string>
+    <string name="telemetry_settings_sync_title">Uitzendvertraging-sync</string>
+    <string name="telemetry_settings_sync_subtitle">Vertraagt de live telemetriefeed met ~3,2s om overeen te komen met de tv-uitzending.</string>
 </resources>

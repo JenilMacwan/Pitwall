@@ -285,4 +285,16 @@
     <string name="auth_required_title">Account Required</string>
     <string name="auth_required_favorites_msg">To receive notifications for your favorite teams and drivers, please sign in or create an account first.</string>
     <string name="auth_sign_in_register">Sign In / Register</string>
+
+    <!-- Telemetry Settings -->
+    <string name="title_telemetry_settings">Telemetry Settings</string>
+    <string name="telemetry_settings_header_style_label">HEADER LAYOUT STYLE</string>
+    <string name="telemetry_settings_header_style_desc">Select your preferred header style for live session telemetry data.</string>
+    <string name="telemetry_settings_default_header_title">Default Header</string>
+    <string name="telemetry_settings_default_header_subtitle">Full telemetry dashboard showing session info, track status, weather metrics (air, track, humidity, wind), lap counter, and remaining time.</string>
+    <string name="telemetry_settings_compact_header_title">Compact Header</string>
+    <string name="telemetry_settings_compact_header_subtitle">Streamlined 2-row header showing session type, track status pill, track temperature, current lap, and remaining time.</string>
+    <string name="telemetry_settings_stream_sync_label">STREAM SYNCHRONIZATION</string>
+    <string name="telemetry_settings_sync_title">Broadcast Delay Sync</string>
+    <string name="telemetry_settings_sync_subtitle">Delays live telemetry feed by ~3.2s to match live TV broadcast coverage.</string>
 </resources>

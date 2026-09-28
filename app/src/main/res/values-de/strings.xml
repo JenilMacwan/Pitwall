@@ -282,4 +282,16 @@
     <string name="auth_required_title">Konto erforderlich</string>
     <string name="auth_required_favorites_msg">Um Benachrichtigungen für Ihre Lieblings-Teams und -Fahrer zu erhalten, melden Sie sich bitte zuerst an oder erstellen Sie ein Konto.</string>
     <string name="auth_sign_in_register">Anmelden / Registrieren</string>
+
+    <!-- Telemetry Settings -->
+    <string name="title_telemetry_settings">Telemetrie-Einstellungen</string>
+    <string name="telemetry_settings_header_style_label">HEADER-LAYOUT-STIL</string>
+    <string name="telemetry_settings_header_style_desc">Wählen Sie Ihren bevorzugten Header-Stil für Live-Sitzungstelemetriedaten.</string>
+    <string name="telemetry_settings_default_header_title">Standard-Header</string>
+    <string name="telemetry_settings_default_header_subtitle">Vollständiges Telemetrie-Dashboard mit Sitzungsinfos, Streckenstatus, Wetterdaten (Luft, Strecke, Feuchtigkeit, Wind), Rundenzähler und verbleibender Zeit.</string>
+    <string name="telemetry_settings_compact_header_title">Kompakter Header</string>
+    <string name="telemetry_settings_compact_header_subtitle">Schlanker zweizeiliger Header mit Sitzungstyp, Streckenstatus-Badge, Streckentemperatur, aktueller Runde und verbleibender Zeit.</string>
+    <string name="telemetry_settings_stream_sync_label">STREAM-SYNCHRONISIERUNG</string>
+    <string name="telemetry_settings_sync_title">Übertragungsverzögerungs-Sync</string>
+    <string name="telemetry_settings_sync_subtitle">Verzögert den Live-Telemetrie-Feed um ca. 3,2s zur Anpassung an die TV-Übertragung.</string>
 </resources>

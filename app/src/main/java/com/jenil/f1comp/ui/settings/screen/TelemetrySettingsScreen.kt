@@ -36,6 +36,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.hapticfeedback.HapticFeedbackType
 import androidx.compose.ui.platform.LocalHapticFeedback
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
@@ -44,6 +45,7 @@ import androidx.compose.ui.unit.sp
 import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavController
+import com.jenil.f1comp.R
 import com.jenil.f1comp.ui.F1ScreenPadding
 import com.jenil.f1comp.ui.settings.component.SettingsSection
 import com.jenil.f1comp.ui.settings.component.SettingsSwitchItem
@@ -81,12 +83,12 @@ fun TelemetrySettingsScreen(
             IconButton(onClick = { navController.popBackStack() }) {
                 Icon(
                     imageVector = Icons.AutoMirrored.Rounded.ArrowBack,
-                    contentDescription = "Back",
+                    contentDescription = stringResource(R.string.common_back),
                     tint = MaterialTheme.colorScheme.onSurface
                 )
             }
             Text(
-                text = "Telemetry Settings",
+                text = stringResource(R.string.title_telemetry_settings),
                 style = MaterialTheme.typography.titleLarge,
                 color = MaterialTheme.colorScheme.onSurface,
                 modifier = Modifier.padding(start = 8.dp)
@@ -103,7 +105,7 @@ fun TelemetrySettingsScreen(
         ) {
             // Section 1: Header Layout Style
             Text(
-                text = "HEADER LAYOUT STYLE",
+                text = stringResource(R.string.telemetry_settings_header_style_label),
                 style = MaterialTheme.typography.labelMedium.copy(
                     fontFamily = FontFamily.Monospace,
                     fontWeight = FontWeight.Bold,
@@ -112,12 +114,12 @@ fun TelemetrySettingsScreen(
                 )
             )
             Spacer(modifier = Modifier.height(4.dp))
-            SettingsSection(title = "Select your preferred header style for live session telemetry data.") {
+            SettingsSection(title = stringResource(R.string.telemetry_settings_header_style_desc)) {
 
                 // Option 1: Default Header Option Card
                 HeaderStyleCard(
-                    title = "Default Header",
-                    subtitle = "Full telemetry dashboard showing session info, track status, weather metrics (air, track, humidity, wind), lap counter, and remaining time.",
+                    title = stringResource(R.string.telemetry_settings_default_header_title),
+                    subtitle = stringResource(R.string.telemetry_settings_default_header_subtitle),
                     isSelected = activeStyle == "DEFAULT",
                     icon = Icons.Outlined.Dashboard,
                     onClick = {
@@ -142,8 +144,8 @@ fun TelemetrySettingsScreen(
 
                 // Option 2: Compact Header Option Card
                 HeaderStyleCard(
-                    title = "Compact Header",
-                    subtitle = "Streamlined 2-row header showing session type, track status pill, track temperature, current lap, and remaining time.",
+                    title = stringResource(R.string.telemetry_settings_compact_header_title),
+                    subtitle = stringResource(R.string.telemetry_settings_compact_header_subtitle),
                     isSelected = activeStyle == "COMPACT",
                     icon = Icons.Outlined.ViewStream,
                     onClick = {
@@ -164,11 +166,11 @@ fun TelemetrySettingsScreen(
             Spacer(modifier = Modifier.height(24.dp))
 
             // Section 2: Broadcast Stream Sync Toggle
-            SettingsSection(title = "STREAM SYNCHRONIZATION") {
+            SettingsSection(title = stringResource(R.string.telemetry_settings_stream_sync_label)) {
                 SettingsSwitchItem(
                     icon = Icons.Outlined.Sync,
-                    title = "Broadcast Delay Sync",
-                    subtitle = "Delays live telemetry feed by ~3.2s to match live TV broadcast coverage.",
+                    title = stringResource(R.string.telemetry_settings_sync_title),
+                    subtitle = stringResource(R.string.telemetry_settings_sync_subtitle),
                     isChecked = isSyncDelayed,
                     onCheckedChange = { newValue ->
                         haptic.performHapticFeedback(HapticFeedbackType.TextHandleMove)

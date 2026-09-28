@@ -282,4 +282,16 @@
     <string name="auth_required_title">Compte Requis</string>
     <string name="auth_required_favorites_msg">Pour recevoir des notifications pour vos équipes et pilotes favoris, veuillez d\'abord vous connecter ou créer un compte.</string>
     <string name="auth_sign_in_register">Se Connecter / S\'inscrire</string>
+
+    <!-- Telemetry Settings -->
+    <string name="title_telemetry_settings">Paramètres de télémétrie</string>
+    <string name="telemetry_settings_header_style_label">STYLE D\'EN-TÊTE</string>
+    <string name="telemetry_settings_header_style_desc">Sélectionnez votre style d\'en-tête préféré pour les données de télémétrie en direct.</string>
+    <string name="telemetry_settings_default_header_title">En-tête par défaut</string>
+    <string name="telemetry_settings_default_header_subtitle">Tableau de bord de télémétrie complet affichant les infos de session, l\'état de la piste, la météo (air, piste, humidité, vent), le compteur de tours et le temps restant.</string>
+    <string name="telemetry_settings_compact_header_title">En-tête compact</string>
+    <string name="telemetry_settings_compact_header_subtitle">En-tête épuré sur 2 lignes indiquant le type de session, l\'état de la piste, la température de piste, le tour actuel et le temps restant.</string>
+    <string name="telemetry_settings_stream_sync_label">SYNCHRONISATION DU FLUX</string>
+    <string name="telemetry_settings_sync_title">Synchro délai de diffusion</string>
+    <string name="telemetry_settings_sync_subtitle">Retarde le flux télémétrique d\'environ 3,2s pour correspondre à la diffusion TV en direct.</string>
 </resources>

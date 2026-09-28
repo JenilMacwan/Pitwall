@@ -282,4 +282,16 @@
     <string name="auth_required_title">Cuenta Requerida</string>
     <string name="auth_required_favorites_msg">Para recibir notificaciones de tus equipos y pilotos favoritos, por favor inicia sesión o crea una cuenta primero.</string>
     <string name="auth_sign_in_register">Iniciar Sesión / Registrarse</string>
+
+    <!-- Telemetry Settings -->
+    <string name="title_telemetry_settings">Ajustes de telemetría</string>
+    <string name="telemetry_settings_header_style_label">ESTILO DE DISEÑO DEL ENCABEZADO</string>
+    <string name="telemetry_settings_header_style_desc">Seleccione su estilo de encabezado preferido para los datos de telemetría de sesión en vivo.</string>
+    <string name="telemetry_settings_default_header_title">Encabezado predeterminado</string>
+    <string name="telemetry_settings_default_header_subtitle">Panel de telemetría completo que muestra información de la sesión, estado de la pista, clima (aire, pista, humedad, viento), contador de vueltas y tiempo restante.</string>
+    <string name="telemetry_settings_compact_header_title">Encabezado compacto</string>
+    <string name="telemetry_settings_compact_header_subtitle">Encabezado simplificado de 2 filas que muestra tipo de sesión, estado de la pista, temperatura de la pista, vuelta actual y tiempo restante.</string>
+    <string name="telemetry_settings_stream_sync_label">SINCRONIZACIÓN DE TRANSMISIÓN</string>
+    <string name="telemetry_settings_sync_title">Sincronización con retardo de TV</string>
+    <string name="telemetry_settings_sync_subtitle">Retrasa la telemetría en vivo ~3.2s para coincidir con la cobertura de TV en directo.</string>
 </resources>

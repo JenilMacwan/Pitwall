@@ -282,4 +282,16 @@
     <string name="auth_required_title">Account Richiesto</string>
     <string name="auth_required_favorites_msg">Per ricevere notifiche sui tuoi team e piloti preferiti, accedi o crea prima un account.</string>
     <string name="auth_sign_in_register">Accedi / Registrati</string>
+
+    <!-- Telemetry Settings -->
+    <string name="title_telemetry_settings">Impostazioni telemetria</string>
+    <string name="telemetry_settings_header_style_label">STILE LAYOUT INTESTAZIONE</string>
+    <string name="telemetry_settings_header_style_desc">Seleziona lo stile dell\'intestazione preferito per i dati di telemetria della sessione dal vivo.</string>
+    <string name="telemetry_settings_default_header_title">Intestazione predefinita</string>
+    <string name="telemetry_settings_default_header_subtitle">Dashboard di telemetria completa con info sessione, stato pista, meteo (aria, pista, umidità, vento), contagiri e tempo rimanente.</string>
+    <string name="telemetry_settings_compact_header_title">Intestazione compatta</string>
+    <string name="telemetry_settings_compact_header_subtitle">Intestazione essenziale a 2 righe con tipo di sessione, stato pista, temperatura pista, giro attuale e tempo rimanente.</string>
+    <string name="telemetry_settings_stream_sync_label">SINCRONIZZAZIONE STREAM</string>
+    <string name="telemetry_settings_sync_title">Sincronizzazione ritardo TV</string>
+    <string name="telemetry_settings_sync_subtitle">Ritarda la telemetria dal vivo di ~3,2s per coordinarla con la diretta TV.</string>
 </resources>

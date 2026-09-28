@@ -331,10 +331,10 @@ fun SettingsScreen(
                     Spacer(modifier = Modifier.height(24.dp))
 
                     // Telemetry Settings
-                    SettingsSection(title = "Telemetry") {
+                    SettingsSection(title = stringResource(R.string.title_telemetry)) {
                         SettingsItem(
                             icon = Icons.Outlined.Dashboard,
-                            title = "Telemetry Settings",
+                            title = stringResource(R.string.title_telemetry_settings),
                             subtitle = "Header layout style (Default vs. Compact)",
                             onClick = { navController.navigate("telemetry_settings") }
                         )

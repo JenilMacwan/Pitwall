@@ -84,7 +84,13 @@ class AuthViewModel @Inject constructor(
         }
     }
 
-    fun registerWithEmailAndPassword(email: String, password: String, displayName: String = "") {
+    fun registerWithEmailAndPassword(
+        email: String,
+        password: String,
+        displayName: String = "",
+        favoriteTeam: String? = null,
+        favoriteDriver: String? = null
+    ) {
         val trimmedEmail = email.trim()
         val emailError = validateEmail(trimmedEmail)
         if (emailError != null) {
@@ -100,7 +106,7 @@ class AuthViewModel @Inject constructor(
         viewModelScope.launch {
             _authUiState.value = AuthUiState.Loading
             try {
-                authRepository.registerWithEmailAndPassword(trimmedEmail, password, displayName)
+                authRepository.registerWithEmailAndPassword(trimmedEmail, password, displayName, favoriteTeam, favoriteDriver)
                 _authUiState.value = AuthUiState.Success
             } catch (e: CancellationException) {
                 throw e
@@ -111,11 +117,16 @@ class AuthViewModel @Inject constructor(
         }
     }
 
-    fun signInWithGoogle(idToken: String) {
+    fun signInWithGoogle(
+        idToken: String,
+        displayName: String? = null,
+        favoriteTeam: String? = null,
+        favoriteDriver: String? = null
+    ) {
         viewModelScope.launch {
             _authUiState.value = AuthUiState.Loading
             try {
-                authRepository.signInWithGoogle(idToken)
+                authRepository.signInWithGoogle(idToken, displayName, favoriteTeam, favoriteDriver)
                 _authUiState.value = AuthUiState.Success
             } catch (e: CancellationException) {
                 throw e

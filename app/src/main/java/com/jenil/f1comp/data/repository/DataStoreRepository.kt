@@ -37,6 +37,11 @@ class DataStoreRepository @Inject constructor(
         preferences[PreferencesKeys.STANDINGS_UPDATES]
     }
 
+    val isFavoritesUpdateEnabled: Flow<Boolean?> = dataStore.data.map { preferences ->
+        preferences[PreferencesKeys.FAVORITES_UPDATES]
+    }
+
+
     val favoriteTeam: Flow<String?> = dataStore.data.map { preferences ->
         preferences[PreferencesKeys.FAVORITE_TEAM]
     }
@@ -92,6 +97,11 @@ class DataStoreRepository @Inject constructor(
         }
     }
 
+    suspend fun setFavoritesUpdatesEnabled(isEnabled: Boolean) {
+        dataStore.edit { preferences ->
+            preferences[PreferencesKeys.FAVORITES_UPDATES] = isEnabled
+        }
+    }
     suspend fun setLiveRaceEventsEnabled(isEnabled: Boolean) {
         dataStore.edit { preferences ->
             preferences[PreferencesKeys.LIVE_RACE_EVENTS] = isEnabled

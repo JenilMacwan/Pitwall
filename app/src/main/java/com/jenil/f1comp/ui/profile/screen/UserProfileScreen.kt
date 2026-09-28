@@ -17,6 +17,7 @@ import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
@@ -30,10 +31,12 @@ import androidx.compose.material.icons.automirrored.outlined.ExitToApp
 import androidx.compose.material.icons.automirrored.outlined.HelpOutline
 import androidx.compose.material.icons.automirrored.outlined.KeyboardArrowRight
 import androidx.compose.material.icons.automirrored.rounded.ArrowBack
+import androidx.compose.material.icons.filled.Check
 import androidx.compose.material.icons.outlined.Edit
 import androidx.compose.material.icons.outlined.Email
 import androidx.compose.material.icons.outlined.KeyboardArrowDown
 import androidx.compose.material.icons.outlined.Language
+import androidx.compose.material.icons.outlined.Lock
 import androidx.compose.material.icons.outlined.Palette
 import androidx.compose.material.icons.outlined.PhotoCamera
 import androidx.compose.material.icons.outlined.Policy
@@ -69,6 +72,7 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -80,6 +84,7 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.core.net.toUri
@@ -141,8 +146,8 @@ fun UserProfileScreen(
     val snackbarHostState = remember { SnackbarHostState() }
     val scope = rememberCoroutineScope()
 
-    var showEditProfileDialog by remember { mutableStateOf(false) }
-    var showSignOutConfirm by remember { mutableStateOf(false) }
+    var showEditProfileDialog by rememberSaveable { mutableStateOf(false) }
+    var showSignOutConfirm by rememberSaveable { mutableStateOf(false) }
 
     var editCallsign by remember(currentUser, userProfile) {
         mutableStateOf(currentUser?.displayName?.ifBlank { null } ?: userProfile?.displayName ?: "")
@@ -151,14 +156,20 @@ fun UserProfileScreen(
         mutableStateOf(currentUser?.photoUrl?.toString()?.ifBlank { null } ?: userProfile?.photoUrl ?: "")
     }
 
-    val currentFavTeam = userProfile?.favoriteTeam?.ifBlank { null } ?: favoriteTeamPref ?: "Scuderia Ferrari HP"
-    val currentFavDriver = userProfile?.favoriteDriver?.ifBlank { null } ?: favoriteDriverPref ?: "Charles Leclerc #16"
+    val currentFavTeam =
+        if (currentUser == null) null else (userProfile?.favoriteTeam?.ifBlank { null }
+            ?: favoriteTeamPref?.ifBlank { null })
+    val currentFavDriver =
+        if (currentUser == null) null else (userProfile?.favoriteDriver?.ifBlank { null }
+            ?: favoriteDriverPref?.ifBlank { null })
 
     var selectedTeam by remember(currentFavTeam) { mutableStateOf(currentFavTeam) }
-    var teamExpanded by remember { mutableStateOf(false) }
+    var teamExpanded by rememberSaveable { mutableStateOf(false) }
 
     var selectedDriver by remember(currentFavDriver) { mutableStateOf(currentFavDriver) }
-    var driverExpanded by remember { mutableStateOf(false) }
+    var driverExpanded by rememberSaveable { mutableStateOf(false) }
+
+    var showGuestFavoritesAlert by rememberSaveable { mutableStateOf(false) }
 
     // --- System Image Picker Launcher ---
     val imagePickerLauncher = rememberLauncherForActivityResult(
@@ -334,15 +345,71 @@ fun UserProfileScreen(
         )
     }
 
+    // --- Guest Favorites Alert Dialog ---
+    if (showGuestFavoritesAlert) {
+        AlertDialog(
+            onDismissRequest = { showGuestFavoritesAlert = false },
+            containerColor = MaterialTheme.colorScheme.surface,
+            icon = {
+                Icon(
+                    imageVector = Icons.Outlined.Lock,
+                    contentDescription = null,
+                    tint = MaterialTheme.colorScheme.primary
+                )
+            },
+            title = {
+                Text(
+                    text = "ACCOUNT REQUIRED",
+                    style = MaterialTheme.typography.titleMedium,
+                    fontWeight = FontWeight.Bold,
+                    color = MaterialTheme.colorScheme.onSurface
+                )
+            },
+            text = {
+                Text(
+                    text = "Setting a favorite constructor or driver requires a PitWall account. Please sign in or register to customize your favorites.",
+                    style = MaterialTheme.typography.bodyMedium,
+                    color = MaterialTheme.colorScheme.onSurfaceVariant
+                )
+            },
+            confirmButton = {
+                TextButton(
+                    onClick = {
+                        showGuestFavoritesAlert = false
+                        navController.navigate("login")
+                    }
+                ) {
+                    Text(
+                        "SIGN IN / REGISTER",
+                        color = MaterialTheme.colorScheme.primary,
+                        fontWeight = FontWeight.Bold
+                    )
+                }
+            },
+            dismissButton = {
+                TextButton(onClick = { showGuestFavoritesAlert = false }) {
+                    Text("CANCEL", color = MaterialTheme.colorScheme.onSurfaceVariant)
+                }
+            }
+        )
+    }
+
     Scaffold(
         snackbarHost = { SnackbarHost(snackbarHostState) },
         containerColor = Color.Transparent
     ) { innerPadding ->
-        Column(
+        Box(
             modifier = modifier
                 .fillMaxSize()
-                .padding(innerPadding)
+                .padding(innerPadding),
+            contentAlignment = Alignment.TopCenter
         ) {
+            Column(
+                modifier = Modifier
+                    .fillMaxSize()
+                    .widthIn(max = 720.dp),
+                horizontalAlignment = Alignment.CenterHorizontally
+            ) {
             // --- Header Top Bar ---
             Row(
                 modifier = Modifier
@@ -658,10 +725,21 @@ fun UserProfileScreen(
                             Surface(
                                 shape = RoundedCornerShape(12.dp),
                                 color = MaterialTheme.colorScheme.surface,
-                                border = BorderStroke(1.dp, MaterialTheme.colorScheme.outlineVariant),
+                                border = BorderStroke(
+                                    1.dp,
+                                    if (currentUser == null) MaterialTheme.colorScheme.outlineVariant.copy(
+                                        alpha = 0.4f
+                                    ) else MaterialTheme.colorScheme.outlineVariant
+                                ),
                                 modifier = Modifier
                                     .fillMaxWidth()
-                                    .clickable { teamExpanded = true }
+                                    .clickable {
+                                        if (currentUser == null) {
+                                            showGuestFavoritesAlert = true
+                                        } else {
+                                            teamExpanded = true
+                                        }
+                                    }
                             ) {
                                 Row(
                                     modifier = Modifier
@@ -671,54 +749,95 @@ fun UserProfileScreen(
                                 ) {
                                     TeamLogoCircle(
                                         logoUrl = TeamUtils.getTeamLogoUrl(selectedTeam, constructorProfiles),
-                                        teamName = selectedTeam,
+                                        teamName = selectedTeam ?: "SELECT TEAM",
                                         size = 28.dp,
                                         containerColor = Color.White
                                     )
                                     Spacer(modifier = Modifier.width(12.dp))
                                     Text(
-                                        text = selectedTeam,
+                                        text = selectedTeam ?: "SELECT TEAM",
                                         style = MaterialTheme.typography.bodyMedium,
-                                        color = MaterialTheme.colorScheme.onSurface,
-                                        fontWeight = FontWeight.SemiBold
+                                        color = if (!selectedTeam.isNullOrBlank()) MaterialTheme.colorScheme.onSurface else MaterialTheme.colorScheme.onSurfaceVariant.copy(
+                                            alpha = 0.7f
+                                        ),
+                                        fontWeight = if (!selectedTeam.isNullOrBlank()) FontWeight.SemiBold else FontWeight.Normal
                                     )
                                     Spacer(modifier = Modifier.weight(1f))
                                     Icon(
                                         imageVector = Icons.Outlined.KeyboardArrowDown,
                                         contentDescription = null,
-                                        tint = MaterialTheme.colorScheme.onSurfaceVariant
+                                        tint = if (currentUser == null) MaterialTheme.colorScheme.outlineVariant else MaterialTheme.colorScheme.onSurfaceVariant
                                     )
                                 }
                             }
-                            DropdownMenu(
-                                expanded = teamExpanded,
-                                onDismissRequest = { teamExpanded = false },
-                                modifier = Modifier
-                                    .widthIn(max = 340.dp)
-                                    .background(MaterialTheme.colorScheme.surface)
-                            ) {
-                                teams.forEach { team ->
-                                    val logoUrl = TeamUtils.getTeamLogoUrl(team, constructorProfiles)
+                            if (currentUser != null) {
+                                DropdownMenu(
+                                    expanded = teamExpanded,
+                                    onDismissRequest = { teamExpanded = false },
+                                    modifier = Modifier
+                                        .widthIn(min = 240.dp, max = 340.dp)
+                                        .heightIn(max = 420.dp),
+                                    shape = RoundedCornerShape(16.dp),
+                                    containerColor = MaterialTheme.colorScheme.surface,
+                                    tonalElevation = 4.dp,
+                                    shadowElevation = 8.dp,
+                                ) {
                                     DropdownMenuItem(
-                                        leadingIcon = {
-                                            TeamLogoCircle(
-                                                logoUrl = logoUrl,
-                                                teamName = team,
-                                                size = 24.dp,
-                                                containerColor = Color.White
+                                        enabled = false,
+                                        text = {
+                                            Text(
+                                                "Choose constructor",
+                                                style = MaterialTheme.typography.labelLarge,
+                                                color = MaterialTheme.colorScheme.onSurfaceVariant,
                                             )
                                         },
-                                        text = { Text(team, color = MaterialTheme.colorScheme.onSurface) },
-                                        onClick = {
-                                            selectedTeam = team
-                                            teamExpanded = false
-                                            settingsViewModel.setFavoriteTeam(team)
-                                            authViewModel.updateFavoriteTeamAndDriver(favoriteTeam = team)
-                                            scope.launch {
-                                                snackbarHostState.showSnackbar("Favorite Constructor set to $team")
-                                            }
-                                        }
+                                        onClick = {},
                                     )
+
+                                    teams.forEach { team ->
+                                        val logoUrl =
+                                            TeamUtils.getTeamLogoUrl(team, constructorProfiles)
+                                        val selected = team == selectedTeam
+
+                                        DropdownMenuItem(
+                                            leadingIcon = {
+                                                TeamLogoCircle(
+                                                    logoUrl = logoUrl,
+                                                    teamName = team,
+                                                    size = 32.dp,
+                                                    containerColor = Color.White,
+                                                )
+                                            },
+                                            text = {
+                                                Text(
+                                                    text = team,
+                                                    maxLines = 1,
+                                                    overflow = TextOverflow.Ellipsis,
+                                                )
+                                            },
+                                            trailingIcon = {
+                                                if (selected) {
+                                                    Icon(
+                                                        imageVector = Icons.Default.Check,
+                                                        contentDescription = "Selected",
+                                                        tint = MaterialTheme.colorScheme.primary,
+                                                    )
+                                                }
+                                            },
+                                            onClick = {
+                                                selectedTeam = team
+                                                teamExpanded = false
+                                                settingsViewModel.setFavoriteTeam(team)
+                                                authViewModel.updateFavoriteTeamAndDriver(
+                                                    favoriteTeam = team
+                                                )
+
+                                                scope.launch {
+                                                    snackbarHostState.showSnackbar("Favorite Constructor set to $team")
+                                                }
+                                            },
+                                        )
+                                    }
                                 }
                             }
                         }
@@ -737,10 +856,21 @@ fun UserProfileScreen(
                             Surface(
                                 shape = RoundedCornerShape(12.dp),
                                 color = MaterialTheme.colorScheme.surface,
-                                border = BorderStroke(1.dp, MaterialTheme.colorScheme.outlineVariant),
+                                border = BorderStroke(
+                                    1.dp,
+                                    if (currentUser == null) MaterialTheme.colorScheme.outlineVariant.copy(
+                                        alpha = 0.4f
+                                    ) else MaterialTheme.colorScheme.outlineVariant
+                                ),
                                 modifier = Modifier
                                     .fillMaxWidth()
-                                    .clickable { driverExpanded = true }
+                                    .clickable {
+                                        if (currentUser == null) {
+                                            showGuestFavoritesAlert = true
+                                        } else {
+                                            driverExpanded = true
+                                        }
+                                    }
                             ) {
                                 Row(
                                     modifier = Modifier
@@ -750,56 +880,94 @@ fun UserProfileScreen(
                                 ) {
                                     DriverProfileCircle(
                                         imageUrl = TeamUtils.getDriverImageUrl(selectedDriver, driverProfiles),
-                                        driverName = selectedDriver,
+                                        driverName = selectedDriver ?: "SELECT DRIVER",
                                         size = 28.dp,
                                         driverProfiles = driverProfiles,
                                         containerColor = Color.White
                                     )
                                     Spacer(modifier = Modifier.width(12.dp))
                                     Text(
-                                        text = selectedDriver,
+                                        text = selectedDriver ?: "SELECT DRIVER",
                                         style = MaterialTheme.typography.bodyMedium,
-                                        color = MaterialTheme.colorScheme.onSurface,
-                                        fontWeight = FontWeight.SemiBold
+                                        color = if (!selectedDriver.isNullOrBlank()) MaterialTheme.colorScheme.onSurface else MaterialTheme.colorScheme.onSurfaceVariant.copy(
+                                            alpha = 0.7f
+                                        ),
+                                        fontWeight = if (!selectedDriver.isNullOrBlank()) FontWeight.SemiBold else FontWeight.Normal
                                     )
                                     Spacer(modifier = Modifier.weight(1f))
                                     Icon(
                                         imageVector = Icons.Outlined.KeyboardArrowDown,
                                         contentDescription = null,
-                                        tint = MaterialTheme.colorScheme.onSurfaceVariant
+                                        tint = if (currentUser == null) MaterialTheme.colorScheme.outlineVariant else MaterialTheme.colorScheme.onSurfaceVariant
                                     )
                                 }
                             }
-                            DropdownMenu(
-                                expanded = driverExpanded,
-                                onDismissRequest = { driverExpanded = false },
-                                modifier = Modifier
-                                    .widthIn(max = 340.dp)
-                                    .background(MaterialTheme.colorScheme.surface)
-                            ) {
-                                drivers.forEach { driver ->
-                                    val driverImg = TeamUtils.getDriverImageUrl(driver, driverProfiles)
+                            if (currentUser != null) {
+                                DropdownMenu(
+                                    expanded = driverExpanded,
+                                    onDismissRequest = { driverExpanded = false },
+                                    modifier = Modifier
+                                        .widthIn(min = 240.dp, max = 340.dp)
+                                        .heightIn(max = 420.dp),
+                                    shape = RoundedCornerShape(16.dp),
+                                    containerColor = MaterialTheme.colorScheme.surface,
+                                    tonalElevation = 4.dp,
+                                    shadowElevation = 8.dp,
+                                ) {
                                     DropdownMenuItem(
-                                        leadingIcon = {
-                                            DriverProfileCircle(
-                                                imageUrl = driverImg,
-                                                driverName = driver,
-                                                size = 24.dp,
-                                                driverProfiles = driverProfiles,
-                                                containerColor = Color.White
+                                        enabled = false,
+                                        text = {
+                                            Text(
+                                                "Choose driver",
+                                                style = MaterialTheme.typography.labelLarge,
+                                                color = MaterialTheme.colorScheme.onSurfaceVariant,
                                             )
                                         },
-                                        text = { Text(driver, color = MaterialTheme.colorScheme.onSurface) },
-                                        onClick = {
-                                            selectedDriver = driver
-                                            driverExpanded = false
-                                            settingsViewModel.setFavoriteDriver(driver)
-                                            authViewModel.updateFavoriteTeamAndDriver(favoriteDriver = driver)
-                                            scope.launch {
-                                                snackbarHostState.showSnackbar("Favorite Driver set to $driver")
-                                            }
-                                        }
+                                        onClick = {},
                                     )
+                                    drivers.forEach { driver ->
+                                        val driverImg =
+                                            TeamUtils.getDriverImageUrl(driver, driverProfiles)
+                                        val selected = driver == selectedDriver
+                                        DropdownMenuItem(
+                                            leadingIcon = {
+                                                DriverProfileCircle(
+                                                    imageUrl = driverImg,
+                                                    driverName = driver,
+                                                    size = 24.dp,
+                                                    driverProfiles = driverProfiles,
+                                                    containerColor = Color.White
+                                                )
+                                            },
+                                            text = {
+                                                Text(
+                                                    text = driver,
+                                                    maxLines = 1,
+                                                    overflow = TextOverflow.Ellipsis,
+                                                )
+                                            },
+                                            trailingIcon = {
+                                                if (selected) {
+                                                    Icon(
+                                                        imageVector = Icons.Default.Check,
+                                                        contentDescription = "Selected",
+                                                        tint = MaterialTheme.colorScheme.primary,
+                                                    )
+                                                }
+                                            },
+                                            onClick = {
+                                                selectedDriver = driver
+                                                driverExpanded = false
+                                                settingsViewModel.setFavoriteDriver(driver)
+                                                authViewModel.updateFavoriteTeamAndDriver(
+                                                    favoriteDriver = driver
+                                                )
+                                                scope.launch {
+                                                    snackbarHostState.showSnackbar("Favorite Driver set to $driver")
+                                                }
+                                            }
+                                        )
+                                    }
                                 }
                             }
                         }
@@ -1051,6 +1219,7 @@ fun UserProfileScreen(
             }
         }
     }
+}
 }
 
 @Composable

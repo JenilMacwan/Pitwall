@@ -58,7 +58,13 @@ class AuthRepository @Inject constructor(
         return user
     }
 
-    suspend fun registerWithEmailAndPassword(email: String, password: String, displayName: String = "") {
+    suspend fun registerWithEmailAndPassword(
+        email: String,
+        password: String,
+        displayName: String = "",
+        favoriteTeam: String? = null,
+        favoriteDriver: String? = null
+    ) {
         require(
             password.length >= 8 &&
                     password.any { it.isUpperCase() } &&
@@ -78,13 +84,33 @@ class AuthRepository @Inject constructor(
         }
         user.sendEmailVerification().await()
         syncUserToCloud(user)
+        if (!favoriteTeam.isNullOrBlank() || !favoriteDriver.isNullOrBlank()) {
+            updateFavoriteTeamAndDriver(favoriteTeam, favoriteDriver)
+        }
     }
 
-    suspend fun signInWithGoogle(idToken: String) {
+    suspend fun signInWithGoogle(
+        idToken: String,
+        displayName: String? = null,
+        favoriteTeam: String? = null,
+        favoriteDriver: String? = null
+    ) {
         val credential = GoogleAuthProvider.getCredential(idToken, null)
         val result = firebaseAuth.signInWithCredential(credential).await()
         val user = result.user ?: throw Exception("Google sign-in failed")
+
+        if (!displayName.isNullOrBlank()) {
+            val request = userProfileChangeRequest {
+                this.displayName = displayName
+            }
+            user.updateProfile(request).await()
+        }
+
         syncUserToCloud(user)
+
+        if (!favoriteTeam.isNullOrBlank() || !favoriteDriver.isNullOrBlank()) {
+            updateFavoriteTeamAndDriver(favoriteTeam, favoriteDriver)
+        }
     }
 
     suspend fun updateProfile(displayName: String) {

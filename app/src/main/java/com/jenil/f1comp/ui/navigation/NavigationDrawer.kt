@@ -65,6 +65,7 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.core.content.ContextCompat
@@ -226,7 +227,10 @@ fun PitwallDrawerContent(
                             verticalAlignment = Alignment.CenterVertically,
                             horizontalArrangement = Arrangement.SpaceBetween
                         ) {
-                            Row(verticalAlignment = Alignment.CenterVertically) {
+                            Row(
+                                modifier = Modifier.weight(1f, fill = false),
+                                verticalAlignment = Alignment.CenterVertically
+                            ) {
                                 FlagImage(
                                     flagUrl = ProfileUtils.getFlagUrl(emoji = nextRace.flagEmoji),
                                     width = 20.dp,
@@ -239,13 +243,17 @@ fun PitwallDrawerContent(
                                     fontFamily = FontFamily.Monospace,
                                     fontWeight = FontWeight.SemiBold,
                                     color = MaterialTheme.colorScheme.onSurface,
-                                    maxLines = 1
+                                    maxLines = 1,
+                                    overflow = TextOverflow.Ellipsis
                                 )
                             }
+                            Spacer(modifier = Modifier.width(8.dp))
                             val countdown = nextRace.countdown
                             val countdownText = when {
                                 countdown.days > 0 -> "${countdown.days}d ${countdown.hours}h"
                                 countdown.hours > 0 -> "${countdown.hours}h ${countdown.minutes}m"
+                                countdown.minutes > 0 -> "${countdown.minutes}m ${countdown.seconds}s"
+                                countdown.seconds > 0 -> "${countdown.seconds}s"
                                 else -> "Live soon"
                             }
                             Text(
@@ -253,7 +261,9 @@ fun PitwallDrawerContent(
                                 style = MaterialTheme.typography.labelSmall,
                                 fontFamily = FontFamily.Monospace,
                                 fontWeight = FontWeight.Bold,
-                                color = MaterialTheme.colorScheme.primary
+                                color = MaterialTheme.colorScheme.primary,
+                                maxLines = 1,
+                                softWrap = false
                             )
                         }
                     }

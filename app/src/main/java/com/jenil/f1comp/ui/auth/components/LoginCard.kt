@@ -36,7 +36,7 @@ import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
+import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Brush
@@ -62,10 +62,10 @@ fun LoginCard(
     onForgotPasswordClick: (String) -> Unit = {},
     onGuestClick: () -> Unit = {},
 ) {
-    val emailState = remember { mutableStateOf("") }
-    val passwordState = remember { mutableStateOf("") }
-    val passwordVisibility = remember { mutableStateOf(false) }
-    val checkState = remember { mutableStateOf(false) }
+    val emailState = rememberSaveable { mutableStateOf("") }
+    val passwordState = rememberSaveable { mutableStateOf("") }
+    val passwordVisibility = rememberSaveable { mutableStateOf(false) }
+    val checkState = rememberSaveable { mutableStateOf(false) }
     val isLoading = authUiState is AuthUiState.Loading
 
     val isEmailError = authUiState is AuthUiState.Error && (authUiState.targetField == AuthErrorField.EMAIL || authUiState.targetField == AuthErrorField.GENERAL)
@@ -139,7 +139,7 @@ fun LoginCard(
                     singleLine = true,
                     maxLines = 1
                 )
-                if (isEmailError && authUiState is AuthUiState.Error && authUiState.targetField == AuthErrorField.EMAIL) {
+                if (isEmailError && authUiState.targetField == AuthErrorField.EMAIL) {
                     Spacer(modifier = Modifier.height(4.dp))
                     Text(
                         text = authUiState.message,
@@ -215,7 +215,7 @@ fun LoginCard(
                     singleLine = true,
                     maxLines = 1
                 )
-                if (isPasswordError && authUiState is AuthUiState.Error && authUiState.targetField == AuthErrorField.PASSWORD) {
+                if (isPasswordError && authUiState.targetField == AuthErrorField.PASSWORD) {
                     Spacer(modifier = Modifier.height(4.dp))
                     Text(
                         text = authUiState.message,

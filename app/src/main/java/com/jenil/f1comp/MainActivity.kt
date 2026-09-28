@@ -13,6 +13,8 @@ import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
+import androidx.compose.material3.windowsizeclass.ExperimentalMaterial3WindowSizeClassApi
+import androidx.compose.material3.windowsizeclass.calculateWindowSizeClass
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.core.content.ContextCompat
@@ -35,6 +37,7 @@ class MainActivity : AppCompatActivity() {
         // Permission result handled
     }
 
+    @OptIn(ExperimentalMaterial3WindowSizeClassApi::class)
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         logNotificationClick(intent)
@@ -43,6 +46,7 @@ class MainActivity : AppCompatActivity() {
         requestNotificationPermissionOnFirstLaunch()
 
         setContent {
+            val windowSizeClass = calculateWindowSizeClass(this)
             val settingsViewModel: SettingsViewModel = hiltViewModel()
             val isDarkModePref by settingsViewModel.isDarkMode.collectAsStateWithLifecycle()
             val selectedThemeId by settingsViewModel.selectedThemeId.collectAsStateWithLifecycle()
@@ -55,7 +59,7 @@ class MainActivity : AppCompatActivity() {
                     modifier = Modifier.fillMaxSize(),
                     color = MaterialTheme.colorScheme.background
                 ) {
-                    AppNavigation()
+                    AppNavigation(windowSizeClass = windowSizeClass)
                 }
             }
         }

@@ -59,6 +59,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
@@ -68,6 +69,7 @@ import androidx.compose.ui.unit.sp
 import androidx.core.net.toUri
 import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
+import com.jenil.f1comp.R
 import com.jenil.f1comp.ui.F1ScreenPadding
 import com.jenil.f1comp.ui.theme.F1CompTheme
 import kotlinx.coroutines.delay
@@ -82,51 +84,53 @@ private data class PolicySection(
     val icon: ImageVector
 )
 
-private val policySections = listOf(
+@Composable
+private fun policySections() = listOf(
     PolicySection(
-        shortLabel = "Storage",
-        title = "Data Storage & Local Preferences",
+        shortLabel = stringResource(R.string.privacy_short_storage),
+        title = stringResource(R.string.privacy_section_storage_title),
         icon = Icons.Outlined.Storage,
-        content = "User choices — including dark mode, favorite team theme accents, units preferences, and notification toggles — are stored locally on your device using Jetpack DataStore and Room Database. This data never leaves your device."
+        content = stringResource(R.string.privacy_section_storage_body)
     ),
     PolicySection(
-        shortLabel = "Permissions",
-        title = "Permissions Used",
+        shortLabel = stringResource(R.string.privacy_short_permissions),
+        title = stringResource(R.string.privacy_section_permissions_title),
         icon = Icons.Outlined.AdminPanelSettings,
-        content = "• Calendar Access: Used solely to sync Formula 1 Grand Prix schedules to your device's system calendar upon your explicit request.\n\n• Notifications & Exact Alarms: Used to trigger local reminders before race sessions begin and deliver breaking news updates."
+        content = stringResource(R.string.privacy_section_permissions_body)
     ),
     PolicySection(
-        shortLabel = "Third-Party",
-        title = "Third-Party Services & APIs",
+        shortLabel = stringResource(R.string.privacy_short_third_party),
+        title = stringResource(R.string.privacy_section_third_party_title),
         icon = Icons.Outlined.Cloud,
-        content = "• Firebase Cloud Messaging (FCM): Used to deliver optional push notifications for breaking F1 news.\n\n• Public F1 APIs: Fetches public Formula 1 session schedules, standings, driver statistics, and team radio audio files."
+        content = stringResource(R.string.privacy_section_third_party_body)
     ),
     PolicySection(
-        shortLabel = "Apex AI",
-        title = "Apex AI & Data Processing",
+        shortLabel = stringResource(R.string.privacy_short_apex),
+        title = stringResource(R.string.privacy_section_apex_title),
         icon = Icons.Outlined.SmartToy,
-        content = "PitWall features 'Apex', an AI chatbot powered by Google Gemini. When you interact with Apex, your text queries are sent to our secure backend API. We temporarily cache chat sessions for up to 1 hour to maintain conversational context. We do not use your queries to train our AI models, nor do we sell this conversational data."
+        content = stringResource(R.string.privacy_section_apex_body)
     ),
     PolicySection(
-        shortLabel = "Analytics",
-        title = "App Analytics & Stability",
+        shortLabel = stringResource(R.string.privacy_short_analytics),
+        title = stringResource(R.string.privacy_section_analytics_title),
         icon = Icons.Outlined.Analytics,
-        content = "To improve PitWall, we may collect anonymous crash reports and basic usage telemetry (e.g., device model, OS version). This data contains no personally identifiable information and is used strictly to fix bugs and optimize app performance."
+        content = stringResource(R.string.privacy_section_analytics_body)
     ),
     PolicySection(
-        shortLabel = "Your Rights",
-        title = "Your Choices & Control",
+        shortLabel = stringResource(R.string.privacy_short_rights),
+        title = stringResource(R.string.privacy_section_rights_title),
         icon = Icons.Outlined.Gavel,
-        content = "You are always in control. Calendar sync can be reversed at any time from Settings → Clear F1 Events. Notification categories can be toggled individually. Revoking a permission in your device settings simply disables the related feature — the rest of PitWall keeps working normally."
+        content = stringResource(R.string.privacy_section_rights_body)
     )
 )
 
 private data class TrustHighlight(val icon: ImageVector, val text: String)
 
-private val trustHighlights = listOf(
-    TrustHighlight(Icons.Outlined.Lock, "No Account Needed"),
-    TrustHighlight(Icons.Outlined.VerifiedUser, "100% Local First"),
-    TrustHighlight(Icons.Outlined.Cloud, "Zero Data Selling")
+@Composable
+private fun trustHighlights() = listOf(
+    TrustHighlight(Icons.Outlined.Lock, stringResource(R.string.privacy_trust_no_account)),
+    TrustHighlight(Icons.Outlined.VerifiedUser, stringResource(R.string.privacy_trust_local_first)),
+    TrustHighlight(Icons.Outlined.Cloud, stringResource(R.string.privacy_trust_no_data_selling))
 )
 
 
@@ -137,13 +141,14 @@ fun PrivacyPolicyScreen(
     navController: NavController,
     modifier: Modifier = Modifier
 ) {
+    val sections = policySections()
     val context = LocalContext.current
     val listState = rememberLazyListState()
     val coroutineScope = rememberCoroutineScope()
 
     val visibleItems = remember { mutableStateListOf<Int>() }
     LaunchedEffect(Unit) {
-        for (i in -3 until policySections.size + 1) {
+        for (i in -3 until sections.size + 1) {
             delay(45L.milliseconds)
             visibleItems.add(i)
         }
@@ -159,10 +164,10 @@ fun PrivacyPolicyScreen(
             onShare = {
                 val shareIntent = Intent(Intent.ACTION_SEND).apply {
                     type = "text/plain"
-                    putExtra(Intent.EXTRA_SUBJECT, "PitWall — Privacy Policy")
-                    putExtra(Intent.EXTRA_TEXT, "Read PitWall's Privacy Policy: https://jenil.dev/pitwall-privacy")
+                    putExtra(Intent.EXTRA_SUBJECT, context.getString(R.string.privacy_share_subject))
+                    putExtra(Intent.EXTRA_TEXT, context.getString(R.string.privacy_share_text))
                 }
-                context.startActivity(Intent.createChooser(shareIntent, "Share Privacy Policy"))
+                context.startActivity(Intent.createChooser(shareIntent, context.getString(R.string.privacy_share_chooser)))
             }
         )
 
@@ -192,7 +197,7 @@ fun PrivacyPolicyScreen(
             item {
                 RevealIn(visible = visibleItems.contains(-1)) {
                     TableOfContents(
-                        sections = policySections,
+                        sections = sections,
                         onSectionSelected = { index ->
                             coroutineScope.launch {
                                 listState.animateScrollToItem(ITEMS_BEFORE_SECTIONS + index)
@@ -203,7 +208,7 @@ fun PrivacyPolicyScreen(
             }
 
 
-            itemsIndexed(policySections) { index, section ->
+            itemsIndexed(sections) { index, section ->
                 RevealIn(visible = visibleItems.contains(index)) {
                     PolicySectionCard(index = index + 1, section = section)
                 }
@@ -211,7 +216,7 @@ fun PrivacyPolicyScreen(
 
 
             item {
-                RevealIn(visible = visibleItems.contains(policySections.size)) {
+                RevealIn(visible = visibleItems.contains(sections.size)) {
                     DocumentFooter(context = context)
                 }
             }
@@ -236,12 +241,12 @@ private fun DocumentTopBar(
             IconButton(onClick = onBack) {
                 Icon(
                     imageVector = Icons.AutoMirrored.Rounded.ArrowBack,
-                    contentDescription = "Back",
+                    contentDescription = stringResource(R.string.common_back),
                     tint = MaterialTheme.colorScheme.onSurface
                 )
             }
             Text(
-                text = "Privacy Policy",
+                text = stringResource(R.string.title_privacy),
                 style = MaterialTheme.typography.titleLarge,
                 fontWeight = FontWeight.Bold,
                 color = MaterialTheme.colorScheme.onSurface,
@@ -251,7 +256,7 @@ private fun DocumentTopBar(
         IconButton(onClick = onShare) {
             Icon(
                 imageVector = Icons.AutoMirrored.Outlined.OpenInNew,
-                contentDescription = "Share policy",
+                contentDescription = stringResource(R.string.privacy_share_content_description),
                 tint = MaterialTheme.colorScheme.onSurfaceVariant
             )
         }
@@ -294,21 +299,21 @@ private fun DocumentLetterhead() {
                 Row(verticalAlignment = Alignment.CenterVertically) {
                     Column {
                         Text(
-                            text = "PITWALL LEGAL DOCUMENT",
+                            text = stringResource(R.string.privacy_document_label),
                             style = MaterialTheme.typography.labelSmall.copy(letterSpacing = 1.5.sp),
                             fontWeight = FontWeight.Bold,
                             color = MaterialTheme.colorScheme.primary
                         )
                         Spacer(modifier = Modifier.height(2.dp))
                         Text(
-                            text = "Privacy Policy",
+                            text = stringResource(R.string.title_privacy),
                             style = MaterialTheme.typography.headlineLarge.copy(fontSize = 24.sp),
                             fontWeight = FontWeight.Bold,
                             color = MaterialTheme.colorScheme.onSurface
                         )
                         Spacer(modifier = Modifier.height(2.dp))
                         Text(
-                            text = "Doc. PW-PRIV · Rev. 1.0",
+                            text = stringResource(R.string.privacy_document_revision),
                             style = MaterialTheme.typography.labelSmall,
                             fontFamily = FontFamily.Monospace,
                             color = MaterialTheme.colorScheme.onSurfaceVariant
@@ -322,7 +327,7 @@ private fun DocumentLetterhead() {
                     border = BorderStroke(1.dp, MaterialTheme.colorScheme.outlineVariant.copy(alpha = 0.5f))
                 ) {
                     Text(
-                        text = "Sep 2026",
+                        text = stringResource(R.string.privacy_document_date),
                         style = MaterialTheme.typography.labelSmall.copy(fontSize = 11.sp),
                         fontFamily = FontFamily.Monospace,
                         color = MaterialTheme.colorScheme.onSurfaceVariant,
@@ -339,7 +344,7 @@ private fun DocumentLetterhead() {
                 modifier = Modifier.fillMaxWidth(),
                 horizontalArrangement = Arrangement.spacedBy(8.dp)
             ) {
-                trustHighlights.forEach { badge ->
+                trustHighlights().forEach { badge ->
                     TrustBadge(icon = badge.icon, text = badge.text, modifier = Modifier.weight(1f))
                 }
             }
@@ -368,7 +373,7 @@ private fun OverviewCallout() {
     ) {
         Column(modifier = Modifier.padding(16.dp)) {
             Text(
-                text = "Overview",
+                text = stringResource(R.string.privacy_overview),
                 style = MaterialTheme.typography.labelSmall.copy(letterSpacing = 1.5.sp),
                 fontFamily = FontFamily.Monospace,
                 fontWeight = FontWeight.Bold,
@@ -376,7 +381,7 @@ private fun OverviewCallout() {
             )
             Spacer(modifier = Modifier.height(8.dp))
             Text(
-                text = "PitWall is designed with privacy as a core principle. The app runs locally on your device without requiring an account, a login, or personal identifying information such as your name, email, or phone number.",
+                text = stringResource(R.string.privacy_overview_body),
                 style = MaterialTheme.typography.bodyMedium,
                 color = MaterialTheme.colorScheme.onSurface,
                 lineHeight = 22.sp
@@ -393,7 +398,7 @@ private fun TableOfContents(
 ) {
     Column(modifier = Modifier.fillMaxWidth()) {
         Text(
-            text = "IN THIS DOCUMENT",
+            text = stringResource(R.string.privacy_table_of_contents),
             style = MaterialTheme.typography.labelSmall.copy(letterSpacing = 1.2.sp),
             fontFamily = FontFamily.Monospace,
             fontWeight = FontWeight.SemiBold,
@@ -422,7 +427,7 @@ private fun TableOfContents(
                         )
                         Spacer(modifier = Modifier.width(6.dp))
                         Text(
-                            text = "${index + 1}. ${section.shortLabel}",
+                            text = stringResource(R.string.privacy_toc_item, index + 1, section.shortLabel),
                             style = MaterialTheme.typography.labelMedium,
                             fontFamily = FontFamily.Monospace,
                             color = MaterialTheme.colorScheme.onSurface
@@ -514,7 +519,7 @@ private fun PolicySectionCard(
                     Spacer(modifier = Modifier.width(12.dp))
                     Column(modifier = Modifier.weight(1f)) {
                         Text(
-                            text = "SECTION ${String.format("%02d", index)}",
+                            text = stringResource(R.string.privacy_section_label, index),
                             style = MaterialTheme.typography.labelSmall.copy(letterSpacing = 1.sp),
                             fontFamily = FontFamily.Monospace,
                             color = MaterialTheme.colorScheme.primary
@@ -556,14 +561,14 @@ private fun DocumentFooter(context: android.content.Context) {
             verticalArrangement = Arrangement.spacedBy(12.dp)
         ) {
             Text(
-                text = "Legal Disclosures & Inquiries",
+                text = stringResource(R.string.privacy_footer_title),
                 style = MaterialTheme.typography.titleMedium,
                 fontWeight = FontWeight.Bold,
                 color = MaterialTheme.colorScheme.onSurface
             )
 
             Text(
-                text = "This policy may be updated as PitWall evolves. Material changes will be reflected here with a new revision date. For the complete web disclosure or a privacy inquiry, use the options below.",
+                text = stringResource(R.string.privacy_footer_body),
                 style = MaterialTheme.typography.bodySmall,
                 color = MaterialTheme.colorScheme.onSurfaceVariant,
                 textAlign = TextAlign.Center,
@@ -574,7 +579,7 @@ private fun DocumentFooter(context: android.content.Context) {
 
             OutlinedButton(
                 onClick = {
-                    val intent = Intent(Intent.ACTION_VIEW, "https://jenil.dev/pitwall-privacy".toUri())
+                    val intent = Intent(Intent.ACTION_VIEW, context.getString(R.string.privacy_web_url).toUri())
                     context.startActivity(intent)
                 },
                 modifier = Modifier.fillMaxWidth(),
@@ -586,13 +591,13 @@ private fun DocumentFooter(context: android.content.Context) {
                     modifier = Modifier.size(18.dp)
                 )
                 Spacer(modifier = Modifier.width(8.dp))
-                Text("Read Full Web Policy")
+                Text(stringResource(R.string.privacy_read_full_web_policy))
             }
 
             TextButton(
                 onClick = {
                     val intent = Intent(Intent.ACTION_SENDTO).apply {
-                        data = "mailto:jenilmacwan29@gmail.com?subject=PitWall Privacy Inquiry".toUri()
+                        data = context.getString(R.string.privacy_contact_email_uri).toUri()
                     }
                     context.startActivity(intent)
                 },
@@ -604,12 +609,12 @@ private fun DocumentFooter(context: android.content.Context) {
                     modifier = Modifier.size(18.dp)
                 )
                 Spacer(modifier = Modifier.width(8.dp))
-                Text("Contact Data Protection")
+                Text(stringResource(R.string.privacy_contact_data_protection))
             }
 
             Spacer(modifier = Modifier.height(4.dp))
             Text(
-                text = "PitWall · Doc. PW-PRIV · Rev. 1.0 · Sep 2026",
+                text = stringResource(R.string.privacy_footer_revision),
                 style = MaterialTheme.typography.labelSmall.copy(fontSize = 10.sp),
                 fontFamily = FontFamily.Monospace,
                 color = MaterialTheme.colorScheme.onSurfaceVariant.copy(alpha = 0.6f)

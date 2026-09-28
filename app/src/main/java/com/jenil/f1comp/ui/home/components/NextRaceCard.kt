@@ -6,8 +6,10 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.IntrinsicSize
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
@@ -240,6 +242,7 @@ fun NextRaceCard(
             Row(
                 modifier = Modifier
                     .fillMaxWidth()
+                    .height(IntrinsicSize.Max)
                     .padding(top = 16.dp),
                 horizontalArrangement = Arrangement.spacedBy(12.dp)
             ) {
@@ -247,7 +250,9 @@ fun NextRaceCard(
                     value = daysStr,
                     unit = stringResource(R.string.home_days),
                     progress = daysProgress,
-                    modifier = Modifier.weight(0.45f)
+                    modifier = Modifier
+                        .weight(0.45f)
+                        .fillMaxHeight()
                 )
                 Column(
                     modifier = Modifier.weight(0.55f),

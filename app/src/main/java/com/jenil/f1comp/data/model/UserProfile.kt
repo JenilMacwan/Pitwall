@@ -5,7 +5,7 @@ data class UserProfile(
     val email: String = "",
     val displayName: String = "",
     val photoUrl: String = "",
-    val favoriteTeam: String = "Scuderia Ferrari HP",
-    val favoriteDriver: String = "Charles Leclerc #16",
+    val favoriteTeam: String = "",
+    val favoriteDriver: String = "",
     val createdAt: Long = System.currentTimeMillis()
 )

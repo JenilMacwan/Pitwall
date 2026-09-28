@@ -44,6 +44,7 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -88,13 +89,13 @@ fun ChatbotScreen(
     navController: NavController,
 ) {
     val uiState by viewModel.uiState.collectAsStateWithLifecycle()
-    val sessionId = remember { UUID.randomUUID().toString() }
+    val sessionId = rememberSaveable { UUID.randomUUID().toString() }
 
     val welcomeText = stringResource(R.string.chatbot_welcome)
     val resetText = stringResource(R.string.chatbot_reset_msg)
     val errorPrefixText = stringResource(R.string.chatbot_error)
 
-    var text by remember { mutableStateOf("") }
+    var text by rememberSaveable { mutableStateOf("") }
     var messages by remember(welcomeText) {
         mutableStateOf(
             listOf(

@@ -17,6 +17,70 @@
     <string name="sub_title_theme">Systeemstandaard</string>
     <string name="title_attribution">Gegevensbronnen</string>
     <string name="title_privacy">Privacybeleid</string>
+    <string name="title_terms">Voorwaarden</string>
+    <string name="common_back">Terug</string>
+    <!-- Privacy Policy -->
+    <string name="privacy_short_storage">Opslag</string>
+    <string name="privacy_short_permissions">Machtigingen</string>
+    <string name="privacy_short_third_party">Derden</string>
+    <string name="privacy_short_apex">Apex AI</string>
+    <string name="privacy_short_analytics">Analytiek</string>
+    <string name="privacy_short_rights">Uw Rechten</string>
+    <string name="privacy_section_storage_title">Gegevensopslag &amp; Paddock-Profielen</string>
+    <string name="privacy_section_storage_body">Voorkeuren — donkere modus, teamkleuren, taal en gecashte F1-gegevens — worden lokaal op uw apparaat opgeslagen via Jetpack DataStore en Room SQLite. Als u ervoor kiest om een Paddock-profiel te registreren of in te loggen, worden uw naam, profielfoto-URL en favoriete team/coureur veilig gesynchroniseerd via Firebase Authentication en Firebase Cloud Firestore.</string>
+    <string name="privacy_section_permissions_title">Gebruikte Systeemmachtigingen</string>
+    <string name="privacy_section_permissions_body">• Agendatoegang: Uitsluitend gebruikt om F1 Grand Prix-raceschema\'s op uw expliciete verzoek te synchroniseren met uw systeemagenda.\n\n• Meldingen &amp; Exacte Alarmen: Gebruikt om precieze herinneringen voor sessies (FP1-3, Kwalificatie, Sprint, Race) te meadalen via Android AlarmManager en pushmeldingen te sturen voor F1-nieuws en live evenementen.</string>
+    <string name="privacy_section_third_party_title">Diensten van Derden &amp; API\'s</string>
+    <string name="privacy_section_third_party_body">• Firebase &amp; Google-authenticatie: Beheert veilige inloggegevens, wachtwoordversleuteling en opslag van profielen in de cloud.\n\n• Firebase Cloud Messaging (FCM): Verstuurt optionele pushmeldingen voor F1-nieuws.\n\n• Openbare F1-API\'s &amp; Streams: Haalt raceschema\'s, standen, coureurstatistieken en live boordradio-audio op.</string>
+    <string name="privacy_section_apex_title">Apex AI-Strategie-assistent</string>
+    <string name="privacy_section_apex_body">PitWall bevat \'Apex\', een AI-strategie-assistent aangedreven door Google Gemini. Uw vragen worden via HTTPS beveiligd naar onze backend-API gestuurd. Gesprekken worden alleen tijdelijk in het geheugen bewaard en worden nooit verkocht of gebruikt om AI-modellen te trainen.</string>
+    <string name="privacy_section_analytics_title">Analytiek &amp; App-Stabiliteit</string>
+    <string name="privacy_section_analytics_body">Om prestaties te waarborgen, gebruiken we Firebase Analytics voor het verzamelen van anonieme operationele gegevens (apparaatmodel, Android-versie, crashrapporten). Deze gegevens bevatten geen persoonlijk identificeerbare informatie.</string>
+    <string name="privacy_section_rights_title">Uw Controle &amp; Rechten</string>
+    <string name="privacy_section_rights_body">U behoudt altijd de volledige controle. U kunt PitWall anoniem gebruiken als Gast zonder account. U kunt op elk moment uitloggen of gesynchroniseerde agenda-evenementen wissen via Instellingen. Het intrekken van machtigingen schakelt alleen de bijbehorende functie uit.</string>
+    <string name="privacy_trust_no_account">Gast- &amp; Accountmodus</string>
+    <string name="privacy_trust_local_first">Lokaal Eerst &amp; Cloud</string>
+    <string name="privacy_trust_no_data_selling">Geen Gegevensverkoop</string>
+    <string name="privacy_share_subject">PitWall — Privacybeleid</string>
+    <string name="privacy_share_text">Lees het Privacybeleid van PitWall: https://jenil.dev/pitwall-privacy</string>
+    <string name="privacy_share_chooser">Privacybeleid Delen</string>
+    <string name="privacy_share_content_description">Beleid delen</string>
+    <string name="privacy_document_label">PITWALL JURIDISCH DOCUMENT</string>
+    <string name="privacy_document_revision">Doc. PW-PRIV · Rev. 1.2</string>
+    <string name="privacy_document_date">2026</string>
+    <string name="privacy_overview">Overzicht</string>
+    <string name="privacy_overview_body">PitWall is ontworpen met privacy als kernbeginsel. U kunt de app volledig als Gast gebruiken zonder een account aan te maken. Als u ervoor kiest om in te loggen, worden uw voorkeuren veilig beheerd via Firebase en Google-authenticatie.</string>
+    <string name="privacy_table_of_contents">IN DIT DOCUMENT</string>
+    <string name="privacy_toc_item">%1$d. %2$s</string>
+    <string name="privacy_section_label">SECTIE %1$02d</string>
+    <string name="privacy_footer_title">Juridische Informatie &amp; Vragen</string>
+    <string name="privacy_footer_body">Dit beleid kan worden bijgewerkt naarmate PitWall zich ontwikkelt. Gebruik de onderstaande opties voor het volledige webbeleid of voor privacyvragen.</string>
+    <string name="privacy_web_url">https://jenil.dev/pitwall-privacy</string>
+    <string name="privacy_read_full_web_policy">Volledige Webbeleid Lezen</string>
+    <string name="privacy_contact_email_uri">mailto:support.pitwall@gmail.com?subject=PitWall%20Privacyvraag</string>
+    <string name="privacy_contact_data_protection">Contact Gegevensbescherming</string>
+    <string name="privacy_footer_revision">PitWall · Doc. PW-PRIV · Rev. 1.2 · 2026</string>
+    <string name="terms_document_label">PITWALL · JURIDISCH</string>
+    <string name="terms_effective_date">Van kracht vanaf 25 september 2026 · Lees deze voorwaarden voordat je PitWall gebruikt.</string>
+    <string name="terms_intro">Door PitWall te openen of te gebruiken, ga je akkoord met deze voorwaarden. Ga je niet akkoord, stop dan met het gebruik van de app. Deze voorwaarden gelden naast het Privacybeleid en eventuele voorwaarden van diensten van derden.</string>
+    <string name="terms_section_1_title">1. Over PitWall</string>
+    <string name="terms_section_1_body">PitWall is een onafhankelijke motorsport-app voor informatie en entertainment. Het is geen officiële dienst van de Formule 1, FIA, een team, coureur of tijdwaarneming en is daar niet aan verbonden of door goedgekeurd. Namen, merken, afbeeldingen en ander materiaal van derden blijven eigendom van de betreffende rechthebbenden.</string>
+    <string name="terms_section_2_title">2. Acceptabel gebruik</string>
+    <string name="terms_section_2_body">Gebruik de app volgens de wet en op een manier die de app, de diensten of andere gebruikers niet verstoort. Probeer geen ongeautoriseerde toegang te krijgen, de werking van de dienst te hinderen, accountfuncties te misbruiken of onwettige of schadelijke inhoud via de app te verspreiden.</string>
+    <string name="terms_section_3_title">3. Informatie en beschikbaarheid</string>
+    <string name="terms_section_3_body">Schema’s, standen, resultaten, nieuws, radiolinks en andere motorsportinformatie kunnen afkomstig zijn van derden. We streven naar nuttige informatie, maar deze kan vertraagd, onvolledig of onjuist zijn en zonder kennisgeving veranderen. Vertrouw niet op PitWall voor officiële uitslagen, tijdkritische beslissingen of veiligheidsinformatie. Functies en beschikbaarheid kunnen wijzigen; onderhoud of omstandigheden buiten onze controle kunnen de dienst onderbreken.</string>
+    <string name="terms_section_4_title">4. Apex AI</string>
+    <string name="terms_section_4_body">Apex gebruikt generatieve AI. Antwoorden kunnen onjuist, onvolledig of verouderd zijn en zijn alleen bedoeld als algemene informatie. Controleer belangrijke beweringen bij betrouwbare bronnen. Beschouw AI-antwoorden niet als professioneel advies of als officiële aanwijzingen van een team, de FIA of de wedstrijdleiding.</string>
+    <string name="terms_section_5_title">5. Accounts en apparaatfuncties</string>
+    <string name="terms_section_5_body">Sommige functies kunnen aanmelden en diensten van derden gebruiken. Je bent verantwoordelijk voor het beveiligen van je inloggegevens en voor activiteiten via je account. Optionele functies zoals meldingen en agendasynchronisatie zijn afhankelijk van machtigingen en instellingen op je apparaat; je beheert deze via de Android-instellingen.</string>
+    <string name="terms_section_6_title">6. Diensten en inhoud van derden</string>
+    <string name="terms_section_6_body">PitWall kan linken naar diensten, API’s, media en websites van anderen of daarvan afhankelijk zijn. Deze diensten worden geleverd door de betreffende aanbieders en kunnen eigen voorwaarden en privacypraktijken hebben. PitWall beheert hun beschikbaarheid of inhoud niet.</string>
+    <string name="terms_section_7_title">7. Intellectueel eigendom</string>
+    <string name="terms_section_7_body">De PitWall-app en de oorspronkelijke inhoud zijn beschermd door toepasselijke intellectuele-eigendomswetten. Je mag de app persoonlijk en niet-commercieel gebruiken. Kopieer, wijzig, verspreid of exploiteer app-inhoud niet commercieel, behalve wanneer de wet of een afzonderlijke licentie dit toestaat. Inhoud van derden blijft onderworpen aan de rechten en voorwaarden van de rechthebbenden.</string>
+    <string name="terms_section_8_title">8. Garanties en aansprakelijkheid</string>
+    <string name="terms_section_8_body">Voor zover de toepasselijke wet dit toestaat, worden de app en de informatie beschikbaar gesteld zonder garanties voor ononderbroken werking, juistheid of geschiktheid voor een bepaald doel. Voor zover wettelijk toegestaan, zijn PitWall en de ontwikkelaar niet aansprakelijk voor indirecte schade of gevolgschade door gebruik van of onvermogen om de app te gebruiken. Niets in deze voorwaarden beperkt rechten of aansprakelijkheid die wettelijk niet beperkt mogen worden.</string>
+    <string name="terms_section_9_title">9. Wijzigingen en contact</string>
+    <string name="terms_section_9_body">Deze voorwaarden kunnen worden bijgewerkt wanneer de app verandert. De huidige versie staat in de app. Als je de app na een wijziging blijft gebruiken, accepteer je de herziene voorwaarden voor zover de wet dit toestaat. Vragen? Mail support.pitwall@gmail.com.</string>
     <string name="title_licenses">Open Source Licenties</string>
     <string name="title_alerts">Meldingen</string>
     <string name="sub_title_alerts">15 minuten voor start van evenement</string>
@@ -71,7 +135,7 @@
     <string name="schedule_date">Datum</string>
 
     <!-- Standings Screen -->
-    <string name="standings_title">F1 STANDEN</string>
+    <string name="standings_title">STANDEN</string>
     <string name="standings_drivers">COUREURS</string>
     <string name="standings_constructors">CONSTRUCTEURS</string>
     <string name="standings_pos">POS</string>
@@ -134,11 +198,17 @@
     <string name="settings_session_reminders_sub">Meldingen voor VT1-3 en Kwalificatie</string>
     <string name="settings_breaking_news">Laatste Nieuws</string>
     <string name="settings_breaking_news_sub">Coureurs-transfers, straffen en belangrijk nieuws</string>
+    <string name="settings_favorites">Favoriete Teams &amp; Coureurs</string>
+    <string name="settings_favorites_sub">Ontvang updates wanneer jouw favorieten een podium behalen, winnen of van positie veranderen in de stand</string>
     <string name="settings_live_events">Live Race-evenementen</string>
     <string name="settings_live_events_sub">Safety car, rode vlaggen en snelste ronde</string>
     <string name="settings_standings_updates">Standen-updates</string>
     <string name="settings_standings_updates_sub">Meldingen wanneer punten veranderen</string>
     <string name="settings_about">Over</string>
+    <string name="settings_rate_app_sub">Tevreden over PitWall? Laat een beoordeling achter</string>
+    <string name="settings_licenses_sub">Bibliotheken van derden die deze app gebruikt</string>
+    <string name="settings_privacy_sub">Hoe je gegevens worden verwerkt</string>
+    <string name="settings_terms_sub">Voorwaarden voor het gebruik van PitWall</string>
     <string name="settings_version">Versie</string>
     <string name="settings_developer">Ontwikkelaar</string>
     <string name="settings_rate_app">Beoordeel de App</string>
@@ -207,4 +277,9 @@
     <string name="nationality_american">Amerikaans</string>
     <string name="nationality_danish">Deens</string>
     <string name="nationality_kiwi">Nieuw-Zeelands</string>
+
+    <!-- Auth Validation Alert -->
+    <string name="auth_required_title">Account Vereist</string>
+    <string name="auth_required_favorites_msg">Om meldingen voor je favoriete teams en coureurs te ontvangen, moet je je eerst aanmelden of een account aanmaken.</string>
+    <string name="auth_sign_in_register">Inloggen / Registreren</string>
 </resources>

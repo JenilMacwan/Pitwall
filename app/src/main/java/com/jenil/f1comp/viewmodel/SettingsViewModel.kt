@@ -1,5 +1,6 @@
 package com.jenil.f1comp.viewmodel
 
+import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.google.firebase.Firebase
@@ -76,15 +77,22 @@ class SettingsViewModel @Inject constructor(
         initialValue = null
     )
 
+    val isFavoritesUpdatesEnabled: StateFlow<Boolean?> =
+        repository.isFavoritesUpdateEnabled.stateIn(
+            scope = viewModelScope,
+            started = SharingStarted.WhileSubscribed(5000),
+            initialValue = null
+        )
+
     val favoriteTeam: StateFlow<String?> = repository.favoriteTeam.stateIn(
         scope = viewModelScope,
-        started = SharingStarted.WhileSubscribed(5000),
+        started = SharingStarted.Eagerly,
         initialValue = null
     )
 
     val favoriteDriver: StateFlow<String?> = repository.favoriteDriver.stateIn(
         scope = viewModelScope,
-        started = SharingStarted.WhileSubscribed(5000),
+        started = SharingStarted.Eagerly,
         initialValue = null
     )
 
@@ -112,14 +120,42 @@ class SettingsViewModel @Inject constructor(
         }
     }
 
-    fun setFavoriteTeam(team: String) {
+    fun setFavoriteTeam(rawTeam: String) {
+
+        val team = cleanTeamName(rawTeam)
         viewModelScope.launch {
+            val oldTeam = favoriteTeam.value
+            val isNotificationsOn = isFavoritesUpdatesEnabled.value == true
+
+            // Unsubscribe from the old team ONLY if notifications are currently ON
+            if (isNotificationsOn && !oldTeam.isNullOrBlank() && oldTeam != team) {
+                Firebase.messaging.unsubscribeFromTopic(sanitizeTopic("favorite_team_$oldTeam"))
+            }
+
+            // Subscribe to the new team ONLY if notifications are currently ON
+            if (isNotificationsOn && team.isNotEmpty()) {
+                Firebase.messaging.subscribeToTopic(sanitizeTopic("favorite_team_$team"))
+            }
+
+            // Finally, save the new team to the database
             repository.setFavoriteTeam(team)
         }
     }
 
-    fun setFavoriteDriver(driver: String) {
+    fun setFavoriteDriver(rawDriver: String) {
+        val driver = cleanDriverName(rawDriver)
         viewModelScope.launch {
+            val oldDriver = favoriteDriver.value
+            val isNotificationsOn = isFavoritesUpdatesEnabled.value == true
+
+            if (isNotificationsOn && !oldDriver.isNullOrBlank() && oldDriver != driver) {
+                Firebase.messaging.unsubscribeFromTopic(sanitizeTopic("favorite_driver_$oldDriver"))
+            }
+
+            if (isNotificationsOn && driver.isNotEmpty()) {
+                Firebase.messaging.subscribeToTopic(sanitizeTopic("favorite_driver_$driver"))
+            }
+
             repository.setFavoriteDriver(driver)
         }
     }
@@ -170,4 +206,64 @@ class SettingsViewModel @Inject constructor(
             }
         }
     }
+
+    fun setFavoritesUpdatesEnabled(isEnabled: Boolean) {
+        viewModelScope.launch {
+            repository.setFavoritesUpdatesEnabled(isEnabled)
+            val currentTeam = favoriteTeam.value
+            val currentDriver = favoriteDriver.value
+
+            Log.d("FCM_TEST", "Toggle is $isEnabled. Team is $currentTeam. Driver is $currentDriver")
+            if (isEnabled) {
+                if (!currentTeam.isNullOrBlank()) {
+                    val topic = sanitizeTopic("favorite_team_$currentTeam")
+                    Log.d("FCM_TEST", "Subscribing to $topic") // ADD THIS
+                    Firebase.messaging.subscribeToTopic(topic)
+                }
+                if (!currentDriver.isNullOrBlank()) {
+                    val topic = sanitizeTopic("favorite_driver_$currentDriver")
+                    Log.d("FCM_TEST", "Subscribing to $topic") // ADD THIS
+                    Firebase.messaging.subscribeToTopic(topic)
+                }
+            } else {
+                if (!currentTeam.isNullOrBlank()) {
+                    Firebase.messaging.unsubscribeFromTopic(sanitizeTopic("favorite_team_$currentTeam"))
+                }
+                if (!currentDriver.isNullOrBlank()) {
+                    Firebase.messaging.unsubscribeFromTopic(sanitizeTopic("favorite_driver_$currentDriver"))
+                }
+            }
+        }
+    }
+
+    private fun sanitizeTopic(input: String): String {
+        return input.trim()
+            .lowercase()
+            .replace(Regex("[^a-z0-9-_.~%]"), "_")
+            .replace(Regex("_+"), "_")
+            .trim('_')
+    }
+
+    private fun cleanTeamName(team: String): String {
+        val lower = team.lowercase()
+        return when {
+            lower.contains("mclaren") -> "McLaren"
+            lower.contains("red bull") -> "Red Bull Racing"
+            lower.contains("mercedes") -> "Mercedes"
+            lower.contains("ferrari") -> "Ferrari"
+            lower.contains("aston martin") -> "Aston Martin"
+            lower.contains("alpine") -> "Alpine"
+            lower.contains("williams") -> "Williams"
+            lower.contains("haas") -> "Haas"
+            lower.contains("sauber") || lower.contains("kick") || lower.contains("stake") -> "Kick Sauber"
+            lower.contains("rb") || lower.contains("racing bulls") -> "RB"
+            else -> team
+        }
+    }
+
+    private fun cleanDriverName(driver: String): String {
+        // Removes any numbers at the end (e.g. "Charles Leclerc 16" -> "Charles Leclerc")
+        return driver.replace(Regex("\\s+#?\\d+$"), "").trim()
+    }
+
 }

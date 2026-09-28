@@ -1,6 +1,8 @@
 package com.jenil.f1comp.ui.auth.screen
 
+import android.app.Activity
 import android.content.Context
+import android.content.ContextWrapper
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
@@ -17,6 +19,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.statusBarsPadding
 import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.layout.widthIn
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -55,6 +58,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.credentials.CredentialManager
 import androidx.credentials.GetCredentialRequest
+import androidx.credentials.exceptions.GetCredentialCancellationException
 import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import androidx.navigation.NavController
 import com.google.android.libraries.identity.googleid.GetGoogleIdOption
@@ -90,29 +94,54 @@ fun LoginScreen(
     val appName = ProfileUtils.multipleColorText
 
     fun launchGoogleSignIn(context: Context, onTokenReceived: (String) -> Unit) {
+        val activity = context.findActivity()
+        if (activity == null) {
+            coroutineScope.launch {
+                snackbarHostState.showSnackbar(
+                    message = "Google Sign-In failed: Host activity not found.",
+                    duration = SnackbarDuration.Short
+                )
+            }
+            return
+        }
+
         coroutineScope.launch {
             try {
-                val credentialManager = CredentialManager.create(context)
+                val webClientId = try {
+                    context.getString(R.string.default_web_client_id)
+                } catch (_: Exception) {
+                    ""
+                }
+
+                if (webClientId.isBlank()) {
+                    snackbarHostState.showSnackbar(
+                        message = "Google Sign-In configuration error: Web Client ID missing.",
+                        duration = SnackbarDuration.Short
+                    )
+                    return@launch
+                }
+
+                val credentialManager = CredentialManager.create(activity)
                 val googleOption = GetGoogleIdOption.Builder()
                     .setFilterByAuthorizedAccounts(false)
-                    .setServerClientId(context.getString(R.string.default_web_client_id))
-                    .setAutoSelectEnabled(true)
+                    .setServerClientId(webClientId)
+                    .setAutoSelectEnabled(false)
                     .build()
 
                 val request = GetCredentialRequest.Builder()
                     .addCredentialOption(googleOption)
                     .build()
 
-                val result = credentialManager.getCredential(context = context, request = request)
+                val result = credentialManager.getCredential(context = activity, request = request)
                 val googleIdTokenCredential = GoogleIdTokenCredential.createFrom(result.credential.data)
                 onTokenReceived(googleIdTokenCredential.idToken)
+            } catch (_: GetCredentialCancellationException) {
+                // User intentionally cancelled Google Sign-In flow; ignore gracefully.
             } catch (e: Exception) {
-                coroutineScope.launch {
-                    snackbarHostState.showSnackbar(
-                        message = "Google Sign-In failed: ${e.localizedMessage}",
-                        duration = SnackbarDuration.Short
-                    )
-                }
+                snackbarHostState.showSnackbar(
+                    message = "Google Sign-In failed: ${e.localizedMessage ?: "Unknown error"}",
+                    duration = SnackbarDuration.Short
+                )
             }
         }
     }
@@ -150,7 +179,10 @@ fun LoginScreen(
         }
     }
 
-    Box(modifier = modifier.fillMaxSize()) {
+    Box(
+        modifier = modifier.fillMaxSize(),
+        contentAlignment = Alignment.TopCenter
+    ) {
         Image(
             painter = painterResource(id = R.drawable.login_img),
             contentDescription = "Login Image",
@@ -161,8 +193,10 @@ fun LoginScreen(
         Column(
             modifier = Modifier
                 .fillMaxSize()
+                .widthIn(max = 600.dp)
                 .statusBarsPadding()
-                .verticalScroll(rememberScrollState())
+                .verticalScroll(rememberScrollState()),
+            horizontalAlignment = Alignment.CenterHorizontally
         ) {
             if (selectedTab == "Sign-In") {
                 Row(
@@ -332,13 +366,18 @@ fun LoginScreen(
                     authUiState = authUiState,
                     navController = navController,
                     onSignInClick = { selectedTab = "Sign-In" },
-                    onGoogleClick = {
+                    onGoogleClick = { callsign, team, driver ->
                         launchGoogleSignIn(context) { idToken ->
-                            viewModel.signInWithGoogle(idToken)
+                            viewModel.signInWithGoogle(
+                                idToken = idToken,
+                                displayName = callsign,
+                                favoriteTeam = team,
+                                favoriteDriver = driver
+                            )
                         }
                     },
-                    onRegisterClick = { email, password, callsign ->
-                        viewModel.registerWithEmailAndPassword(email, password, callsign)
+                    onRegisterClick = { email, password, callsign, team, driver ->
+                        viewModel.registerWithEmailAndPassword(email, password, callsign, team, driver)
                     }
                 )
             }
@@ -464,6 +503,12 @@ fun LoginScreen(
     }
 }
 
+
+private tailrec fun Context.findActivity(): Activity? = when (this) {
+    is Activity -> this
+    is ContextWrapper -> baseContext.findActivity()
+    else -> null
+}
 
 @Preview(showBackground = true, showSystemUi = true)
 @Composable

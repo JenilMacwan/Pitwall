@@ -45,6 +45,7 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -103,10 +104,10 @@ fun LanguageSettingsScreen(
     modifier: Modifier = Modifier
 ) {
     val context = LocalContext.current
-    var currentLanguageCode by remember { mutableStateOf(getAppLanguage(context)) }
-    var selectedLanguageCode by remember { mutableStateOf(currentLanguageCode) }
-    var searchQuery by remember { mutableStateOf("") }
-    var isSwitchingLanguage by remember { mutableStateOf(false) }
+    var currentLanguageCode by rememberSaveable { mutableStateOf(getAppLanguage(context)) }
+    var selectedLanguageCode by rememberSaveable { mutableStateOf(currentLanguageCode) }
+    var searchQuery by rememberSaveable { mutableStateOf("") }
+    var isSwitchingLanguage by rememberSaveable { mutableStateOf(false) }
 
     val scope = rememberCoroutineScope()
 

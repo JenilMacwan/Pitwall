@@ -13,6 +13,7 @@ import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
@@ -46,6 +47,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -53,7 +55,9 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.text.LinkAnnotation
 import androidx.compose.ui.text.SpanStyle
+import androidx.compose.ui.text.TextLinkStyles
 import androidx.compose.ui.text.buildAnnotatedString
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.ImeAction
@@ -61,6 +65,8 @@ import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.ui.text.style.TextDecoration
+import androidx.compose.ui.text.style.TextOverflow
+import androidx.compose.ui.text.withLink
 import androidx.compose.ui.text.withStyle
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
@@ -84,27 +90,27 @@ fun RegisterCard(
     authUiState: AuthUiState = AuthUiState.Idle,
     navController: NavController? = null,
     onSignInClick: () -> Unit = {},
-    onGoogleClick: () -> Unit = {},
-    onRegisterClick: (email: String, pass: String, callsign: String) -> Unit = { _, _, _ -> },
+    onGoogleClick: (callsign: String, team: String?, driver: String?) -> Unit = { _, _, _ -> },
+    onRegisterClick: (email: String, pass: String, callsign: String, team: String?, driver: String?) -> Unit = { _, _, _, _, _ -> },
     driverProfiles: List<DriverProfileEntity> = emptyList(),
     constructorProfiles: List<ConstructorProfileEntity> = emptyList()
 ) {
-    var callsignState by remember { mutableStateOf("") }
-    var emailState by remember { mutableStateOf("") }
-    var passwordState by remember { mutableStateOf("") }
-    var passwordVisibility by remember { mutableStateOf(false) }
+    var callsignState by rememberSaveable { mutableStateOf("") }
+    var emailState by rememberSaveable { mutableStateOf("") }
+    var passwordState by rememberSaveable { mutableStateOf("") }
+    var passwordVisibility by rememberSaveable { mutableStateOf(false) }
 
     val isEmailError = authUiState is AuthUiState.Error && (authUiState.targetField == AuthErrorField.EMAIL || authUiState.targetField == AuthErrorField.GENERAL)
     val isPasswordError = authUiState is AuthUiState.Error && (authUiState.targetField == AuthErrorField.PASSWORD || authUiState.targetField == AuthErrorField.GENERAL)
 
-    var selectedTeam by remember { mutableStateOf<String?>(null) }
-    var teamExpanded by remember { mutableStateOf(false) }
+    var selectedTeam by rememberSaveable { mutableStateOf<String?>(null) }
+    var teamExpanded by rememberSaveable { mutableStateOf(false) }
 
-    var selectedDriver by remember { mutableStateOf<String?>(null) }
-    var driverExpanded by remember { mutableStateOf(false) }
+    var selectedDriver by rememberSaveable { mutableStateOf<String?>(null) }
+    var driverExpanded by rememberSaveable { mutableStateOf(false) }
 
-    var alertsChecked by remember { mutableStateOf(true) }
-    var termsChecked by remember { mutableStateOf(true) }
+    var alertsChecked by rememberSaveable { mutableStateOf(true) }
+    var termsChecked by rememberSaveable { mutableStateOf(true) }
 
     val teams = remember(constructorProfiles) {
         if (constructorProfiles.isNotEmpty()) {
@@ -320,21 +326,55 @@ fun RegisterCard(
                         expanded = teamExpanded,
                         onDismissRequest = { teamExpanded = false },
                         modifier = Modifier
-                            .widthIn(max = 488.dp)
-                            .background(Color(0xFF1A1A22))
+                            .widthIn(min = 240.dp, max = 340.dp)
+                            .heightIn(max = 420.dp),
+                        shape = RoundedCornerShape(16.dp),
+                        containerColor = Color(0xFF1A1A22),
+                        tonalElevation = 4.dp,
+                        shadowElevation = 8.dp,
                     ) {
+                        DropdownMenuItem(
+                            enabled = false,
+                            text = {
+                                Text(
+                                    "Choose constructor",
+                                    style = MaterialTheme.typography.labelLarge,
+                                    color = MaterialTheme.colorScheme.onSurfaceVariant,
+                                )
+                            },
+                            onClick = {},
+                        )
+
                         teams.forEach { team ->
-                            val logoUrl = TeamUtils.getTeamLogoUrl(team, constructorProfiles)
+                            val logoUrl =
+                                TeamUtils.getTeamLogoUrl(team, constructorProfiles)
+                            val selected = team == selectedTeam
+
                             DropdownMenuItem(
                                 leadingIcon = {
                                     TeamLogoCircle(
                                         logoUrl = logoUrl,
                                         teamName = team,
-                                        size = 24.dp,
-                                        containerColor = Color.White
+                                        size = 32.dp,
+                                        containerColor = Color.White,
                                     )
                                 },
-                                text = { Text(team, color = Color.White) },
+                                text = {
+                                    Text(
+                                        text = team,
+                                        maxLines = 1,
+                                        overflow = TextOverflow.Ellipsis,
+                                    )
+                                },
+                                trailingIcon = {
+                                    if (selected) {
+                                        Icon(
+                                            imageVector = Icons.Default.Check,
+                                            contentDescription = "Selected",
+                                            tint = MaterialTheme.colorScheme.primary,
+                                        )
+                                    }
+                                },
                                 onClick = {
                                     selectedTeam = team
                                     teamExpanded = false
@@ -401,21 +441,54 @@ fun RegisterCard(
                         expanded = driverExpanded,
                         onDismissRequest = { driverExpanded = false },
                         modifier = Modifier
-                            .widthIn(max = 488.dp)
-                            .background(Color(0xFF1A1A22))
+                            .widthIn(min = 240.dp, max = 340.dp)
+                            .heightIn(max = 420.dp),
+                        shape = RoundedCornerShape(16.dp),
+                        containerColor = Color(0xFF1A1A22),
+                        tonalElevation = 4.dp,
+                        shadowElevation = 8.dp,
                     ) {
+                        DropdownMenuItem(
+                            enabled = false,
+                            text = {
+                                Text(
+                                    "Choose driver",
+                                    style = MaterialTheme.typography.labelLarge,
+                                    color = MaterialTheme.colorScheme.onSurfaceVariant,
+                                )
+                            },
+                            onClick = {},
+                        )
                         drivers.forEach { driver ->
-                            val driverImg = TeamUtils.getDriverImageUrl(driver, driverProfiles)
+                            val driverImg =
+                                TeamUtils.getDriverImageUrl(driver, driverProfiles)
+                            val selected = driver == selectedDriver
                             DropdownMenuItem(
                                 leadingIcon = {
                                     DriverProfileCircle(
                                         imageUrl = driverImg,
                                         driverName = driver,
                                         size = 24.dp,
+                                        driverProfiles = driverProfiles,
                                         containerColor = Color.White
                                     )
                                 },
-                                text = { Text(driver, color = Color.White) },
+                                text = {
+                                    Text(
+                                        text = driver,
+                                        maxLines = 1,
+                                        overflow = TextOverflow.Ellipsis,
+                                    )
+                                },
+                                trailingIcon = {
+                                    if (selected) {
+                                        Icon(
+                                            imageVector = Icons.Default.Check,
+                                            contentDescription = "Selected",
+                                            tint = MaterialTheme.colorScheme.primary,
+                                        )
+                                    }
+                                },
                                 onClick = {
                                     selectedDriver = driver
                                     driverExpanded = false
@@ -616,7 +689,21 @@ fun RegisterCard(
                     Spacer(modifier = Modifier.width(10.dp))
                     val termsText = buildAnnotatedString {
                         append("I accept the ")
-                        withStyle(SpanStyle(fontWeight = FontWeight.Bold, textDecoration = TextDecoration.Underline, color = Color.White)) {
+                        withLink(
+                            LinkAnnotation.Clickable(
+                                tag = "TERMS",
+                                styles = TextLinkStyles(
+                                    style = SpanStyle(
+                                        fontWeight = FontWeight.Bold,
+                                        textDecoration = TextDecoration.Underline,
+                                        color = Color.White
+                                    )
+                                ),
+                                linkInteractionListener = {
+                                    navController?.navigate("terms_and_conditions")
+                                }
+                            )
+                        ) {
                             append("PitWall Terms")
                         }
                         append(" & Data Regulations.")
@@ -657,7 +744,9 @@ fun RegisterCard(
                             onRegisterClick(
                                 emailState,
                                 passwordState,
-                                callsignState
+                                callsignState,
+                                selectedTeam,
+                                selectedDriver
                             )
                         },
                         enabled = !isLoading && emailState.isNotBlank() && passwordStrength.isStrong && termsChecked,
@@ -716,7 +805,7 @@ fun RegisterCard(
                 val isLoadingG = authUiState is AuthUiState.Loading
                 OutlinedButton(
                     onClick = {
-                        onGoogleClick()
+                        onGoogleClick(callsignState, selectedTeam, selectedDriver)
                     },
                     enabled = !isLoadingG,
                     modifier = Modifier

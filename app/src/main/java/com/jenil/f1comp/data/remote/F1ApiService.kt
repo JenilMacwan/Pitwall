@@ -5,6 +5,7 @@ import com.jenil.f1comp.data.model.ConstructorProfileResponse
 import com.jenil.f1comp.data.model.ConstructorStandingsResponse
 import com.jenil.f1comp.data.model.DriverProfileResponse
 import com.jenil.f1comp.data.model.DriverStandingsResponse
+import com.jenil.f1comp.data.model.LiveTelemetryResponse
 import com.jenil.f1comp.data.model.NewsResponse
 import com.jenil.f1comp.data.model.NextRace
 import com.jenil.f1comp.data.model.QualifyingResultResponse
@@ -44,6 +45,9 @@ interface F1ApiService {
 
     @GET("teammate_h2h")
     suspend fun getTeammateHead2Head(): TeammateHead2HeadResponse
+
+    @GET("live-timing")
+    suspend fun getLiveTiming(): LiveTelemetryResponse
 
     @GET("race_results/{race_id}/{year}")
     suspend fun getRaceResult(

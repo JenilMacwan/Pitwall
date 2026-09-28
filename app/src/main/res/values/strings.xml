@@ -17,6 +17,8 @@
     <string name="sub_title_theme">System Default</string>
     <string name="title_attribution">Data Attribution</string>
     <string name="title_privacy">Privacy Policy</string>
+    <string name="title_terms">Terms &amp; Conditions</string>
+    <string name="common_back">Back</string>
     <string name="title_licenses">Open Source Licenses</string>
     <string name="title_alerts">Alerts</string>
     <string name="sub_title_alerts">15 Min Before the Event Starts</string>
@@ -71,7 +73,7 @@
     <string name="schedule_date">Date</string>
 
     <!-- Standings Screen -->
-    <string name="standings_title">F1 STANDINGS</string>
+    <string name="standings_title">STANDINGS</string>
     <string name="standings_drivers">DRIVERS</string>
     <string name="standings_constructors">CONSTRUCTORS</string>
     <string name="standings_pos">POS</string>
@@ -134,13 +136,84 @@
     <string name="settings_session_reminders_sub">Alerts before FP1-3 and Qualifying</string>
     <string name="settings_breaking_news">Breaking News</string>
     <string name="settings_breaking_news_sub">Driver transfers, penalties, big stories</string>
+    <string name="settings_favorites">Favorite Teams &amp; Drivers</string>
+    <string name="settings_favorites_sub">Receive updates when your favorites score a podium, win, or change standings</string>
     <string name="settings_live_events">Live Race Events</string>
     <string name="settings_live_events_sub">Safety car, red flags, fastest lap — during races</string>
     <string name="settings_standings_updates">Standings Updates</string>
     <string name="settings_standings_updates_sub">When Drivers\' or Constructors\' standings change</string>
     <string name="settings_about">About</string>
+    <string name="settings_rate_app_sub">Enjoying PitWall? Leave a review</string>
+    <string name="settings_licenses_sub">Third-party libraries used in this app</string>
+    <string name="settings_privacy_sub">How your data is handled</string>
+    <string name="settings_terms_sub">Terms for using PitWall</string>
     <string name="settings_version">Version</string>
     <string name="settings_developer">Developer</string>
+
+    <!-- Privacy Policy -->
+    <string name="privacy_short_storage">Storage</string>
+    <string name="privacy_short_permissions">Permissions</string>
+    <string name="privacy_short_third_party">Third-Party</string>
+    <string name="privacy_short_apex">Apex AI</string>
+    <string name="privacy_short_analytics">Analytics</string>
+    <string name="privacy_short_rights">Your Rights</string>
+    <string name="privacy_section_storage_title">Data Storage &amp; Paddock Profiles</string>
+    <string name="privacy_section_storage_body">User choices — dark mode, favorite constructor theme, regional language, and cached F1 data — are stored locally on your device using Jetpack DataStore and Room SQLite database. If you choose to register or sign in with a Paddock Profile, your display name, profile photo URL, and favorite driver/team selections are securely processed via Firebase Authentication and stored in Firebase Cloud Firestore solely to synchronize your profile and personalized alerts.</string>
+    <string name="privacy_section_permissions_title">System Permissions Used</string>
+    <string name="privacy_section_permissions_body">• Calendar Access: Used strictly to sync Grand Prix race schedules to your device\'s system calendar upon your explicit request.\n\n• Notifications &amp; Exact Alarms: Used to trigger precise reminders before race sessions begin (FP1-3, Qualifying, Sprint, Race) via Android AlarmManager and deliver push alerts for breaking F1 news, standings updates, and live race weekend events.</string>
+    <string name="privacy_section_third_party_title">Third-Party Services &amp; APIs</string>
+    <string name="privacy_section_third_party_body">• Firebase &amp; Google Authentication: Handles secure credential management, password hashing, Google Sign-In, and cloud profile storage.\n\n• Firebase Cloud Messaging (FCM): Delivers optional push notifications for breaking F1 news and live alerts.\n\n• Public F1 APIs &amp; Streams: Fetches public Formula 1 session schedules, driver/constructor standings, race results, and live team radio audio transmissions.</string>
+    <string name="privacy_section_apex_title">Apex AI Strategy Assistant</string>
+    <string name="privacy_section_apex_body">PitWall features \'Apex\', an AI strategy specialist powered by Google Gemini. When you interact with Apex, your text prompts are transmitted securely via HTTPS to our backend API to generate strategy responses. Chat sessions are held temporarily in memory to maintain conversational context. We do not sell conversational data or use your private prompts to train AI models.</string>
+    <string name="privacy_section_analytics_title">Analytics &amp; App Stability</string>
+    <string name="privacy_section_analytics_body">To maintain high performance and resolve crashes, PitWall uses Firebase Analytics to aggregate anonymous operational metrics (e.g. device model, Android OS version, crash logs). This data contains no sensitive personal information and is used exclusively to fix bugs and improve performance.</string>
+    <string name="privacy_section_rights_title">Your Choices &amp; Control</string>
+    <string name="privacy_section_rights_body">You are always in control. You can use PitWall anonymously as a Paddock Guest without an account. You can sign out or clear synced calendar events at any time from Settings → Clear F1 Events. Notification categories can be toggled individually. Revoking permissions in Android settings simply disables the associated feature while the rest of PitWall keeps working normally.</string>
+    <string name="privacy_trust_no_account">Guest &amp; Account Mode</string>
+    <string name="privacy_trust_local_first">Local First &amp; Cloud Sync</string>
+    <string name="privacy_trust_no_data_selling">Zero Data Selling</string>
+    <string name="privacy_share_subject">PitWall — Privacy Policy</string>
+    <string name="privacy_share_text">Read PitWall\'s Privacy Policy: https://jenil.dev/pitwall-privacy</string>
+    <string name="privacy_share_chooser">Share Privacy Policy</string>
+    <string name="privacy_share_content_description">Share policy</string>
+    <string name="privacy_document_label">PITWALL LEGAL DOCUMENT</string>
+    <string name="privacy_document_revision">Doc. PW-PRIV · Rev. 1.2</string>
+    <string name="privacy_document_date">2026</string>
+    <string name="privacy_overview">Overview</string>
+    <string name="privacy_overview_body">PitWall is built with privacy and user control at its core. You can use the app fully as a Paddock Guest without creating an account. If you choose to sign in, your profile preferences are securely managed via Firebase and Google Authentication.</string>
+    <string name="privacy_table_of_contents">IN THIS DOCUMENT</string>
+    <string name="privacy_toc_item">%1$d. %2$s</string>
+    <string name="privacy_section_label">SECTION %1$02d</string>
+    <string name="privacy_footer_title">Legal Disclosures &amp; Inquiries</string>
+    <string name="privacy_footer_body">This policy may be updated as PitWall evolves. Material changes will be reflected here with a new revision date. For the complete web disclosure or a privacy inquiry, use the options below.</string>
+    <string name="privacy_web_url">https://jenil.dev/pitwall-privacy</string>
+    <string name="privacy_read_full_web_policy">Read Full Web Policy</string>
+    <string name="privacy_contact_email_uri">mailto:support.pitwall@gmail.com?subject=PitWall%20Privacy%20Inquiry</string>
+    <string name="privacy_contact_data_protection">Contact Data Protection</string>
+    <string name="privacy_footer_revision">PitWall · Doc. PW-PRIV · Rev. 1.2 · 2026</string>
+
+    <!-- Terms & Conditions -->
+    <string name="terms_document_label">PITWALL · LEGAL</string>
+    <string name="terms_effective_date">Effective September 25, 2026 · Please read before using PitWall.</string>
+    <string name="terms_intro">By accessing or using PitWall, you agree to these terms. If you do not agree, stop using the app. These terms apply alongside the Privacy Policy and any applicable third-party service terms.</string>
+    <string name="terms_section_1_title">1. About PitWall</string>
+    <string name="terms_section_1_body">PitWall is an independent motorsport companion app for informational and entertainment purposes. It is not an official Formula 1, FIA, team, driver, or race timing service and is not affiliated with or endorsed by them. Names, marks, images, and other third-party materials remain the property of their respective owners.</string>
+    <string name="terms_section_2_title">2. Acceptable use</string>
+    <string name="terms_section_2_body">Use the app lawfully and in a way that does not disrupt the app, its services, or other users. Do not attempt to gain unauthorized access, interfere with service operation, misuse account features, or use the app to distribute unlawful or harmful content.</string>
+    <string name="terms_section_3_title">3. Information and availability</string>
+    <string name="terms_section_3_body">Schedules, standings, results, news, radio links, and other motorsport information may come from third-party sources. We aim to present useful information, but it may be delayed, incomplete, or inaccurate and can change without notice. Do not rely on PitWall for official results, time-critical decisions, or safety-related information. Features and availability may change, and services may be interrupted for maintenance or circumstances outside our control.</string>
+    <string name="terms_section_4_title">4. Apex AI</string>
+    <string name="terms_section_4_body">Apex uses generative AI. Its responses can be incorrect, incomplete, or out of date and are provided for general information only. Verify important claims with reliable sources. Do not treat AI responses as professional advice or as official team, FIA, or race-control guidance.</string>
+    <string name="terms_section_5_title">5. Accounts and device features</string>
+    <string name="terms_section_5_body">Some features may use sign-in and third-party services. You are responsible for keeping your sign-in credentials secure and for activity on your account. Optional features such as notifications and calendar sync depend on device permissions and settings; you can manage those permissions in Android settings.</string>
+    <string name="terms_section_6_title">6. Third-party services and content</string>
+    <string name="terms_section_6_body">PitWall may link to or rely on services, APIs, media, and websites operated by others. Those services are provided by their respective operators and may have separate terms and privacy practices. PitWall does not control their availability or content.</string>
+    <string name="terms_section_7_title">7. Intellectual property</string>
+    <string name="terms_section_7_body">The PitWall app and its original content are protected by applicable intellectual property laws. You may use the app for personal, non-commercial purposes. Do not copy, modify, redistribute, or commercially exploit app content except where applicable law or a separate license permits it. Third-party content remains subject to its owners’ rights and terms.</string>
+    <string name="terms_section_8_title">8. Disclaimers and liability</string>
+    <string name="terms_section_8_body">To the extent permitted by applicable law, the app and its information are provided as available, without guarantees of uninterrupted service, accuracy, or fitness for a particular purpose. To the extent permitted by law, PitWall and its developer are not liable for indirect or consequential loss arising from use of, or inability to use, the app. Nothing in these terms limits rights or liability that cannot lawfully be limited.</string>
+    <string name="terms_section_9_title">9. Changes and contact</string>
+    <string name="terms_section_9_body">These terms may be updated as the app changes. The current version is shown in the app; continued use after an update means you accept the revised terms to the extent permitted by law. For questions, contact support.pitwall@gmail.com.</string>
     <string name="settings_rate_app">Rate the App</string>
 
     <!-- Language Settings Screen -->
@@ -207,4 +280,9 @@
     <string name="nationality_american">American</string>
     <string name="nationality_danish">Danish</string>
     <string name="nationality_kiwi">New Zealander</string>
+
+    <!-- Auth Validation Alert -->
+    <string name="auth_required_title">Account Required</string>
+    <string name="auth_required_favorites_msg">To receive notifications for your favorite teams and drivers, please sign in or create an account first.</string>
+    <string name="auth_sign_in_register">Sign In / Register</string>
 </resources>

@@ -108,6 +108,18 @@ class SettingsViewModel @Inject constructor(
         initialValue = null
     )
 
+    val telemetryHeaderStyle: StateFlow<String?> = repository.telemetryHeaderStyle.stateIn(
+        scope = viewModelScope,
+        started = SharingStarted.WhileSubscribed(5000),
+        initialValue = "DEFAULT"
+    )
+
+    val isTelemetrySyncDelayed: StateFlow<Boolean?> = repository.isTelemetrySyncDelayed.stateIn(
+        scope = viewModelScope,
+        started = SharingStarted.WhileSubscribed(5000),
+        initialValue = false
+    )
+
     fun toggleDarkMode(isDarkMode: Boolean) {
         viewModelScope.launch {
             repository.setDarkMode(isDarkMode)
@@ -163,6 +175,18 @@ class SettingsViewModel @Inject constructor(
     fun setSelectedThemeId(id: String) {
         viewModelScope.launch {
             repository.setSelectedThemeId(id)
+        }
+    }
+
+    fun setTelemetryHeaderStyle(style: String) {
+        viewModelScope.launch {
+            repository.setTelemetryHeaderStyle(style)
+        }
+    }
+
+    fun setTelemetrySyncDelayed(isDelayed: Boolean) {
+        viewModelScope.launch {
+            repository.setTelemetrySyncDelayed(isDelayed)
         }
     }
 

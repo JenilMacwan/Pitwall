@@ -54,6 +54,7 @@ import com.jenil.f1comp.ui.settings.screen.LanguageSettingsScreen
 import com.jenil.f1comp.ui.settings.screen.LicensesScreen
 import com.jenil.f1comp.ui.settings.screen.PrivacyPolicyScreen
 import com.jenil.f1comp.ui.settings.screen.SettingsScreen
+import com.jenil.f1comp.ui.settings.screen.TelemetrySettingsScreen
 import com.jenil.f1comp.ui.settings.screen.TermsAndConditionsScreen
 import com.jenil.f1comp.ui.settings.screen.ThemeSettingsScreen
 import com.jenil.f1comp.ui.standings.screen.StandingsScreen
@@ -113,6 +114,7 @@ fun AppNavigation(
 
     ModalNavigationDrawer(
         drawerState = drawerState,
+        gesturesEnabled = showBottomBar,
         drawerContent = {
             PitwallDrawer(
                 currentRoute = currentRoute,
@@ -301,6 +303,11 @@ fun AppNavigation(
                     composable(route = "telemetry") {
                         TelemetryScreen(
                             title = "Live Telemetry",
+                            navController = navController
+                        )
+                    }
+                    composable(route = "telemetry_settings") {
+                        TelemetrySettingsScreen(
                             navController = navController
                         )
                     }

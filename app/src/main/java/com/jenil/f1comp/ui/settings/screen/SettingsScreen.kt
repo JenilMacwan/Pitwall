@@ -23,12 +23,14 @@ import androidx.compose.material.icons.automirrored.rounded.ArrowBack
 import androidx.compose.material.icons.outlined.CalendarMonth
 import androidx.compose.material.icons.outlined.Code
 import androidx.compose.material.icons.outlined.DarkMode
+import androidx.compose.material.icons.outlined.Dashboard
 import androidx.compose.material.icons.outlined.DeleteOutline
 import androidx.compose.material.icons.outlined.Description
 import androidx.compose.material.icons.outlined.EmojiEvents
 import androidx.compose.material.icons.outlined.FavoriteBorder
 import androidx.compose.material.icons.outlined.Info
 import androidx.compose.material.icons.outlined.NewReleases
+import androidx.compose.material.icons.outlined.Palette
 import androidx.compose.material.icons.outlined.Policy
 import androidx.compose.material.icons.outlined.RadioButtonChecked
 import androidx.compose.material.icons.outlined.StarRate
@@ -78,7 +80,6 @@ import com.jenil.f1comp.viewmodel.AuthViewModel
 import com.jenil.f1comp.viewmodel.ScheduleViewModel
 import com.jenil.f1comp.viewmodel.SettingsViewModel
 import kotlinx.coroutines.launch
-
 
 @Composable
 fun SettingsScreen(
@@ -154,7 +155,6 @@ fun SettingsScreen(
             action()
         }
     }
-
 
     val runWithPermission = { action: () -> Unit ->
         val hasReadPerm = ContextCompat.checkSelfPermission(
@@ -308,7 +308,7 @@ fun SettingsScreen(
                         .verticalScroll(scrollState)
                         .padding(horizontal = 16.dp)
                 ) {
-                    // Appearance
+                    // Appearance & Theme
                     SettingsSection(title = stringResource(R.string.settings_appearance)) {
                         SettingsSwitchItem(
                             icon = Icons.Outlined.DarkMode,
@@ -319,6 +319,24 @@ fun SettingsScreen(
                                 haptic.performHapticFeedback(HapticFeedbackType.TextHandleMove)
                                 settingsViewModel.toggleDarkMode(newValue)
                             }
+                        )
+                        SettingsItem(
+                            icon = Icons.Outlined.Palette,
+                            title = "Appearance & Theme",
+                            subtitle = "Color swatches, constructor team liveries & dark mode",
+                            onClick = { navController.navigate("theme_settings") }
+                        )
+                    }
+
+                    Spacer(modifier = Modifier.height(24.dp))
+
+                    // Telemetry Settings
+                    SettingsSection(title = "Telemetry") {
+                        SettingsItem(
+                            icon = Icons.Outlined.Dashboard,
+                            title = "Telemetry Settings",
+                            subtitle = "Header layout style (Default vs. Compact)",
+                            onClick = { navController.navigate("telemetry_settings") }
                         )
                     }
 

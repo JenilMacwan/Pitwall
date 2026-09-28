@@ -1005,8 +1005,8 @@ fun UserProfileScreen(
                 ProfileMenuItem(
                     icon = Icons.Outlined.Security,
                     title = stringResource(R.string.title_telemetry),
-                    subtitle = "Paddock security passkeys & telemetry options",
-                    onClick = { navController.navigate("telemetry") }
+                    subtitle = "Paddock telemetry options",
+                    onClick = { navController.navigate("telemetry_settings") }
                 )
 
                 Spacer(modifier = Modifier.height(20.dp))

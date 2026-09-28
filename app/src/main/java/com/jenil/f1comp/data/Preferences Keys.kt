@@ -15,4 +15,6 @@ object PreferencesKeys {
     val FAVORITE_DRIVER = stringPreferencesKey("favorite_driver")
     val IS_FIRST_LAUNCH = booleanPreferencesKey("is_first_launch")
     val SELECTED_THEME_ID = stringPreferencesKey("selected_theme_id")
+    val TELEMETRY_HEADER_STYLE = stringPreferencesKey("telemetry_header_style")
+    val IS_TELEMETRY_SYNC_DELAYED = booleanPreferencesKey("is_telemetry_sync_delayed")
 }

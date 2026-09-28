@@ -41,7 +41,6 @@ class DataStoreRepository @Inject constructor(
         preferences[PreferencesKeys.FAVORITES_UPDATES]
     }
 
-
     val favoriteTeam: Flow<String?> = dataStore.data.map { preferences ->
         preferences[PreferencesKeys.FAVORITE_TEAM]
     }
@@ -52,6 +51,18 @@ class DataStoreRepository @Inject constructor(
 
     val isFirstLaunch: Flow<Boolean?> = dataStore.data.map { preferences ->
         preferences[PreferencesKeys.IS_FIRST_LAUNCH] ?: true
+    }
+
+    val selectedThemeId: Flow<String?> = dataStore.data.map { preferences ->
+        preferences[PreferencesKeys.SELECTED_THEME_ID]
+    }
+
+    val telemetryHeaderStyle: Flow<String?> = dataStore.data.map { preferences ->
+        preferences[PreferencesKeys.TELEMETRY_HEADER_STYLE]
+    }
+
+    val isTelemetrySyncDelayed: Flow<Boolean?> = dataStore.data.map { preferences ->
+        preferences[PreferencesKeys.IS_TELEMETRY_SYNC_DELAYED]
     }
 
     suspend fun setDarkMode(isDarkMode: Boolean) {
@@ -78,7 +89,6 @@ class DataStoreRepository @Inject constructor(
         }
     }
 
-
     suspend fun setRaceRemindersEnabled(isEnabled: Boolean) {
         dataStore.edit { preferences ->
             preferences[PreferencesKeys.RACE_REMINDERS] = isEnabled
@@ -102,6 +112,7 @@ class DataStoreRepository @Inject constructor(
             preferences[PreferencesKeys.FAVORITES_UPDATES] = isEnabled
         }
     }
+
     suspend fun setLiveRaceEventsEnabled(isEnabled: Boolean) {
         dataStore.edit { preferences ->
             preferences[PreferencesKeys.LIVE_RACE_EVENTS] = isEnabled
@@ -114,14 +125,21 @@ class DataStoreRepository @Inject constructor(
         }
     }
 
-    val selectedThemeId: Flow<String?> = dataStore.data.map { preferences ->
-        preferences[PreferencesKeys.SELECTED_THEME_ID]
-    }
-
     suspend fun setSelectedThemeId(id: String) {
         dataStore.edit { preferences ->
             preferences[PreferencesKeys.SELECTED_THEME_ID] = id
         }
     }
 
+    suspend fun setTelemetryHeaderStyle(style: String) {
+        dataStore.edit { preferences ->
+            preferences[PreferencesKeys.TELEMETRY_HEADER_STYLE] = style
+        }
+    }
+
+    suspend fun setTelemetrySyncDelayed(isDelayed: Boolean) {
+        dataStore.edit { preferences ->
+            preferences[PreferencesKeys.IS_TELEMETRY_SYNC_DELAYED] = isDelayed
+        }
+    }
 }

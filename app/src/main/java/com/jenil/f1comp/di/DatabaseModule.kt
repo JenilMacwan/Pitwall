@@ -1,7 +1,6 @@
 package com.jenil.f1comp.di
 
 import android.content.Context
-import androidx.room.Room
 import com.jenil.f1comp.data.local.AppDatabase
 import dagger.Module
 import dagger.Provides
@@ -17,12 +16,7 @@ object DatabaseModule {
     @Provides
     @Singleton
     fun provideAppDatabase(@ApplicationContext context: Context): AppDatabase {
-        return Room.databaseBuilder(
-                context,
-                AppDatabase::class.java,
-                "f1_comp_db"
-            ).fallbackToDestructiveMigration(true)
-            .build()
+        return AppDatabase.getInstance(context)
     }
 
     @Provides

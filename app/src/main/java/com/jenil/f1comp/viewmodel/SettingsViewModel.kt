@@ -120,6 +120,10 @@ class SettingsViewModel @Inject constructor(
         initialValue = false
     )
 
+    val telemetryTowerShowGaps: StateFlow<Boolean> = repository.telemetryTowerShowGaps.stateIn(viewModelScope, SharingStarted.WhileSubscribed(5000), true)
+    val telemetryTowerShowSectors: StateFlow<Boolean> = repository.telemetryTowerShowSectors.stateIn(viewModelScope, SharingStarted.WhileSubscribed(5000), true)
+    val telemetryTowerShowTyres: StateFlow<Boolean> = repository.telemetryTowerShowTyres.stateIn(viewModelScope, SharingStarted.WhileSubscribed(5000), true)
+
     fun toggleDarkMode(isDarkMode: Boolean) {
         viewModelScope.launch {
             repository.setDarkMode(isDarkMode)
@@ -189,6 +193,10 @@ class SettingsViewModel @Inject constructor(
             repository.setTelemetrySyncDelayed(isDelayed)
         }
     }
+
+    fun setTelemetryTowerShowGaps(show: Boolean) { viewModelScope.launch { repository.setTelemetryTowerShowGaps(show) } }
+    fun setTelemetryTowerShowSectors(show: Boolean) { viewModelScope.launch { repository.setTelemetryTowerShowSectors(show) } }
+    fun setTelemetryTowerShowTyres(show: Boolean) { viewModelScope.launch { repository.setTelemetryTowerShowTyres(show) } }
 
     fun setRaceRemindersEnabled(isEnabled: Boolean) {
         viewModelScope.launch {

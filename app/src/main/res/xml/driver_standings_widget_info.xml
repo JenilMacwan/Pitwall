@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<appwidget-provider xmlns:android="http://schemas.android.com/apk/res/android"
+    android:initialLayout="@layout/widget_driver_standings_loading"
+    android:targetCellWidth="4"
+    android:targetCellHeight="2"
+    android:maxResizeWidth="500dp"
+    android:maxResizeHeight="400dp"
+    android:minWidth="250dp"
+    android:minHeight="110dp"
+    android:minResizeWidth="220dp"
+    android:minResizeHeight="110dp"
+    android:resizeMode="horizontal|vertical"
+    android:updatePeriodMillis="0"
+    android:previewLayout="@layout/widget_driver_standings_preview"
+    android:description="@string/widget_driver_standings_description"
+    android:widgetCategory="home_screen" />

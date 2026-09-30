@@ -288,8 +288,8 @@
 
     <!-- Telemetry Settings -->
     <string name="title_telemetry_settings">Telemetry Settings</string>
-    <string name="telemetry_settings_header_style_label">HEADER LAYOUT STYLE</string>
-    <string name="telemetry_settings_header_style_desc">Select your preferred header style for live session telemetry data.</string>
+    <string name="telemetry_settings_header_style_label">HEADER LAYOUT</string>
+    <string name="telemetry_settings_header_style_desc">Choose how session status, weather, lap, and time information appears at the top of the live telemetry screen.</string>
     <string name="telemetry_settings_default_header_title">Default Header</string>
     <string name="telemetry_settings_default_header_subtitle">Full telemetry dashboard showing session info, track status, weather metrics (air, track, humidity, wind), lap counter, and remaining time.</string>
     <string name="telemetry_settings_compact_header_title">Compact Header</string>
@@ -297,4 +297,36 @@
     <string name="telemetry_settings_stream_sync_label">STREAM SYNCHRONIZATION</string>
     <string name="telemetry_settings_sync_title">Broadcast Delay Sync</string>
     <string name="telemetry_settings_sync_subtitle">Delays live telemetry feed by ~3.2s to match live TV broadcast coverage.</string>
+    <string name="telemetry_settings_tower_label">TIMING TOWER DISPLAY</string>
+    <string name="telemetry_settings_tower_desc">Choose which details appear beside each driver. Position and driver name are always shown.</string>
+    <string name="telemetry_settings_tower_gaps_title">Gaps</string>
+    <string name="telemetry_settings_tower_gaps_desc">Show the gap to the leader and interval to the car ahead.</string>
+    <string name="telemetry_settings_tower_sectors_title">Sector times</string>
+    <string name="telemetry_settings_tower_sectors_desc">Show sector 1, 2, and 3 times with fastest-sector highlights.</string>
+    <string name="telemetry_settings_tower_tyres_title">Tyres and stint age</string>
+    <string name="telemetry_settings_tower_tyres_desc">Show the current tyre compound and laps completed on the stint.</string>
+
+    <!-- Widget -->
+    <string name="widget_next_race_description">Shows the upcoming Grand Prix, circuit layout, session countdown, and event status.</string>
+    <string name="widget_loading_title">PITWALL WIDGET</string>
+    <string name="widget_loading_subtitle">Loading Next Race...</string>
+    <string name="widget_round_format">FORMULA 1  /  ROUND %1$s</string>
+    <string name="widget_next_race_title">FORMULA 1  /  NEXT RACE</string>
+    <string name="widget_track_map_fallback">TRACK\nMAP</string>
+    <string name="widget_lights_out_in">LIGHTS OUT IN</string>
+    <string name="widget_session_starts_in">SESSION STARTS IN</string>
+    <string name="widget_live_session">LIVE SESSION</string>
+    <string name="widget_in_progress">IN PROGRESS</string>
+    <string name="widget_no_data_title">No Next Race Data</string>
+    <string name="widget_no_data_subtitle">Open F1Comp to update schedule</string>
+    <string name="widget_next_session_title">NEXT SESSION</string>
+    <string name="widget_live_prefix">LIVE · %1$s</string>
+    <string name="widget_driver_standings_description">Displays the current F1 World Driver Championship standings and points.</string>
+    <string name="widget_driver_standings_title">FORMULA 1  /  DRIVER STANDINGS</string>
+    <string name="widget_constructor_standings_description">Displays the current F1 World Constructor Championship standings and points.</string>
+    <string name="widget_constructor_standings_title">FORMULA 1  /  CONSTRUCTOR STANDINGS</string>
+    <string name="widget_pts_format">%1$s PTS</string>
+    <string name="widget_no_standings_title">No Standings Data</string>
+    <string name="widget_no_standings_subtitle">Open F1Comp to refresh standings</string>
+
 </resources>

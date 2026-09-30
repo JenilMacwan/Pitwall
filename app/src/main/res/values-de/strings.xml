@@ -294,4 +294,35 @@
     <string name="telemetry_settings_stream_sync_label">STREAM-SYNCHRONISIERUNG</string>
     <string name="telemetry_settings_sync_title">Übertragungsverzögerungs-Sync</string>
     <string name="telemetry_settings_sync_subtitle">Verzögert den Live-Telemetrie-Feed um ca. 3,2s zur Anpassung an die TV-Übertragung.</string>
+    <string name="telemetry_settings_tower_label">TIMING-TOWER-ANZEIGE</string>
+    <string name="telemetry_settings_tower_desc">Wählen Sie, welche Details neben jedem Fahrer angezeigt werden. Position und Fahrername werden immer angezeigt.</string>
+    <string name="telemetry_settings_tower_gaps_title">Abstände</string>
+    <string name="telemetry_settings_tower_gaps_desc">Zeigen Sie den Abstand zum Führenden und das Intervall zum vorausfahrenden Auto an.</string>
+    <string name="telemetry_settings_tower_sectors_title">Sektorenzeiten</string>
+    <string name="telemetry_settings_tower_sectors_desc">Zeigen Sie Sektor 1, 2 und 3 mit Hervorhebungen für die schnellsten Sektoren an.</string>
+    <string name="telemetry_settings_tower_tyres_title">Reifen und Stint-Alter</string>
+    <string name="telemetry_settings_tower_tyres_desc">Zeigen Sie die aktuelle Reifenmischung und die absolvierten Runden im Stint an.</string>
+
+    <!-- Widget -->
+    <string name="widget_next_race_description">Zeigt den nächsten Grand Prix, den Streckenverlauf, den Countdown und den Event-Status an.</string>
+    <string name="widget_loading_title">PITWALL WIDGET</string>
+    <string name="widget_loading_subtitle">Nächstes Rennen wird geladen...</string>
+    <string name="widget_round_format">FORMEL 1  /  RUNDE %1$s</string>
+    <string name="widget_next_race_title">FORMEL 1  /  NÄCHSTES RENNEN</string>
+    <string name="widget_track_map_fallback">STRECKEN\nKARTE</string>
+    <string name="widget_lights_out_in">START IN</string>
+    <string name="widget_session_starts_in">SESSION-START IN</string>
+    <string name="widget_live_session">LIVE-SESSION</string>
+    <string name="widget_in_progress">LÄUFT</string>
+    <string name="widget_no_data_title">Keine Renndaten verfügbar</string>
+    <string name="widget_no_data_subtitle">Öffnen Sie F1Comp, um den Zeitplan zu aktualisieren</string>
+    <string name="widget_next_session_title">NÄCHSTE SESSION</string>
+    <string name="widget_live_prefix">LIVE · %1$s</string>
+    <string name="widget_driver_standings_description">Zeigt den aktuellen Stand und die Punkte der F1-Fahrer-Weltmeisterschaft an.</string>
+    <string name="widget_driver_standings_title">FORMEL 1  /  FAHRERWERTUNG</string>
+    <string name="widget_constructor_standings_description">Zeigt den aktuellen Stand und die Punkte der F1-Konstrukteurs-Weltmeisterschaft an.</string>
+    <string name="widget_constructor_standings_title">FORMEL 1  /  TEAMWERTUNG</string>
+    <string name="widget_pts_format">%1$s PKT</string>
+    <string name="widget_no_standings_title">Keine Wertungsdaten</string>
+    <string name="widget_no_standings_subtitle">Öffnen Sie F1Comp, um die Wertung zu aktualisieren</string>
 </resources>

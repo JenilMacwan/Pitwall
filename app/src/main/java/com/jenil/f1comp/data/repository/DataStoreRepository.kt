@@ -65,6 +65,16 @@ class DataStoreRepository @Inject constructor(
         preferences[PreferencesKeys.IS_TELEMETRY_SYNC_DELAYED]
     }
 
+    val telemetryTowerShowGaps: Flow<Boolean> = dataStore.data.map { preferences ->
+        preferences[PreferencesKeys.TELEMETRY_TOWER_SHOW_GAPS] ?: true
+    }
+    val telemetryTowerShowSectors: Flow<Boolean> = dataStore.data.map { preferences ->
+        preferences[PreferencesKeys.TELEMETRY_TOWER_SHOW_SECTORS] ?: true
+    }
+    val telemetryTowerShowTyres: Flow<Boolean> = dataStore.data.map { preferences ->
+        preferences[PreferencesKeys.TELEMETRY_TOWER_SHOW_TYRES] ?: true
+    }
+
     suspend fun setDarkMode(isDarkMode: Boolean) {
         dataStore.edit { preferences ->
             preferences[PreferencesKeys.IS_DARK_MODE] = isDarkMode
@@ -141,5 +151,15 @@ class DataStoreRepository @Inject constructor(
         dataStore.edit { preferences ->
             preferences[PreferencesKeys.IS_TELEMETRY_SYNC_DELAYED] = isDelayed
         }
+    }
+
+    suspend fun setTelemetryTowerShowGaps(show: Boolean) {
+        dataStore.edit { it[PreferencesKeys.TELEMETRY_TOWER_SHOW_GAPS] = show }
+    }
+    suspend fun setTelemetryTowerShowSectors(show: Boolean) {
+        dataStore.edit { it[PreferencesKeys.TELEMETRY_TOWER_SHOW_SECTORS] = show }
+    }
+    suspend fun setTelemetryTowerShowTyres(show: Boolean) {
+        dataStore.edit { it[PreferencesKeys.TELEMETRY_TOWER_SHOW_TYRES] = show }
     }
 }

@@ -54,6 +54,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.LinkAnnotation
 import androidx.compose.ui.text.SpanStyle
@@ -78,9 +79,11 @@ import com.jenil.f1comp.data.local.entity.DriverProfileEntity
 import com.jenil.f1comp.ui.home.components.DriverProfileCircle
 import com.jenil.f1comp.ui.home.components.TeamLogoCircle
 import com.jenil.f1comp.ui.theme.F1Red
+import com.jenil.f1comp.util.LegalConstants
 import com.jenil.f1comp.util.ProfileUtils.defaultFallBackDrivers
 import com.jenil.f1comp.util.ProfileUtils.defaultFallBackTeams
 import com.jenil.f1comp.util.TeamUtils
+import com.jenil.f1comp.util.openCustomTabUrl
 import com.jenil.f1comp.viewmodel.AuthErrorField
 import com.jenil.f1comp.viewmodel.AuthUiState
 
@@ -95,6 +98,7 @@ fun RegisterCard(
     driverProfiles: List<DriverProfileEntity> = emptyList(),
     constructorProfiles: List<ConstructorProfileEntity> = emptyList()
 ) {
+    val context = LocalContext.current
     var callsignState by rememberSaveable { mutableStateOf("") }
     var emailState by rememberSaveable { mutableStateOf("") }
     var passwordState by rememberSaveable { mutableStateOf("") }
@@ -700,7 +704,7 @@ fun RegisterCard(
                                     )
                                 ),
                                 linkInteractionListener = {
-                                    navController?.navigate("terms_and_conditions")
+                                    openCustomTabUrl(context, LegalConstants.TERMS_CONDITIONS_URL)
                                 }
                             )
                         ) {

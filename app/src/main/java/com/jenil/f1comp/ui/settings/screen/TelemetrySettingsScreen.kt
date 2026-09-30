@@ -17,6 +17,7 @@ import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.rounded.ArrowBack
 import androidx.compose.material.icons.outlined.Dashboard
+import androidx.compose.material.icons.outlined.Equalizer
 import androidx.compose.material.icons.outlined.Sync
 import androidx.compose.material.icons.outlined.ViewStream
 import androidx.compose.material3.Card
@@ -37,11 +38,9 @@ import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.hapticfeedback.HapticFeedbackType
 import androidx.compose.ui.platform.LocalHapticFeedback
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
 import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavController
@@ -62,6 +61,9 @@ fun TelemetrySettingsScreen(
 ) {
     val currentHeaderStyle by settingsViewModel.telemetryHeaderStyle.collectAsStateWithLifecycle()
     val isSyncDelayedPref by settingsViewModel.isTelemetrySyncDelayed.collectAsStateWithLifecycle()
+    val showTowerGaps by settingsViewModel.telemetryTowerShowGaps.collectAsStateWithLifecycle()
+    val showTowerSectors by settingsViewModel.telemetryTowerShowSectors.collectAsStateWithLifecycle()
+    val showTowerTyres by settingsViewModel.telemetryTowerShowTyres.collectAsStateWithLifecycle()
     val activeStyle = currentHeaderStyle ?: "DEFAULT"
     val isSyncDelayed = isSyncDelayedPref ?: false
 
@@ -104,17 +106,13 @@ fun TelemetrySettingsScreen(
                 .padding(horizontal = 16.dp)
         ) {
             // Section 1: Header Layout Style
-            Text(
-                text = stringResource(R.string.telemetry_settings_header_style_label),
-                style = MaterialTheme.typography.labelMedium.copy(
-                    fontFamily = FontFamily.Monospace,
-                    fontWeight = FontWeight.Bold,
-                    color = MaterialTheme.colorScheme.primary,
-                    letterSpacing = 1.sp
+            SettingsSection(title = stringResource(R.string.telemetry_settings_header_style_label)) {
+                Text(
+                    text = stringResource(R.string.telemetry_settings_header_style_desc),
+                    style = MaterialTheme.typography.bodySmall,
+                    color = MaterialTheme.colorScheme.onSurfaceVariant,
+                    modifier = Modifier.padding(horizontal = 16.dp, vertical = 12.dp)
                 )
-            )
-            Spacer(modifier = Modifier.height(4.dp))
-            SettingsSection(title = stringResource(R.string.telemetry_settings_header_style_desc)) {
 
                 // Option 1: Default Header Option Card
                 HeaderStyleCard(
@@ -161,6 +159,38 @@ fun TelemetrySettingsScreen(
                         remainingTime = "48:22"
                     )
                 }
+            }
+
+            Spacer(modifier = Modifier.height(24.dp))
+
+            SettingsSection(title = stringResource(R.string.telemetry_settings_tower_label)) {
+                Text(
+                    text = stringResource(R.string.telemetry_settings_tower_desc),
+                    style = MaterialTheme.typography.bodySmall,
+                    color = MaterialTheme.colorScheme.onSurfaceVariant,
+                    modifier = Modifier.padding(horizontal = 16.dp, vertical = 12.dp)
+                )
+                SettingsSwitchItem(
+                    icon = Icons.Outlined.Equalizer,
+                    title = stringResource(R.string.telemetry_settings_tower_gaps_title),
+                    subtitle = stringResource(R.string.telemetry_settings_tower_gaps_desc),
+                    isChecked = showTowerGaps,
+                    onCheckedChange = { settingsViewModel.setTelemetryTowerShowGaps(it) }
+                )
+                SettingsSwitchItem(
+                    icon = Icons.Outlined.ViewStream,
+                    title = stringResource(R.string.telemetry_settings_tower_sectors_title),
+                    subtitle = stringResource(R.string.telemetry_settings_tower_sectors_desc),
+                    isChecked = showTowerSectors,
+                    onCheckedChange = { settingsViewModel.setTelemetryTowerShowSectors(it) }
+                )
+                SettingsSwitchItem(
+                    icon = Icons.Outlined.Dashboard,
+                    title = stringResource(R.string.telemetry_settings_tower_tyres_title),
+                    subtitle = stringResource(R.string.telemetry_settings_tower_tyres_desc),
+                    isChecked = showTowerTyres,
+                    onCheckedChange = { settingsViewModel.setTelemetryTowerShowTyres(it) }
+                )
             }
 
             Spacer(modifier = Modifier.height(24.dp))

@@ -1,15 +1,19 @@
 package com.jenil.f1comp.data.repository
 
+import android.content.Context
 import android.util.Log
 import com.jenil.f1comp.data.local.dao.DriverStandingsDao
 import com.jenil.f1comp.data.local.entity.DriverStandingsEntity
 import com.jenil.f1comp.data.remote.F1ApiService
+import com.jenil.f1comp.widget.DriverStandingsWidgetProvider
+import dagger.hilt.android.qualifiers.ApplicationContext
 import kotlinx.coroutines.flow.Flow
 import javax.inject.Inject
 
 class DriverStandingsRepository @Inject constructor (
     private val apiService: F1ApiService,
-    private val driverStandingsDao: DriverStandingsDao
+    private val driverStandingsDao: DriverStandingsDao,
+    @ApplicationContext private val context: Context
 ) {
     fun getCachedDriverStandings(): Flow<List<DriverStandingsEntity>> {
         return driverStandingsDao.getDriverStandings()
@@ -32,6 +36,7 @@ class DriverStandingsRepository @Inject constructor (
         }
         Log.d("F1Debug", "3. Repository: Saving to Room Database...")
         driverStandingsDao.refreshDriverStandings(driverStandingsEntities)
+        DriverStandingsWidgetProvider.pushUpdateToWidgets(context)
         Log.d("F1Debug", "3. Repository: Database updated successfully.")
 
     }

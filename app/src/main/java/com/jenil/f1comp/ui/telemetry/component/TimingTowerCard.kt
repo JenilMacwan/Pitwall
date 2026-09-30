@@ -41,7 +41,10 @@ fun TimingTowerCard(
     timingLines: Map<String, TimingLine>? = null,
     driverList: Map<String, DriverInfo>? = null,
     appDataLines: Map<String, AppDataLine>? = null,
-    sessionType: String = "Race"
+    sessionType: String = "Race",
+    showGaps: Boolean = true,
+    showSectors: Boolean = true,
+    showTyres: Boolean = true
 ) {
     val sortedDrivers = remember(timingLines) {
         timingLines?.values?.sortedBy { it.position?.toIntOrNull() ?: 999 } ?: emptyList()
@@ -165,7 +168,7 @@ fun TimingTowerCard(
                         ),
                         modifier = Modifier.weight(1f)
                     )
-                    Text(
+                    if (showGaps) Text(
                         text = "GAP",
                         style = MaterialTheme.typography.labelSmall.copy(
                             fontFamily = FontFamily.Monospace,
@@ -175,8 +178,8 @@ fun TimingTowerCard(
                         ),
                         modifier = Modifier.width(54.dp)
                     )
-                    Spacer(modifier = Modifier.width(6.dp))
-                    Text(
+                    if (showGaps && showSectors) Spacer(modifier = Modifier.width(6.dp))
+                    if (showSectors) Text(
                         text = "SECTORS",
                         style = MaterialTheme.typography.labelSmall.copy(
                             fontFamily = FontFamily.Monospace,
@@ -186,8 +189,8 @@ fun TimingTowerCard(
                         ),
                         modifier = Modifier.width(148.dp)
                     )
-                    Spacer(modifier = Modifier.width(6.dp))
-                    Text(
+                    if (showSectors && showTyres) Spacer(modifier = Modifier.width(6.dp))
+                    if (showTyres) Text(
                         text = "TYRE",
                         style = MaterialTheme.typography.labelSmall.copy(
                             fontFamily = FontFamily.Monospace,
@@ -214,7 +217,10 @@ fun TimingTowerCard(
                             timingLine = timingLine,
                             driverInfo = driverInfo,
                             appData = appData,
-                            sessionType = sessionType
+                            sessionType = sessionType,
+                            showGaps = showGaps,
+                            showSectors = showSectors,
+                            showTyres = showTyres
                         )
                     }
                 }

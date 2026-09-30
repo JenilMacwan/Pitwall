@@ -17,4 +17,7 @@ object PreferencesKeys {
     val SELECTED_THEME_ID = stringPreferencesKey("selected_theme_id")
     val TELEMETRY_HEADER_STYLE = stringPreferencesKey("telemetry_header_style")
     val IS_TELEMETRY_SYNC_DELAYED = booleanPreferencesKey("is_telemetry_sync_delayed")
+    val TELEMETRY_TOWER_SHOW_GAPS = booleanPreferencesKey("telemetry_tower_show_gaps")
+    val TELEMETRY_TOWER_SHOW_SECTORS = booleanPreferencesKey("telemetry_tower_show_sectors")
+    val TELEMETRY_TOWER_SHOW_TYRES = booleanPreferencesKey("telemetry_tower_show_tyres")
 }

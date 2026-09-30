@@ -67,6 +67,9 @@ fun TelemetryScreen(
     val telemetryUiState by telemetryViewModel.telemetryUiState.collectAsState()
     val rawHeaderStyle by settingsViewModel.telemetryHeaderStyle.collectAsStateWithLifecycle()
     val headerStyle = rawHeaderStyle ?: "DEFAULT"
+    val showTowerGaps by settingsViewModel.telemetryTowerShowGaps.collectAsStateWithLifecycle()
+    val showTowerSectors by settingsViewModel.telemetryTowerShowSectors.collectAsStateWithLifecycle()
+    val showTowerTyres by settingsViewModel.telemetryTowerShowTyres.collectAsStateWithLifecycle()
 
     val scrollState = rememberScrollState()
 
@@ -367,7 +370,10 @@ fun TelemetryScreen(
                         timingLines = currentData?.timingData?.lines,
                         driverList = currentData?.driverList,
                         appDataLines = currentData?.timingAppData?.lines,
-                        sessionType = currentData?.sessionInfo?.type ?: "N/A"
+                        sessionType = currentData?.sessionInfo?.type ?: "N/A",
+                        showGaps = showTowerGaps,
+                        showSectors = showTowerSectors,
+                        showTyres = showTowerTyres
                     )
 
                     Spacer(modifier = Modifier.height(8.dp))

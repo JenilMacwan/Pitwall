@@ -1,15 +1,19 @@
 package com.jenil.f1comp.data.repository
 
+import android.content.Context
 import android.util.Log
 import com.jenil.f1comp.data.local.dao.ConstructorStandingsDao
 import com.jenil.f1comp.data.local.entity.ConstructorStandingsEntity
 import com.jenil.f1comp.data.remote.F1ApiService
+import com.jenil.f1comp.widget.ConstructorStandingsWidgetProvider
+import dagger.hilt.android.qualifiers.ApplicationContext
 import kotlinx.coroutines.flow.Flow
 import javax.inject.Inject
 
 class ConstructorStandingsRepository @Inject constructor (
     private val apiService: F1ApiService,
-    private val constructorStandingsDao: ConstructorStandingsDao
+    private val constructorStandingsDao: ConstructorStandingsDao,
+    @ApplicationContext private val context: Context
 ) {
     fun getCachedConstructorStanding(): Flow<List<ConstructorStandingsEntity>> {
         return constructorStandingsDao.getConstructorStandings()
@@ -31,6 +35,7 @@ class ConstructorStandingsRepository @Inject constructor (
         }
         Log.d("F1Debug", "3. Constructor Repository: Saving to Room Database...")
         constructorStandingsDao.refreshConstructorStandings(constructorStandingsEntities)
+        ConstructorStandingsWidgetProvider.pushUpdateToWidgets(context)
         Log.d("F1Debug", "3. Constructor Repository: Saved to Room Database...")
 
     }

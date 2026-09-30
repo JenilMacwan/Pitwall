@@ -89,6 +89,9 @@ dependencies {
     //noinspection LoginCredentials,UseTomlInstead
     implementation("com.google.android.libraries.identity.googleid:googleid:1.2.1")
 
+    // Chrome Custom Tabs
+    implementation("androidx.browser:browser:1.10.0")
+
 
     // Hilt
     implementation(libs.hilt.android)
@@ -126,6 +129,11 @@ dependencies {
     // Navigation
     implementation(libs.androidx.navigation.compose)
     implementation(libs.androidx.lifecycle.runtime.compose)
+
+    // Glance
+    implementation(libs.androidx.glance.appwidget)
+    implementation(libs.androidx.glance.material3)
+
 
     //Haze
     implementation(libs.haze)

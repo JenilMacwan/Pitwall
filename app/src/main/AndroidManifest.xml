@@ -79,6 +79,42 @@
             </intent-filter>
         </receiver>
 
+        <receiver
+            android:name=".widget.NextRaceWidgetProvider"
+            android:exported="true">
+            <intent-filter>
+                <action android:name="android.appwidget.action.APPWIDGET_UPDATE" />
+            </intent-filter>
+
+            <meta-data
+                android:name="android.appwidget.provider"
+                android:resource="@xml/next_race_widget_info" />
+        </receiver>
+
+        <receiver
+            android:name=".widget.DriverStandingsWidgetProvider"
+            android:exported="true">
+            <intent-filter>
+                <action android:name="android.appwidget.action.APPWIDGET_UPDATE" />
+            </intent-filter>
+
+            <meta-data
+                android:name="android.appwidget.provider"
+                android:resource="@xml/driver_standings_widget_info" />
+        </receiver>
+
+        <receiver
+            android:name=".widget.ConstructorStandingsWidgetProvider"
+            android:exported="true">
+            <intent-filter>
+                <action android:name="android.appwidget.action.APPWIDGET_UPDATE" />
+            </intent-filter>
+
+            <meta-data
+                android:name="android.appwidget.provider"
+                android:resource="@xml/constructor_standings_widget_info" />
+        </receiver>
+
     </application>
 
 </manifest>

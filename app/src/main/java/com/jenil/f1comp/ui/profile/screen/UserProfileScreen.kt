@@ -32,6 +32,7 @@ import androidx.compose.material.icons.automirrored.outlined.HelpOutline
 import androidx.compose.material.icons.automirrored.outlined.KeyboardArrowRight
 import androidx.compose.material.icons.automirrored.rounded.ArrowBack
 import androidx.compose.material.icons.filled.Check
+import androidx.compose.material.icons.outlined.Description
 import androidx.compose.material.icons.outlined.Edit
 import androidx.compose.material.icons.outlined.Email
 import androidx.compose.material.icons.outlined.KeyboardArrowDown
@@ -98,9 +99,11 @@ import com.jenil.f1comp.R
 import com.jenil.f1comp.ui.F1ScreenPadding
 import com.jenil.f1comp.ui.home.components.DriverProfileCircle
 import com.jenil.f1comp.ui.home.components.TeamLogoCircle
+import com.jenil.f1comp.util.LegalConstants
 import com.jenil.f1comp.util.ProfileUtils.defaultFallBackDrivers
 import com.jenil.f1comp.util.ProfileUtils.defaultFallBackTeams
 import com.jenil.f1comp.util.TeamUtils
+import com.jenil.f1comp.util.openWebUrl
 import com.jenil.f1comp.viewmodel.AuthUiState
 import com.jenil.f1comp.viewmodel.AuthViewModel
 import com.jenil.f1comp.viewmodel.SettingsViewModel
@@ -1086,7 +1089,15 @@ fun UserProfileScreen(
                     icon = Icons.Outlined.Policy,
                     title = "Privacy Policy",
                     subtitle = "How telemetry & authentication data is protected",
-                    onClick = { navController.navigate("privacy_policy") }
+                    onClick = { openWebUrl(context, LegalConstants.PRIVACY_POLICY_URL) }
+                )
+
+                // Terms & Conditions
+                ProfileMenuItem(
+                    icon = Icons.Outlined.Description,
+                    title = "Terms & Conditions",
+                    subtitle = "Terms of service & legal guidelines",
+                    onClick = { openWebUrl(context, LegalConstants.TERMS_CONDITIONS_URL) }
                 )
 
                 Spacer(modifier = Modifier.height(20.dp))

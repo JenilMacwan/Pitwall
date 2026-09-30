@@ -294,4 +294,35 @@
     <string name="telemetry_settings_stream_sync_label">STREAM-SYNCHRONISATIE</string>
     <string name="telemetry_settings_sync_title">Uitzendvertraging-sync</string>
     <string name="telemetry_settings_sync_subtitle">Vertraagt de live telemetriefeed met ~3,2s om overeen te komen met de tv-uitzending.</string>
+    <string name="telemetry_settings_tower_label">TIMING TOWER WEERGAVE</string>
+    <string name="telemetry_settings_tower_desc">Kies welke details naast elke coureur verschijnen. Positie en coureurnaam worden altijd getoond.</string>
+    <string name="telemetry_settings_tower_gaps_title">Verschillen</string>
+    <string name="telemetry_settings_tower_gaps_desc">Toon het gat naar de leider en het interval naar de auto voor je.</string>
+    <string name="telemetry_settings_tower_sectors_title">Sectortijden</string>
+    <string name="telemetry_settings_tower_sectors_desc">Toon sector 1, 2 en 3 tijden met markeringen voor snelste sectoren.</string>
+    <string name="telemetry_settings_tower_tyres_title">Banden en stintleeftijd</string>
+    <string name="telemetry_settings_tower_tyres_desc">Toon de huidige bandencompound en voltooide ronden in de stint.</string>
+
+    <!-- Widget -->
+    <string name="widget_next_race_description">Toont de komende Grand Prix, de lay-out van het circuit, het aftellen van de sessie en de status van het evenement.</string>
+    <string name="widget_loading_title">PITWALL WIDGET</string>
+    <string name="widget_loading_subtitle">Laden van de volgende race...</string>
+    <string name="widget_round_format">FORMULE 1  /  RONDE %1$s</string>
+    <string name="widget_next_race_title">FORMULE 1  /  VOLGENDE RACE</string>
+    <string name="widget_track_map_fallback">CIRCUIT\nKAART</string>
+    <string name="widget_lights_out_in">START OVER</string>
+    <string name="widget_session_starts_in">SESSIE START OVER</string>
+    <string name="widget_live_session">LIVE SESSIE</string>
+    <string name="widget_in_progress">BEZIG</string>
+    <string name="widget_no_data_title">Geen gegevens over de volgende race</string>
+    <string name="widget_no_data_subtitle">Open F1Comp om het schema bij te werken</string>
+    <string name="widget_next_session_title">VOLGENDE SESSIE</string>
+    <string name="widget_live_prefix">LIVE · %1$s</string>
+    <string name="widget_driver_standings_description">Toont de huidige stand en punten van het F1 Wereldkampioenschap voor coureurs.</string>
+    <string name="widget_driver_standings_title">FORMULE 1  /  COUREURSSTAND</string>
+    <string name="widget_constructor_standings_description">Toont de huidige stand en punten van het F1 Wereldkampioenschap voor constructeurs.</string>
+    <string name="widget_constructor_standings_title">FORMULE 1  /  CONSTRUCTEURSSTAND</string>
+    <string name="widget_pts_format">%1$s PNT</string>
+    <string name="widget_no_standings_title">Geen standgegevens</string>
+    <string name="widget_no_standings_subtitle">Open F1Comp om de stand te verversen</string>
 </resources>

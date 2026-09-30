@@ -294,4 +294,35 @@
     <string name="telemetry_settings_stream_sync_label">SYNCHRONISATION DU FLUX</string>
     <string name="telemetry_settings_sync_title">Synchro délai de diffusion</string>
     <string name="telemetry_settings_sync_subtitle">Retarde le flux télémétrique d\'environ 3,2s pour correspondre à la diffusion TV en direct.</string>
+    <string name="telemetry_settings_tower_label">AFFICHAGE TOUR DE CHRONOMÉTRAGE</string>
+    <string name="telemetry_settings_tower_desc">Choisissez les détails affichés à côté de chaque pilote. La position et le nom du pilote sont toujours affichés.</string>
+    <string name="telemetry_settings_tower_gaps_title">Écarts</string>
+    <string name="telemetry_settings_tower_gaps_desc">Affiche l\'écart avec le leader et l\'intervalle avec la voiture précédente.</string>
+    <string name="telemetry_settings_tower_sectors_title">Temps au secteur</string>
+    <string name="telemetry_settings_tower_sectors_desc">Affiche les temps des secteurs 1, 2 et 3 avec les meilleurs secteurs mis en valeur.</string>
+    <string name="telemetry_settings_tower_tyres_title">Pneus et âge du relais</string>
+    <string name="telemetry_settings_tower_tyres_desc">Affiche le composé de pneu actuel et les tours effectués durant le relais.</string>
+
+    <!-- Widget -->
+    <string name="widget_next_race_description">Affiche le prochain Grand Prix, le tracé du circuit, le compte à rebours de la session et le statut.</string>
+    <string name="widget_loading_title">WIDGET PITWALL</string>
+    <string name="widget_loading_subtitle">Chargement de la prochaine course...</string>
+    <string name="widget_round_format">FORMULE 1  /  MANCHE %1$s</string>
+    <string name="widget_next_race_title">FORMULE 1  /  PROCHAINE COURSE</string>
+    <string name="widget_track_map_fallback">TRACÉ\nCIRCUIT</string>
+    <string name="widget_lights_out_in">DEPART DANS</string>
+    <string name="widget_session_starts_in">DEBUT DE SESSION DANS</string>
+    <string name="widget_live_session">SESSION EN DIRECT</string>
+    <string name="widget_in_progress">EN COURS</string>
+    <string name="widget_no_data_title">Aucune donnée de course</string>
+    <string name="widget_no_data_subtitle">Ouvrez F1Comp pour mettre à jour le calendrier</string>
+    <string name="widget_next_session_title">PROCHAINE SESSION</string>
+    <string name="widget_live_prefix">EN DIRECT · %1$s</string>
+    <string name="widget_driver_standings_description">Affiche le classement actuel et les points du Championnat du Monde des Pilotes de F1.</string>
+    <string name="widget_driver_standings_title">FORMULE 1  /  CLASSEMENT PILOTES</string>
+    <string name="widget_constructor_standings_description">Affiche le classement actuel et les points du Championnat du Monde des Constructeurs de F1.</string>
+    <string name="widget_constructor_standings_title">FORMULE 1  /  CLASSEMENT CONSTRUCTEURS</string>
+    <string name="widget_pts_format">%1$s PTS</string>
+    <string name="widget_no_standings_title">Aucune donnée de classement</string>
+    <string name="widget_no_standings_subtitle">Ouvrez F1Comp pour actualiser le classement</string>
 </resources>

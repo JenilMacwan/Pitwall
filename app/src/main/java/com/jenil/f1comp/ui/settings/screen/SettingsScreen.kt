@@ -74,6 +74,8 @@ import com.jenil.f1comp.ui.F1ScreenPadding
 import com.jenil.f1comp.ui.settings.component.SettingsItem
 import com.jenil.f1comp.ui.settings.component.SettingsSection
 import com.jenil.f1comp.ui.settings.component.SettingsSwitchItem
+import com.jenil.f1comp.util.LegalConstants
+import com.jenil.f1comp.util.openWebUrl
 import com.jenil.f1comp.util.removeRacesFromCalendar
 import com.jenil.f1comp.util.syncRacesToCalendar
 import com.jenil.f1comp.viewmodel.AuthViewModel
@@ -551,13 +553,13 @@ fun SettingsScreen(
                             icon = Icons.Outlined.Policy,
                             title = stringResource(R.string.title_privacy),
                             subtitle = stringResource(R.string.settings_privacy_sub),
-                            onClick = { navController.navigate("privacy_policy") }
+                            onClick = { openWebUrl(context, LegalConstants.PRIVACY_POLICY_URL) }
                         )
                         SettingsItem(
                             icon = Icons.Outlined.Description,
                             title = stringResource(R.string.title_terms),
                             subtitle = stringResource(R.string.settings_terms_sub),
-                            onClick = { navController.navigate("terms_and_conditions") }
+                            onClick = { openWebUrl(context, LegalConstants.TERMS_CONDITIONS_URL) }
                         )
                         SettingsItem(
                             icon = Icons.Outlined.Info,

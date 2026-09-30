@@ -2,6 +2,7 @@ package com.jenil.f1comp.ui.telemetry.component
 
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -15,10 +16,15 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.alpha
@@ -43,8 +49,12 @@ fun DriverRow(
     driverInfo: DriverInfo?,
     appData: AppDataLine?,
     sessionType: String,
+    showGaps: Boolean = true,
+    showSectors: Boolean = true,
+    showTyres: Boolean = true,
     modifier: Modifier = Modifier
 ) {
+    var expanded by remember(timingLine.racingNumber) { mutableStateOf(false) }
     val isOut = timingLine.retired == true || timingLine.stopped == true
     val rowAlpha = if (isOut) 0.5f else 1f
 
@@ -79,18 +89,20 @@ fun DriverRow(
     Surface(
         modifier = modifier
             .fillMaxWidth()
-            .alpha(rowAlpha),
+            .alpha(rowAlpha)
+            .clickable { expanded = !expanded },
         shape = RoundedCornerShape(8.dp),
         color = MaterialTheme.colorScheme.surfaceVariant.copy(alpha = 0.35f),
         border = BorderStroke(1.dp, MaterialTheme.colorScheme.outlineVariant.copy(alpha = 0.2f))
     ) {
-        Row(
+        Column(modifier = Modifier.fillMaxWidth()) {
+          Row(
             modifier = Modifier
                 .fillMaxWidth()
                 .height(52.dp)
                 .padding(end = 6.dp),
             verticalAlignment = Alignment.CenterVertically
-        ) {
+          ) {
             // 1. Team Color Indicator Bar
             Box(
                 modifier = Modifier
@@ -167,6 +179,7 @@ fun DriverRow(
                 }
             } else {
                 // 4. Gap & Interval Column
+                if (showGaps) {
                 Column(
                     modifier = Modifier.width(54.dp),
                     horizontalAlignment = Alignment.End
@@ -195,10 +208,12 @@ fun DriverRow(
                         )
                     }
                 }
+                }
 
-                Spacer(modifier = Modifier.width(6.dp))
+                if (showGaps && showSectors) Spacer(modifier = Modifier.width(6.dp))
 
                 // 5. Sectors (S1, S2, S3) - Widened boxes (48.dp) with single line constraint to prevent wrapping
+                if (showSectors) {
                 Row(
                     modifier = Modifier.width(148.dp),
                     horizontalArrangement = Arrangement.spacedBy(2.dp)
@@ -239,10 +254,12 @@ fun DriverRow(
                         }
                     }
                 }
+                }
 
-                Spacer(modifier = Modifier.width(6.dp))
+                if ((showGaps || showSectors) && showTyres) Spacer(modifier = Modifier.width(6.dp))
 
                 // 6. Tyre Compound & Lap Age
+                if (showTyres) {
                 Column(
                     horizontalAlignment = Alignment.CenterHorizontally,
                     modifier = Modifier.width(32.dp)
@@ -278,7 +295,35 @@ fun DriverRow(
                         )
                     }
                 }
+                }
             }
+          }
+          if (expanded) {
+              val sectors = timingLine.sectors.orEmpty()
+              val currentLap = timingLine.numberOfLaps?.plus(1)
+              Column(
+                  modifier = Modifier.fillMaxWidth().padding(start = 16.dp, end = 12.dp, bottom = 12.dp),
+                  verticalArrangement = Arrangement.spacedBy(6.dp)
+              ) {
+                  HorizontalDivider(color = MaterialTheme.colorScheme.outlineVariant.copy(alpha = 0.3f))
+                  LapDetailLine("CURRENT LAP${currentLap?.let { " · $it" } ?: ""}", sectors.takeIf { it.isNotEmpty() }?.mapIndexed { i, s -> "S${i + 1} ${s.value ?: "--"}" }?.joinToString("   ") ?: "Sector timing unavailable")
+                  LapDetailLine("FASTEST LAP", when {
+                      timingLine.lastLapTime?.overallFastest == true -> "${timingLine.lastLapTime.value ?: "--"} · overall fastest"
+                      timingLine.lastLapTime?.personalFastest == true -> "${timingLine.lastLapTime.value ?: "--"} · personal best"
+                      !timingLine.timeDiffToFastest.isNullOrBlank() -> "${timingLine.timeDiffToFastest} to fastest"
+                      else -> "Fastest lap unavailable"
+                  })
+                  LapDetailLine("PREVIOUS LAP", timingLine.lastLapTime?.value ?: "Lap time unavailable")
+              }
+          }
         }
+    }
+}
+
+@Composable
+private fun LapDetailLine(label: String, value: String) {
+    Row(modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.SpaceBetween, verticalAlignment = Alignment.CenterVertically) {
+        Text(label, style = MaterialTheme.typography.labelSmall.copy(fontFamily = FontFamily.Monospace, fontWeight = FontWeight.Bold, color = MaterialTheme.colorScheme.onSurfaceVariant, fontSize = 9.sp))
+        Text(value, style = MaterialTheme.typography.labelSmall.copy(fontFamily = FontFamily.Monospace, color = MaterialTheme.colorScheme.onSurface, fontSize = 10.sp), maxLines = 1, softWrap = false)
     }
 }

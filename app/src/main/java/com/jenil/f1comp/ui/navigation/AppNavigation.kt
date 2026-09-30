@@ -24,6 +24,7 @@ import androidx.compose.material3.rememberDrawerState
 import androidx.compose.material3.windowsizeclass.WindowSizeClass
 import androidx.compose.material3.windowsizeclass.WindowWidthSizeClass
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
@@ -31,6 +32,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalConfiguration
+import androidx.compose.ui.platform.LocalContext
 import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavType
@@ -52,13 +54,13 @@ import com.jenil.f1comp.ui.schedule.screen.ScheduleScreen
 import com.jenil.f1comp.ui.settings.screen.DataAttributionScreen
 import com.jenil.f1comp.ui.settings.screen.LanguageSettingsScreen
 import com.jenil.f1comp.ui.settings.screen.LicensesScreen
-import com.jenil.f1comp.ui.settings.screen.PrivacyPolicyScreen
 import com.jenil.f1comp.ui.settings.screen.SettingsScreen
 import com.jenil.f1comp.ui.settings.screen.TelemetrySettingsScreen
-import com.jenil.f1comp.ui.settings.screen.TermsAndConditionsScreen
 import com.jenil.f1comp.ui.settings.screen.ThemeSettingsScreen
 import com.jenil.f1comp.ui.standings.screen.StandingsScreen
 import com.jenil.f1comp.ui.telemetry.screen.TelemetryScreen
+import com.jenil.f1comp.util.LegalConstants
+import com.jenil.f1comp.util.openWebUrl
 import com.jenil.f1comp.viewmodel.SettingsViewModel
 import dev.chrisbanes.haze.HazeState
 import dev.chrisbanes.haze.hazeSource
@@ -250,10 +252,18 @@ fun AppNavigation(
                         LicensesScreen(navController = navController)
                     }
                     composable(route = "privacy_policy") {
-                        PrivacyPolicyScreen(navController = navController)
+                        val context = LocalContext.current
+                        LaunchedEffect(Unit) {
+                            openWebUrl(context, LegalConstants.PRIVACY_POLICY_URL)
+                            navController.popBackStack()
+                        }
                     }
                     composable(route = "terms_and_conditions") {
-                        TermsAndConditionsScreen(navController = navController)
+                        val context = LocalContext.current
+                        LaunchedEffect(Unit) {
+                            openWebUrl(context, LegalConstants.TERMS_CONDITIONS_URL)
+                            navController.popBackStack()
+                        }
                     }
                     composable(route = "data_attribution") {
                         DataAttributionScreen(navController = navController)

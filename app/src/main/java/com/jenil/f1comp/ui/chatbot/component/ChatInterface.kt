@@ -14,6 +14,7 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -26,12 +27,18 @@ import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.selection.SelectionContainer
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.automirrored.outlined.VolumeUp
+import androidx.compose.material.icons.outlined.ContentCopy
+import androidx.compose.material.icons.outlined.Share
 import androidx.compose.material3.AssistChip
 import androidx.compose.material3.AssistChipDefaults
 import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
+import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -39,11 +46,13 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.semantics.LiveRegionMode
 import androidx.compose.ui.semantics.contentDescription
+import androidx.compose.ui.semantics.liveRegion
 import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.unit.dp
 import com.jenil.f1comp.R
-import com.jenil.f1comp.ui.chatbot.screen.UiMessage
+import com.jenil.f1comp.data.model.ChatMessage
 
 @Composable
 fun ApexAvatar(modifier: Modifier = Modifier) {
@@ -72,23 +81,30 @@ fun ApexAvatar(modifier: Modifier = Modifier) {
 }
 
 @Composable
-fun ChatBubble(message: UiMessage) {
+fun ChatBubble(
+    message: ChatMessage,
+    onCopy: (String) -> Unit,
+    onShare: (String) -> Unit,
+    onReadAloud: (String) -> Unit,
+    onRetry: (String) -> Unit,
+    onOpenRelatedData: (String) -> Unit
+) {
     val isUser = message.isUser
     val configuration = androidx.compose.ui.platform.LocalConfiguration.current
-    val maxBubbleWidth = (configuration.screenWidthDp * 0.78f).dp
+    val maxBubbleWidth = (configuration.screenWidthDp * 0.82f).dp
 
     AnimatedVisibility(
         visible = true,
         enter = fadeIn(tween(220)) + slideInVertically(tween(220)) { it / 4 }
     ) {
         Row(
-            modifier = Modifier.fillMaxWidth(),
+            modifier = Modifier.fillMaxWidth().semantics {
+                if (!isUser) liveRegion = LiveRegionMode.Polite
+            },
             horizontalArrangement = if (isUser) Arrangement.End else Arrangement.Start,
             verticalAlignment = Alignment.Bottom
         ) {
-            if (!isUser) {
-                ApexAvatar(modifier = Modifier.padding(end = 6.dp))
-            }
+            if (!isUser) ApexAvatar(modifier = Modifier.padding(end = 6.dp))
 
             Surface(
                 shape = RoundedCornerShape(
@@ -101,21 +117,80 @@ fun ChatBubble(message: UiMessage) {
                 border = if (isUser) null else BorderStroke(1.dp, MaterialTheme.colorScheme.outlineVariant),
                 modifier = Modifier.widthIn(max = maxBubbleWidth)
             ) {
-                SelectionContainer {
-                    Text(
-                        text = message.text,
-                        modifier = Modifier.padding(12.dp),
-                        color = if (isUser) MaterialTheme.colorScheme.onPrimary else MaterialTheme.colorScheme.onSurface,
-                        style = MaterialTheme.typography.bodyMedium
-                    )
+                Column {
+                    SelectionContainer {
+                        Text(
+                            text = message.text,
+                            modifier = Modifier.padding(12.dp),
+                            color = if (isUser) MaterialTheme.colorScheme.onPrimary else MaterialTheme.colorScheme.onSurface,
+                            style = MaterialTheme.typography.bodyMedium
+                        )
+                    }
+                    if (!isUser && message.dataSources.isNotEmpty()) {
+                        Text(
+                            text = stringResource(R.string.chatbot_data_sources, message.dataSources.joinToString()),
+                            modifier = Modifier.padding(start = 12.dp, end = 12.dp, bottom = 8.dp),
+                            color = MaterialTheme.colorScheme.onSurfaceVariant,
+                            style = MaterialTheme.typography.labelSmall
+                        )
+                    }
+                    if (!isUser && message.referenceDocuments.isNotEmpty()) {
+                        Text(
+                            text = stringResource(
+                                R.string.chatbot_references,
+                                message.referenceDocuments.joinToString()
+                            ),
+                            modifier = Modifier.padding(start = 12.dp, end = 12.dp, bottom = 8.dp),
+                            color = MaterialTheme.colorScheme.onSurfaceVariant,
+                            style = MaterialTheme.typography.labelSmall
+                        )
+                    }
+                    if (!isUser) {
+                        val relatedActions = message.dataSources.mapNotNull { source ->
+                            when {
+                                source.contains("standings", ignoreCase = true) -> "standings" to R.string.chatbot_open_standings
+                                source.contains("schedule", ignoreCase = true) || source.contains("next race", ignoreCase = true) -> "schedule" to R.string.chatbot_open_schedule
+                                source.contains("race control", ignoreCase = true) -> "telemetry" to R.string.chatbot_open_telemetry
+                                source.contains("news", ignoreCase = true) -> "news" to R.string.chatbot_open_news
+                                else -> null
+                            }
+                        }.distinctBy { it.first }
+                        if (relatedActions.isNotEmpty()) {
+                            Row(horizontalArrangement = Arrangement.spacedBy(6.dp), modifier = Modifier.padding(horizontal = 8.dp)) {
+                                relatedActions.forEach { (route, label) ->
+                                    AssistChip(onClick = { onOpenRelatedData(route) }, label = { Text(stringResource(label)) })
+                                }
+                            }
+                        }
+                        Row(
+                            modifier = Modifier.fillMaxWidth(),
+                            horizontalArrangement = Arrangement.End,
+                            verticalAlignment = Alignment.CenterVertically
+                        ) {
+                            IconButton(onClick = { onCopy(message.text) }) {
+                                Icon(Icons.Outlined.ContentCopy, contentDescription = stringResource(R.string.chatbot_copy_response))
+                            }
+                            IconButton(onClick = { onShare(message.text) }) {
+                                Icon(Icons.Outlined.Share, contentDescription = stringResource(R.string.chatbot_share_response))
+                            }
+                            IconButton(onClick = { onReadAloud(message.text) }) {
+                                Icon(Icons.AutoMirrored.Outlined.VolumeUp, contentDescription = stringResource(R.string.chatbot_read_aloud))
+                            }
+                            message.retryQuery?.let { query ->
+                                TextButton(onClick = { onRetry(query) }) {
+                                    Text(stringResource(R.string.chatbot_retry))
+                                }
+                            }
+                        }
+                    }
                 }
             }
         }
     }
 }
-
 @Composable
 fun ThinkBubble() {
+    val typingDescription = stringResource(R.string.chatbot_thinking_status)
     Row(
         modifier = Modifier.fillMaxWidth(),
         horizontalArrangement = Arrangement.Start,
@@ -134,7 +209,10 @@ fun ThinkBubble() {
             border = BorderStroke(1.dp, MaterialTheme.colorScheme.outlineVariant),
             modifier = Modifier
                 .widthIn(max = 80.dp)
-                .semantics { contentDescription = "Apex is typing" }
+                .semantics {
+                    contentDescription = typingDescription
+                    liveRegion = LiveRegionMode.Polite
+                }
         ) {
             BouncingDots()
         }

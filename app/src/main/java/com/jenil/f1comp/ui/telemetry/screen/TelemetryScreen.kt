@@ -47,6 +47,7 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavController
 import com.jenil.f1comp.ui.F1ScreenPadding
 import com.jenil.f1comp.ui.telemetry.component.CompactTelemetryHeader
+import com.jenil.f1comp.ui.telemetry.component.RaceConditionBanner
 import com.jenil.f1comp.ui.telemetry.component.RaceControlCard
 import com.jenil.f1comp.ui.telemetry.component.TelemetryHeader
 import com.jenil.f1comp.ui.telemetry.component.TimingTowerCard
@@ -342,21 +343,36 @@ fun TelemetryScreen(
                     }
 
                     // Render selected header layout (COMPACT vs DEFAULT)
+                    val trackCondition = currentData?.trackStatus?.message
+                        ?: currentData?.trackStatus?.status
+                        ?: ""
+                    val latestRaceControlMessage = currentData?.raceControlMessages?.lastOrNull()
+                    RaceConditionBanner(
+                        trackCondition = trackCondition,
+                        latestMessage = latestRaceControlMessage?.message,
+                        latestCategory = latestRaceControlMessage?.category,
+                        latestFlag = latestRaceControlMessage?.flag
+                    )
+
                     if (headerStyle == "COMPACT") {
                         CompactTelemetryHeader(
                             sessionType = currentData?.sessionInfo?.type ?: "N/A",
+                            sessionPart = currentData?.timingData?.sessionPart,
                             trackStatus = currentData?.trackStatus?.message ?: currentData?.trackStatus?.status ?: "N/A",
                             trackTemp = currentData?.weatherData?.trackTemp ?: "--°C",
                             currentLap = currentLapString,
-                            remainingTime = currentData?.extrapolatedClock?.remaining ?: "--:--"
+                            remainingTime = currentData?.extrapolatedClock?.remaining ?: "--:--",
+                            isExtrapolating = currentData?.extrapolatedClock?.extrapolating == true
                         )
                     } else {
                         TelemetryHeader(
                             sessionName = currentData?.sessionInfo?.meeting?.name ?: "UNKNOWN",
                             sessionType = currentData?.sessionInfo?.type ?: "N/A",
+                            sessionPart = currentData?.timingData?.sessionPart,
                             trackStatus = currentData?.trackStatus?.message ?: currentData?.trackStatus?.status ?: "N/A",
                             currentLap = currentLapString,
                             remainingTime = currentData?.extrapolatedClock?.remaining ?: "--:--",
+                            isExtrapolating = currentData?.extrapolatedClock?.extrapolating == true,
                             airTemp = currentData?.weatherData?.airTemp ?: "--°C",
                             trackTemp = currentData?.weatherData?.trackTemp ?: "--°C",
                             humidity = currentData?.weatherData?.humidity ?: "--%",

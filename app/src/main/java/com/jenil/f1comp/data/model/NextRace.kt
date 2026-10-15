@@ -31,5 +31,19 @@ data class RaceCountdown(
     val days: Int,
     val hours: Int,
     val minutes: Int,
-    val seconds: Int
+    val seconds: Int,
+    val calculatedAtEpochMillis: Long = 0L
 )
+
+fun RaceCountdown.remainingSeconds(nowEpochMillis: Long = System.currentTimeMillis()): Long {
+    val durationSeconds = days.coerceAtLeast(0) * 86_400L +
+        hours.coerceAtLeast(0) * 3_600L +
+        minutes.coerceAtLeast(0) * 60L +
+        seconds.coerceAtLeast(0)
+    val elapsedSeconds = if (calculatedAtEpochMillis > 0L) {
+        ((nowEpochMillis - calculatedAtEpochMillis).coerceAtLeast(0L) / 1_000L)
+    } else {
+        0L
+    }
+    return (durationSeconds - elapsedSeconds).coerceAtLeast(0L)
+}

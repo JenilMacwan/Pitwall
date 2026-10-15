@@ -40,6 +40,7 @@ import com.jenil.f1comp.R
 import com.jenil.f1comp.data.local.entity.ScheduleEntity
 import com.jenil.f1comp.data.model.RaceCountdown
 import com.jenil.f1comp.data.model.RaceWeather
+import com.jenil.f1comp.data.model.remainingSeconds
 import com.jenil.f1comp.util.FlagImage
 import com.jenil.f1comp.util.ProfileUtils
 import kotlinx.coroutines.delay
@@ -63,13 +64,7 @@ fun NextRaceCard(
     onDetailClick: () -> Unit
 ) {
     var timeRemaining by remember(countdown) {
-        val totalSeconds: Long = countdown.let {
-            (it.days * 86400L) +
-                    (countdown.hours * 3600L) +
-                    (countdown.minutes * 60L) +
-                    countdown.seconds
-        }
-        mutableLongStateOf(totalSeconds)
+        mutableLongStateOf(countdown.remainingSeconds())
     }
     LaunchedEffect(countdown) {
         while (timeRemaining > 0) {

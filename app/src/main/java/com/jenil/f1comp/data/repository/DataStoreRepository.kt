@@ -6,6 +6,7 @@ import androidx.datastore.preferences.core.edit
 import com.jenil.f1comp.data.PreferencesKeys
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
+import java.util.UUID
 import javax.inject.Inject
 import javax.inject.Singleton
 
@@ -161,5 +162,30 @@ class DataStoreRepository @Inject constructor(
     }
     suspend fun setTelemetryTowerShowTyres(show: Boolean) {
         dataStore.edit { it[PreferencesKeys.TELEMETRY_TOWER_SHOW_TYRES] = show }
+    }
+
+    val apexResponseStyle: Flow<String> = dataStore.data.map { it[PreferencesKeys.APEX_RESPONSE_STYLE] ?: "concise" }
+
+    suspend fun setApexResponseStyle(style: String) {
+        dataStore.edit { it[PreferencesKeys.APEX_RESPONSE_STYLE] = style }
+    }
+
+    suspend fun getOrCreateApexChatSessionId(): String {
+        val preferences = dataStore.edit { values ->
+            if (values[PreferencesKeys.APEX_CHAT_SESSION_ID] == null) {
+                values[PreferencesKeys.APEX_CHAT_SESSION_ID] = UUID.randomUUID().toString()
+            }
+        }
+        return preferences[PreferencesKeys.APEX_CHAT_SESSION_ID]!!
+    }
+
+    suspend fun createApexChatSessionId(): String {
+        val sessionId = UUID.randomUUID().toString()
+        dataStore.edit { values -> values[PreferencesKeys.APEX_CHAT_SESSION_ID] = sessionId }
+        return sessionId
+    }
+
+    suspend fun clearApexChatSessionId() {
+        dataStore.edit { values -> values.remove(PreferencesKeys.APEX_CHAT_SESSION_ID) }
     }
 }

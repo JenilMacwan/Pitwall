@@ -139,9 +139,12 @@ fun syncRacesToCalendar(context: Context, races: List<ScheduleEntity>,onComplete
                                 put(CalendarContract.Events.EVENT_LOCATION, "${race.circuitName}, ${race.circuitLocation}")
                                 put(CalendarContract.Events.CALENDAR_ID, calendarId)
                                 put(CalendarContract.Events.EVENT_TIMEZONE, TimeZone.getDefault().id)
+                                put(CalendarContract.Events.CUSTOM_APP_PACKAGE, context.packageName)
+                                put(CalendarContract.Events.CUSTOM_APP_URI, "pitwall://calendar/events")
                             }
-                            contentResolver.insert(CalendarContract.Events.CONTENT_URI, values)
-                            insertedCount++
+                            if (contentResolver.insert(CalendarContract.Events.CONTENT_URI, values) != null) {
+                                insertedCount++
+                            }
                         }
                     } catch (e: Exception) {
                         e.printStackTrace()
@@ -151,7 +154,7 @@ fun syncRacesToCalendar(context: Context, races: List<ScheduleEntity>,onComplete
         }
 
         withContext(Dispatchers.Main) {
-            onComplete("Successfully synced ${LocalDate.now().year} F1 sessions to Calendar")
+            onComplete("Added $insertedCount new ${LocalDate.now().year} F1 sessions to Calendar")
         }
     }
 }
@@ -159,17 +162,17 @@ fun syncRacesToCalendar(context: Context, races: List<ScheduleEntity>,onComplete
 fun removeRacesFromCalendar(context: Context,onComplete: (String) -> Unit) {
     CoroutineScope(Dispatchers.IO).launch {
         val contentResolver = context.contentResolver
-        val selection = "${CalendarContract.Events.TITLE} LIKE ? OR ${CalendarContract.Events.DESCRIPTION} LIKE ?"
-        val selectionArgs = arrayOf("%PitWall%", "%PitWall%")
+        val selection = "${CalendarContract.Events.CUSTOM_APP_PACKAGE} = ?"
+        val selectionArgs = arrayOf(context.packageName)
 
         try {
-            contentResolver.delete(
+            val removedCount = contentResolver.delete(
                 CalendarContract.Events.CONTENT_URI,
                 selection,
                 selectionArgs
             )
             withContext(Dispatchers.Main) {
-                onComplete("Successfully removed ${LocalDate.now().year} F1 sessions from Calendar")
+                onComplete("Removed $removedCount PitWall calendar events")
             }
         } catch (e: SecurityException) {
             e.printStackTrace()

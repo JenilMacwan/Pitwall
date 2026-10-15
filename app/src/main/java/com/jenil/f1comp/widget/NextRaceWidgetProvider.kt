@@ -24,6 +24,7 @@ import com.jenil.f1comp.MainActivity
 import com.jenil.f1comp.R
 import com.jenil.f1comp.data.local.AppDatabase
 import com.jenil.f1comp.data.local.entity.NextRaceEntity
+import com.jenil.f1comp.data.model.remainingSeconds
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.firstOrNull
@@ -112,12 +113,7 @@ class NextRaceWidgetProvider : AppWidgetProvider() {
 
                 // Calculate time remaining in milliseconds from countdown data
                 val countdown = nextRaceEntity.countdown
-                val totalMillisRemaining = (
-                    (countdown.days * 86400L) +
-                    (countdown.hours * 3600L) +
-                    (countdown.minutes * 60L) +
-                    countdown.seconds
-                ) * 1000L
+                val totalMillisRemaining = countdown.remainingSeconds() * 1000L
 
                 val isRaceSession = nextRaceEntity.sessionName.contains("Race", ignoreCase = true) &&
                         !nextRaceEntity.sessionName.contains("Sprint", ignoreCase = true)

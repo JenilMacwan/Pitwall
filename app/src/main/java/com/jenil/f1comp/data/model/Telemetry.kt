@@ -101,6 +101,8 @@ data class ExtrapolatedClock(
 )
 
 data class TimingDataContainer(
+    @SerializedName("SessionPart")
+    val sessionPart: Int? = null,
     @SerializedName("Lines")
     val lines: Map<String, TimingLine>? = null
 )
@@ -122,6 +124,8 @@ data class TimingLine(
     val pitOut: Boolean? = null,
     @SerializedName("NumberOfLaps")
     val numberOfLaps: Int? = null,
+    @SerializedName("KnockedOut")
+    val knockedOut: Boolean? = null,
 
     @SerializedName("TimeDiffToFastest")
     val timeDiffToFastest: String? = null,
@@ -133,6 +137,8 @@ data class TimingLine(
     @SerializedName("IntervalToPositionAhead")
     val intervalToPositionAhead: Any? = null,
 
+    @SerializedName("BestLapTime")
+    val bestLapTime: LapTime? = null,
     @SerializedName("LastLapTime")
     val lastLapTime: LapTime? = null,
 

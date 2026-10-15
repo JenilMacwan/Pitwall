@@ -58,6 +58,11 @@ class AuthRepository @Inject constructor(
         return user
     }
 
+    suspend fun signInAnonymously(): FirebaseUser {
+        val result = firebaseAuth.signInAnonymously().await()
+        return result.user ?: throw IllegalStateException("Guest sign-in failed")
+    }
+
     suspend fun registerWithEmailAndPassword(
         email: String,
         password: String,
@@ -151,6 +156,17 @@ class AuthRepository @Inject constructor(
 
     suspend fun sendPasswordResetEmail(email: String) {
         firebaseAuth.sendPasswordResetEmail(email).await()
+    }
+
+    suspend fun deleteAccount() {
+        val user = firebaseAuth.currentUser ?: throw IllegalStateException("No active user session found.")
+        if (!user.isAnonymous) {
+            firestore.collection("users")
+                .document(user.uid)
+                .delete()
+                .await()
+        }
+        user.delete().await()
     }
 
     fun signOut() {

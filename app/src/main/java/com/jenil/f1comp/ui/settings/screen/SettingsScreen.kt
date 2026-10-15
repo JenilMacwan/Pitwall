@@ -43,11 +43,13 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
+import androidx.compose.material3.SnackbarDuration
 import androidx.compose.material3.SnackbarHost
 import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -61,6 +63,7 @@ import androidx.compose.ui.hapticfeedback.HapticFeedbackType
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalHapticFeedback
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.core.content.ContextCompat
 import androidx.core.net.toUri
@@ -78,6 +81,7 @@ import com.jenil.f1comp.util.LegalConstants
 import com.jenil.f1comp.util.openWebUrl
 import com.jenil.f1comp.util.removeRacesFromCalendar
 import com.jenil.f1comp.util.syncRacesToCalendar
+import com.jenil.f1comp.viewmodel.AuthUiState
 import com.jenil.f1comp.viewmodel.AuthViewModel
 import com.jenil.f1comp.viewmodel.ScheduleViewModel
 import com.jenil.f1comp.viewmodel.SettingsViewModel
@@ -99,7 +103,9 @@ fun SettingsScreen(
     val haptic = LocalHapticFeedback.current
 
     val currentUser by authViewModel.currentUser.collectAsStateWithLifecycle()
+    val authUiState by authViewModel.authUiState.collectAsStateWithLifecycle()
     var showAuthDialog by rememberSaveable { mutableStateOf(false) }
+    var showDeleteAccountConfirm by rememberSaveable { mutableStateOf(false) }
 
     var pendingAction by remember { mutableStateOf<(() -> Unit)?>(null) }
     var showClearConfirm by rememberSaveable { mutableStateOf(false) }
@@ -219,6 +225,84 @@ fun SettingsScreen(
             dismissButton = {
                 TextButton(onClick = { showClearConfirm = false }) {
                     Text("Cancel")
+                }
+            }
+        )
+    }
+
+    LaunchedEffect(authUiState) {
+        when (val state = authUiState) {
+            is AuthUiState.Error -> {
+                scope.launch {
+                    snackbarHostState.showSnackbar(
+                        message = state.message,
+                        duration = SnackbarDuration.Short
+                    )
+                }
+                authViewModel.resetAuthUiState()
+            }
+            is AuthUiState.Success -> {
+                scope.launch {
+                    snackbarHostState.showSnackbar(
+                        message = "Account deleted successfully.",
+                        duration = SnackbarDuration.Short
+                    )
+                }
+                authViewModel.resetAuthUiState()
+            }
+            else -> {}
+        }
+    }
+
+    if (showDeleteAccountConfirm) {
+        AlertDialog(
+            onDismissRequest = { showDeleteAccountConfirm = false },
+            containerColor = MaterialTheme.colorScheme.surface,
+            icon = {
+                Icon(
+                    imageVector = Icons.Rounded.WarningAmber,
+                    contentDescription = null,
+                    tint = MaterialTheme.colorScheme.error
+                )
+            },
+            title = {
+                Text(
+                    text = stringResource(R.string.settings_delete_account_dialog_title),
+                    style = MaterialTheme.typography.titleMedium,
+                    fontWeight = FontWeight.Bold,
+                    color = MaterialTheme.colorScheme.onSurface
+                )
+            },
+            text = {
+                Text(
+                    text = stringResource(R.string.settings_delete_account_dialog_msg),
+                    style = MaterialTheme.typography.bodyMedium,
+                    color = MaterialTheme.colorScheme.onSurfaceVariant
+                )
+            },
+            confirmButton = {
+                TextButton(
+                    onClick = {
+                        showDeleteAccountConfirm = false
+                        authViewModel.deleteAccount()
+                        scope.launch {
+                            snackbarHostState.showSnackbar("Deleting account...")
+                        }
+                    }
+                ) {
+                    Text(
+                        text = stringResource(R.string.settings_delete_account_confirm),
+                        color = MaterialTheme.colorScheme.error,
+                        fontWeight = FontWeight.Bold
+                    )
+                }
+            },
+            dismissButton = {
+                TextButton(onClick = { showDeleteAccountConfirm = false }) {
+                    Text(
+                        text = stringResource(android.R.string.cancel),
+                        color = MaterialTheme.colorScheme.onSurfaceVariant
+                    )
                 }
             }
         )
@@ -575,6 +659,22 @@ fun SettingsScreen(
                             showChevron = false,
                             onClick = { }
                         )
+                    }
+
+                    // Account & Privacy (Delete Account)
+                    if (currentUser != null) {
+                        Spacer(modifier = Modifier.height(24.dp))
+
+                        SettingsSection(title = stringResource(R.string.settings_account_section)) {
+                            SettingsItem(
+                                icon = Icons.Outlined.DeleteOutline,
+                                title = stringResource(R.string.settings_delete_account),
+                                subtitle = stringResource(R.string.settings_delete_account_sub),
+                                textColor = MaterialTheme.colorScheme.error,
+                                iconTint = MaterialTheme.colorScheme.error,
+                                onClick = { showDeleteAccountConfirm = true }
+                            )
+                        }
                     }
 
                     Spacer(modifier = Modifier.height(32.dp))

@@ -5,11 +5,13 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.google.firebase.auth.FirebaseAuthInvalidCredentialsException
 import com.google.firebase.auth.FirebaseAuthInvalidUserException
+import com.google.firebase.auth.FirebaseAuthRecentLoginRequiredException
 import com.google.firebase.auth.FirebaseAuthUserCollisionException
 import com.google.firebase.auth.FirebaseAuthWeakPasswordException
 import com.google.firebase.auth.FirebaseUser
 import com.jenil.f1comp.data.model.UserProfile
 import com.jenil.f1comp.data.repository.AuthRepository
+import com.jenil.f1comp.data.repository.ChatRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
@@ -35,7 +37,8 @@ sealed interface AuthUiState {
 
 @HiltViewModel
 class AuthViewModel @Inject constructor(
-    private val authRepository: AuthRepository
+    private val authRepository: AuthRepository,
+    private val chatRepository: ChatRepository
 ) : ViewModel() {
     private val _authUiState = MutableStateFlow<AuthUiState>(AuthUiState.Idle)
     val authUiState: StateFlow<AuthUiState> = _authUiState.asStateFlow()
@@ -74,6 +77,21 @@ class AuthViewModel @Inject constructor(
             _authUiState.value = AuthUiState.Loading
             try {
                 authRepository.signInWithEmailAndPassword(trimmedEmail, password)
+                _authUiState.value = AuthUiState.Success
+            } catch (e: CancellationException) {
+                throw e
+            } catch (e: Exception) {
+                val (msg, field) = parseAuthException(e)
+                _authUiState.value = AuthUiState.Error(msg, field)
+            }
+        }
+    }
+
+    fun signInAnonymously() {
+        viewModelScope.launch {
+            _authUiState.value = AuthUiState.Loading
+            try {
+                authRepository.signInAnonymously()
                 _authUiState.value = AuthUiState.Success
             } catch (e: CancellationException) {
                 throw e
@@ -198,9 +216,46 @@ class AuthViewModel @Inject constructor(
         }
     }
 
+    fun deleteAccount() {
+        viewModelScope.launch {
+            _authUiState.value = AuthUiState.Loading
+            try {
+                clearAccountChatDataBestEffort()
+                authRepository.deleteAccount()
+                _authUiState.value = AuthUiState.Success
+            } catch (e: CancellationException) {
+                throw e
+            } catch (e: Exception) {
+                val msg = if (e.message?.contains("REQUIRES_RECENT_LOGIN", ignoreCase = true) == true ||
+                    e is FirebaseAuthRecentLoginRequiredException) {
+                    "Deleting your account requires a recent sign-in. Please sign out and sign in again before deleting your account."
+                } else {
+                    e.localizedMessage ?: "Failed to delete account."
+                }
+                _authUiState.value = AuthUiState.Error(msg, AuthErrorField.GENERAL)
+            }
+        }
+    }
+
     fun signOut() {
-        authRepository.signOut()
-        _authUiState.value = AuthUiState.Idle
+        viewModelScope.launch {
+            try {
+                clearAccountChatDataBestEffort()
+            } finally {
+                authRepository.signOut()
+                _authUiState.value = AuthUiState.Idle
+            }
+        }
+    }
+
+    private suspend fun clearAccountChatDataBestEffort() {
+        try {
+            chatRepository.clearAllAccountChatData()
+        } catch (e: CancellationException) {
+            throw e
+        } catch (_: Exception) {
+            // Account deletion/sign-out must not be blocked by offline chat cleanup.
+        }
     }
 
     fun resetAuthUiState() {

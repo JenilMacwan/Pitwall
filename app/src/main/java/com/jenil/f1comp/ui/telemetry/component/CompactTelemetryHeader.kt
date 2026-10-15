@@ -31,6 +31,7 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -51,13 +52,20 @@ import com.jenil.f1comp.ui.theme.F1Red
 fun CompactTelemetryHeader(
     modifier: Modifier = Modifier,
     sessionType: String = "RACE",
+    sessionPart: Int? = null,
     trackStatus: String = "All Clear",
     trackTemp: String = "37.2°C",
     currentLap: String = "34",
-    remainingTime: String = "48:22"
+    remainingTime: String = "48:22",
+    isExtrapolating: Boolean = false
 ) {
-    val displaySessionType = remember(sessionType) {
-        sessionType.ifBlank { "N/A" }.uppercase()
+    val displaySessionType = remember(sessionType, sessionPart) {
+        val type = sessionType.ifBlank { "N/A" }.uppercase()
+        if (type.contains("QUALIFYING") && sessionPart != null && sessionPart in 1..3) {
+            "Q$sessionPart"
+        } else {
+            type
+        }
     }
 
     val (statusText, statusColor) = remember(trackStatus) {
@@ -102,8 +110,37 @@ fun CompactTelemetryHeader(
         }
     }
 
-    val formattedRemainingTime = remember(remainingTime) {
-        val trimmed = remainingTime.trim()
+    val isPracticeOrQuali = remember(sessionType) {
+        sessionType.contains("Practice", ignoreCase = true) || sessionType.contains("Qualifying", ignoreCase = true)
+    }
+
+    var liveRemainingTime by remember(remainingTime) { androidx.compose.runtime.mutableStateOf(remainingTime) }
+
+    androidx.compose.runtime.LaunchedEffect(isExtrapolating, liveRemainingTime) {
+        if (isExtrapolating && liveRemainingTime.isNotBlank() && liveRemainingTime != "--:--") {
+            kotlinx.coroutines.delay(1000)
+
+            // Format: hh:mm:ss
+            val parts = liveRemainingTime.split(":")
+            if (parts.size == 3) {
+                var hours = parts[0].toIntOrNull() ?: 0
+                var minutes = parts[1].toIntOrNull() ?: 0
+                var seconds = parts[2].toIntOrNull() ?: 0
+
+                var totalSeconds = hours * 3600 + minutes * 60 + seconds - 1
+                if (totalSeconds < 0) totalSeconds = 0
+
+                hours = totalSeconds / 3600
+                minutes = (totalSeconds % 3600) / 60
+                seconds = totalSeconds % 60
+
+                liveRemainingTime = String.format(java.util.Locale.US, "%02d:%02d:%02d", hours, minutes, seconds)
+            }
+        }
+    }
+
+    val formattedRemainingTime = remember(liveRemainingTime) {
+        val trimmed = liveRemainingTime.trim()
         trimmed.ifBlank { "--:--" }
     }
 
@@ -256,25 +293,27 @@ fun CompactTelemetryHeader(
                 }
 
                 // Lap Counter
-                Row(verticalAlignment = Alignment.CenterVertically) {
-                    Text(
-                        text = "LAP: ",
-                        style = MaterialTheme.typography.bodyMedium.copy(
-                            fontFamily = FontFamily.Monospace,
-                            fontWeight = FontWeight.Normal,
-                            color = MaterialTheme.colorScheme.onSurfaceVariant,
-                            fontSize = 12.sp
+                if (!isPracticeOrQuali) {
+                    Row(verticalAlignment = Alignment.CenterVertically) {
+                        Text(
+                            text = "LAP: ",
+                            style = MaterialTheme.typography.bodyMedium.copy(
+                                fontFamily = FontFamily.Monospace,
+                                fontWeight = FontWeight.Normal,
+                                color = MaterialTheme.colorScheme.onSurfaceVariant,
+                                fontSize = 12.sp
+                            )
                         )
-                    )
-                    Text(
-                        text = displayCurrentLap,
-                        style = MaterialTheme.typography.bodyLarge.copy(
-                            fontFamily = FontFamily.Monospace,
-                            fontWeight = FontWeight.Bold,
-                            color = MaterialTheme.colorScheme.onSurface,
-                            fontSize = 14.sp
+                        Text(
+                            text = displayCurrentLap,
+                            style = MaterialTheme.typography.bodyLarge.copy(
+                                fontFamily = FontFamily.Monospace,
+                                fontWeight = FontWeight.Bold,
+                                color = MaterialTheme.colorScheme.onSurface,
+                                fontSize = 14.sp
+                            )
                         )
-                    )
+                    }
                 }
 
                 // Remaining Time

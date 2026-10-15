@@ -62,7 +62,7 @@ class LiveTelemetryViewModel @Inject constructor(
     }
 
     fun toggleSyncDelay(isDelayed: Boolean) {
-        _syncDelayMs.value = if (isDelayed) 32000L else 0L
+        _syncDelayMs.value = if (isDelayed) 63000L else 0L
     }
 
     fun retryTelemetry() {

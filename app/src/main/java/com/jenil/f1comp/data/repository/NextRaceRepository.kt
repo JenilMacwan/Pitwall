@@ -33,7 +33,7 @@ class NextRaceRepository @Inject constructor(
                 circuit = response.circuit,
                 country = response.country,
                 weather = response.weather,
-                countdown = response.countdown,
+                countdown = response.countdown.copy(calculatedAtEpochMillis = System.currentTimeMillis()),
                 sessionName = response.sessionName,
                 sprint = response.sprint,
                 flagEmoji = response.flagEmoji,

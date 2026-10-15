@@ -13,6 +13,8 @@ object PreferencesKeys {
     val FAVORITES_UPDATES = booleanPreferencesKey("favorites_updates")
     val FAVORITE_TEAM = stringPreferencesKey("favorite_team")
     val FAVORITE_DRIVER = stringPreferencesKey("favorite_driver")
+    val APEX_CHAT_SESSION_ID = stringPreferencesKey("apex_chat_session_id")
+    val APEX_RESPONSE_STYLE = stringPreferencesKey("apex_response_style")
     val IS_FIRST_LAUNCH = booleanPreferencesKey("is_first_launch")
     val SELECTED_THEME_ID = stringPreferencesKey("selected_theme_id")
     val TELEMETRY_HEADER_STYLE = stringPreferencesKey("telemetry_header_style")

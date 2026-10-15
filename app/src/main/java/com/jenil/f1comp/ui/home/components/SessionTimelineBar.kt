@@ -207,13 +207,20 @@ private fun parseSessionDayAndTime(dateStr: String?, timeStr: String?): Pair<Str
     if (dateStr.isNullOrBlank()) return Pair("", "")
     return try {
         val parsedDate = LocalDate.parse(dateStr.trim())
-        val dayStr = parsedDate.dayOfWeek.getDisplayName(TextStyle.SHORT, Locale.ENGLISH)
+        
+        if (timeStr.isNullOrBlank()) {
+            val dayStr = parsedDate.dayOfWeek.getDisplayName(TextStyle.SHORT, Locale.ENGLISH)
+            return Pair(dayStr, "")
+        }
+        
+        val cleanTime = timeStr.removeSuffix("Z").trim()
+        val parsedTime = LocalTime.parse(cleanTime)
+        
+        val utcDateTime = ZonedDateTime.of(parsedDate, parsedTime, ZoneId.of("UTC"))
+        val localDateTime = utcDateTime.withZoneSameInstant(ZoneId.systemDefault())
 
-        val formattedTime = if (!timeStr.isNullOrBlank()) {
-            val cleanTime = timeStr.removeSuffix("Z").trim()
-            val parsedTime = LocalTime.parse(cleanTime)
-            parsedTime.format(DateTimeFormatter.ofPattern("HH:mm"))
-        } else ""
+        val dayStr = localDateTime.dayOfWeek.getDisplayName(TextStyle.SHORT, Locale.ENGLISH)
+        val formattedTime = localDateTime.format(DateTimeFormatter.ofPattern("HH:mm"))
 
         Pair(dayStr, formattedTime)
     } catch (_: Exception) {

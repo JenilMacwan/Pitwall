@@ -1,5 +1,6 @@
 package com.jenil.f1comp.ui.telemetry.component
 
+import androidx.compose.animation.animateContentSize
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
@@ -55,12 +56,24 @@ fun DriverRow(
     modifier: Modifier = Modifier
 ) {
     var expanded by remember(timingLine.racingNumber) { mutableStateOf(false) }
-    val isOut = timingLine.retired == true || timingLine.stopped == true
+    val isOut = timingLine.retired == true || timingLine.stopped == true || timingLine.knockedOut == true
     val rowAlpha = if (isOut) 0.5f else 1f
 
+    val isPracticeOrQuali = sessionType.contains("Practice", ignoreCase = true) || sessionType.contains("Qualifying", ignoreCase = true)
+    val isQuali = sessionType.contains("Qualifying", ignoreCase = true)
+
     val isLeader = timingLine.position == "1"
-    val gap = if (isLeader) "LEADER" else extractGap(timingLine.gapToLeader)
-    val interval = extractGap(timingLine.intervalToPositionAhead)
+    val gap = if (isPracticeOrQuali) {
+        timingLine.bestLapTime?.value ?: timingLine.lastLapTime?.value ?: "-"
+    } else {
+        if (isLeader) "LEADER" else extractGap(timingLine.gapToLeader)
+    }
+    
+    val interval = if (isPracticeOrQuali) {
+        if (isLeader) "" else timingLine.timeDiffToFastest ?: extractGap(timingLine.intervalToPositionAhead)
+    } else {
+        extractGap(timingLine.intervalToPositionAhead)
+    }
 
     val currentStint = appData?.stints?.lastOrNull()
     val tyreCompound = currentStint?.compound?.uppercase() ?: "UNKNOWN"
@@ -90,16 +103,22 @@ fun DriverRow(
         modifier = modifier
             .fillMaxWidth()
             .alpha(rowAlpha)
-            .clickable { expanded = !expanded },
-        shape = RoundedCornerShape(8.dp),
-        color = MaterialTheme.colorScheme.surfaceVariant.copy(alpha = 0.35f),
-        border = BorderStroke(1.dp, MaterialTheme.colorScheme.outlineVariant.copy(alpha = 0.2f))
+            .clickable { expanded = !expanded }
+            .animateContentSize(),
+        shape = RoundedCornerShape(10.dp),
+        color = if (expanded) MaterialTheme.colorScheme.surfaceVariant.copy(alpha = 0.62f)
+        else MaterialTheme.colorScheme.surfaceVariant.copy(alpha = 0.28f),
+        border = BorderStroke(
+            1.dp,
+            if (expanded) teamColor.copy(alpha = 0.45f)
+            else MaterialTheme.colorScheme.outlineVariant.copy(alpha = 0.22f)
+        )
     ) {
         Column(modifier = Modifier.fillMaxWidth()) {
           Row(
             modifier = Modifier
                 .fillMaxWidth()
-                .height(52.dp)
+                .height(58.dp)
                 .padding(end = 6.dp),
             verticalAlignment = Alignment.CenterVertically
           ) {
@@ -122,7 +141,7 @@ fun DriverRow(
                     color = if (isLeader) PodiumGold else MaterialTheme.colorScheme.onSurface,
                     fontSize = 14.sp
                 ),
-                modifier = Modifier.width(24.dp),
+                modifier = Modifier.width(30.dp),
                 maxLines = 1,
                 softWrap = false
             )
@@ -143,6 +162,46 @@ fun DriverRow(
                         maxLines = 1,
                         softWrap = false
                     )
+
+                    if (isQuali && isLeader) {
+                        Spacer(modifier = Modifier.width(4.dp))
+                        Surface(
+                            color = PodiumGold.copy(alpha = 0.2f),
+                            shape = RoundedCornerShape(4.dp),
+                            border = BorderStroke(1.dp, PodiumGold.copy(alpha = 0.5f))
+                        ) {
+                            Text(
+                                text = "POLE",
+                                color = PodiumGold,
+                                style = MaterialTheme.typography.labelSmall.copy(
+                                    fontFamily = FontFamily.Monospace,
+                                    fontWeight = FontWeight.Bold,
+                                    fontSize = 8.sp
+                                ),
+                                modifier = Modifier.padding(horizontal = 4.dp, vertical = 2.dp)
+                            )
+                        }
+                    }
+
+                    if (timingLine.inPit == true) {
+                        Spacer(modifier = Modifier.width(4.dp))
+                        Surface(
+                            color = Color(0xFF00B0FF).copy(alpha = 0.15f),
+                            shape = RoundedCornerShape(4.dp),
+                            border = BorderStroke(1.dp, Color(0xFF00B0FF).copy(alpha = 0.5f))
+                        ) {
+                            Text(
+                                text = "IN PIT",
+                                color = Color(0xFF00B0FF),
+                                style = MaterialTheme.typography.labelSmall.copy(
+                                    fontFamily = FontFamily.Monospace,
+                                    fontWeight = FontWeight.Bold,
+                                    fontSize = 8.sp
+                                ),
+                                modifier = Modifier.padding(horizontal = 4.dp, vertical = 2.dp)
+                            )
+                        }
+                    }
                 }
                 Text(
                     text = driverInfo?.broadcastName ?: lastName,
@@ -164,7 +223,11 @@ fun DriverRow(
                     modifier = Modifier.padding(end = 6.dp)
                 ) {
                     Text(
-                        text = if (timingLine.stopped == true) "STOPPED" else "RETIRED",
+                        text = when {
+                            timingLine.knockedOut == true -> "OUT"
+                            timingLine.stopped == true -> "STOPPED"
+                            else -> "RETIRED"
+                        },
                         color = F1Red,
                         style = MaterialTheme.typography.labelSmall.copy(
                             fontFamily = FontFamily.Monospace,
@@ -303,9 +366,9 @@ fun DriverRow(
               val currentLap = timingLine.numberOfLaps?.plus(1)
               Column(
                   modifier = Modifier.fillMaxWidth().padding(start = 16.dp, end = 12.dp, bottom = 12.dp),
-                  verticalArrangement = Arrangement.spacedBy(6.dp)
+                  verticalArrangement = Arrangement.spacedBy(9.dp)
               ) {
-                  HorizontalDivider(color = MaterialTheme.colorScheme.outlineVariant.copy(alpha = 0.3f))
+                  HorizontalDivider(color = teamColor.copy(alpha = 0.45f))
                   LapDetailLine("CURRENT LAP${currentLap?.let { " · $it" } ?: ""}", sectors.takeIf { it.isNotEmpty() }?.mapIndexed { i, s -> "S${i + 1} ${s.value ?: "--"}" }?.joinToString("   ") ?: "Sector timing unavailable")
                   LapDetailLine("FASTEST LAP", when {
                       timingLine.lastLapTime?.overallFastest == true -> "${timingLine.lastLapTime.value ?: "--"} · overall fastest"
@@ -322,8 +385,8 @@ fun DriverRow(
 
 @Composable
 private fun LapDetailLine(label: String, value: String) {
-    Row(modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.SpaceBetween, verticalAlignment = Alignment.CenterVertically) {
+    Column(verticalArrangement = Arrangement.spacedBy(2.dp)) {
         Text(label, style = MaterialTheme.typography.labelSmall.copy(fontFamily = FontFamily.Monospace, fontWeight = FontWeight.Bold, color = MaterialTheme.colorScheme.onSurfaceVariant, fontSize = 9.sp))
-        Text(value, style = MaterialTheme.typography.labelSmall.copy(fontFamily = FontFamily.Monospace, color = MaterialTheme.colorScheme.onSurface, fontSize = 10.sp), maxLines = 1, softWrap = false)
+        Text(value, style = MaterialTheme.typography.bodySmall.copy(fontFamily = FontFamily.Monospace, color = MaterialTheme.colorScheme.onSurface, fontWeight = FontWeight.Medium), maxLines = 2, softWrap = true)
     }
 }

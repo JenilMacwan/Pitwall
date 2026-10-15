@@ -42,7 +42,7 @@
     <string name="privacy_trust_local_first">Lokale Daten &amp; Cloud-Sync</string>
     <string name="privacy_trust_no_data_selling">Kein Datenverkauf</string>
     <string name="privacy_share_subject">PitWall — Datenschutzbestimmungen</string>
-    <string name="privacy_share_text">Lesen Sie die Datenschutzbestimmungen von PitWall: https://jenil.dev/pitwall-privacy</string>
+    <string name="privacy_share_text">Lesen Sie die Datenschutzbestimmungen von PitWall: https://pitwall-apex.vercel.app/privacy</string>
     <string name="privacy_share_chooser">Datenschutzbestimmungen teilen</string>
     <string name="privacy_share_content_description">Datenschutz teilen</string>
     <string name="privacy_document_label">PITWALL RECHTLICHES DOKUMENT</string>
@@ -55,7 +55,7 @@
     <string name="privacy_section_label">ABSCHNITT %1$02d</string>
     <string name="privacy_footer_title">Rechtliche Hinweise &amp; Kontakt</string>
     <string name="privacy_footer_body">Diese Richtlinie kann bei App-Updates aktualisiert werden. Bei Fragen oder für die vollständige Web-Richtlinie nutzen Sie die Optionen unten.</string>
-    <string name="privacy_web_url">https://jenil.dev/pitwall-privacy</string>
+    <string name="privacy_web_url">https://pitwall-apex.vercel.app/privacy</string>
     <string name="privacy_read_full_web_policy">Vollständige Web-Richtlinie lesen</string>
     <string name="privacy_contact_email_uri">mailto:support.pitwall@gmail.com?subject=PitWall%20Datenschutzanfrage</string>
     <string name="privacy_contact_data_protection">Datenschutz-Kontakt</string>
@@ -231,6 +231,7 @@
     <string name="chatbot_placeholder">Fragen Sie Apex etwas...</string>
     <string name="chatbot_welcome">Apex initialisiert. Live-Telemetrie aktiv. Wie kann ich Ihre Rennstrategie unterstützen?</string>
     <string name="chatbot_error">Entschuldigung, beim Verbinden mit Apex ist ein Fehler aufgetreten.</string>
+    <string name="chatbot_account_required">Apex KI ist nur für registrierte Pitwall-Konten verfügbar. Melden Sie sich an oder erstellen Sie ein Konto.</string>
     <string name="chatbot_beta">BETA</string>
     <string name="chatbot_powered_by">Unterstützt von Pitwall</string>
     <string name="chatbot_clear_chat">Chat löschen</string>
@@ -325,4 +326,22 @@
     <string name="widget_pts_format">%1$s PKT</string>
     <string name="widget_no_standings_title">Keine Wertungsdaten</string>
     <string name="widget_no_standings_subtitle">Öffnen Sie F1Comp, um die Wertung zu aktualisieren</string>
+    <string name="chatbot_references">Referenzmaterial: %1$s</string>
+    <string name="chatbot_thinking_status">Apex bereitet eine Antwort vor</string>
+<string name="chatbot_retry">Erneut versuchen</string>
+<string name="chatbot_copy_response">Antwort kopieren</string>
+<string name="chatbot_share_response">Antwort teilen</string>
+<string name="chatbot_read_aloud">Antwort vorlesen</string>
+<string name="chatbot_voice_input">Spracheingabe verwenden</string>
+<string name="chatbot_stop_response">Antwort stoppen</string>
+<string name="chatbot_copied">Antwort kopiert</string>
+<string name="chatbot_voice_unavailable">Spracheingabe ist auf diesem Gerät nicht verfügbar</string>
+<string name="chatbot_send_message">Nachricht senden</string>
+<string name="chatbot_concise">Kurz</string>
+<string name="chatbot_detailed">Detailliert</string>
+<string name="chatbot_data_sources">Abgerufene Daten: %1$s</string>
+<string name="chatbot_open_schedule">Zeitplan öffnen</string>
+<string name="chatbot_open_standings">Wertung öffnen</string>
+<string name="chatbot_open_telemetry">Telemetrie öffnen</string>
+<string name="chatbot_open_news">Nachrichten öffnen</string>
 </resources>

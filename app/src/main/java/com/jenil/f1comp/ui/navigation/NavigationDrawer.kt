@@ -78,6 +78,7 @@ import com.jenil.f1comp.R
 import com.jenil.f1comp.data.local.entity.NextRaceEntity
 import com.jenil.f1comp.data.local.entity.ScheduleEntity
 import com.jenil.f1comp.data.model.RaceCountdown
+import com.jenil.f1comp.data.model.remainingSeconds
 import com.jenil.f1comp.ui.chatbot.component.apexMark
 import com.jenil.f1comp.ui.state.NextRaceUiState
 import com.jenil.f1comp.ui.theme.F1CompTheme
@@ -248,12 +249,16 @@ fun PitwallDrawerContent(
                                 )
                             }
                             Spacer(modifier = Modifier.width(8.dp))
-                            val countdown = nextRace.countdown
+                            val remainingSeconds = nextRace.countdown.remainingSeconds()
+                            val days = remainingSeconds / 86_400L
+                            val hours = (remainingSeconds % 86_400L) / 3_600L
+                            val minutes = (remainingSeconds % 3_600L) / 60L
+                            val seconds = remainingSeconds % 60L
                             val countdownText = when {
-                                countdown.days > 0 -> "${countdown.days}d ${countdown.hours}h"
-                                countdown.hours > 0 -> "${countdown.hours}h ${countdown.minutes}m"
-                                countdown.minutes > 0 -> "${countdown.minutes}m ${countdown.seconds}s"
-                                countdown.seconds > 0 -> "${countdown.seconds}s"
+                                days > 0 -> "${days}d ${hours}h"
+                                hours > 0 -> "${hours}h ${minutes}m"
+                                minutes > 0 -> "${minutes}m ${seconds}s"
+                                seconds > 0 -> "${seconds}s"
                                 else -> "Live soon"
                             }
                             Text(

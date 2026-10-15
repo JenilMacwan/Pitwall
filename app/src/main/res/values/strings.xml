@@ -173,7 +173,7 @@
     <string name="privacy_trust_local_first">Local First &amp; Cloud Sync</string>
     <string name="privacy_trust_no_data_selling">Zero Data Selling</string>
     <string name="privacy_share_subject">PitWall — Privacy Policy</string>
-    <string name="privacy_share_text">Read PitWall\'s Privacy Policy: https://jenil.dev/pitwall-privacy</string>
+    <string name="privacy_share_text">Read PitWall\'s Privacy Policy: https://pitwall-apex.vercel.app/privacy</string>
     <string name="privacy_share_chooser">Share Privacy Policy</string>
     <string name="privacy_share_content_description">Share policy</string>
     <string name="privacy_document_label">PITWALL LEGAL DOCUMENT</string>
@@ -186,7 +186,7 @@
     <string name="privacy_section_label">SECTION %1$02d</string>
     <string name="privacy_footer_title">Legal Disclosures &amp; Inquiries</string>
     <string name="privacy_footer_body">This policy may be updated as PitWall evolves. Material changes will be reflected here with a new revision date. For the complete web disclosure or a privacy inquiry, use the options below.</string>
-    <string name="privacy_web_url">https://jenil.dev/pitwall-privacy</string>
+    <string name="privacy_web_url">https://pitwall-apex.vercel.app/privacy</string>
     <string name="privacy_read_full_web_policy">Read Full Web Policy</string>
     <string name="privacy_contact_email_uri">mailto:support.pitwall@gmail.com?subject=PitWall%20Privacy%20Inquiry</string>
     <string name="privacy_contact_data_protection">Contact Data Protection</string>
@@ -216,6 +216,14 @@
     <string name="terms_section_9_body">These terms may be updated as the app changes. The current version is shown in the app; continued use after an update means you accept the revised terms to the extent permitted by law. For questions, contact support.pitwall@gmail.com.</string>
     <string name="settings_rate_app">Rate the App</string>
 
+    <!-- Account Deletion -->
+    <string name="settings_account_section">Account &amp; Privacy</string>
+    <string name="settings_delete_account">Delete Account</string>
+    <string name="settings_delete_account_sub">Permanently delete your account, session, and cloud profile data</string>
+    <string name="settings_delete_account_dialog_title">DELETE PITWALL ACCOUNT?</string>
+    <string name="settings_delete_account_dialog_msg">This action is permanent and cannot be undone. Your profile data and account will be deleted, and Apex chat history stored on this device will be cleared.</string>
+    <string name="settings_delete_account_confirm">DELETE ACCOUNT</string>
+
     <!-- Language Settings Screen -->
     <string name="lang_title">Language &amp; Region</string>
     <string name="lang_select_prompt">Select your preferred application language:</string>
@@ -234,6 +242,7 @@
     <string name="chatbot_placeholder">Ask Apex anything...</string>
     <string name="chatbot_welcome">Apex initialized. Live telemetry link active. How can I assist your race strategy?</string>
     <string name="chatbot_error">Sorry, I encountered an issue connecting to Apex.</string>
+    <string name="chatbot_account_required">Apex AI is available only to registered Pitwall accounts. Sign in or create an account to use it.</string>
     <string name="chatbot_beta">BETA</string>
     <string name="chatbot_powered_by">Powered by Pitwall</string>
     <string name="chatbot_clear_chat">Clear Chat</string>
@@ -329,4 +338,22 @@
     <string name="widget_no_standings_title">No Standings Data</string>
     <string name="widget_no_standings_subtitle">Open F1Comp to refresh standings</string>
 
+    <string name="chatbot_references">Reference material: %1$s</string>
+    <string name="chatbot_thinking_status">Apex is preparing a response</string>
+<string name="chatbot_retry">Retry</string>
+<string name="chatbot_copy_response">Copy response</string>
+<string name="chatbot_share_response">Share response</string>
+<string name="chatbot_read_aloud">Read response aloud</string>
+<string name="chatbot_voice_input">Use voice input</string>
+<string name="chatbot_stop_response">Stop response</string>
+<string name="chatbot_copied">Response copied</string>
+<string name="chatbot_voice_unavailable">Voice input is unavailable on this device</string>
+<string name="chatbot_send_message">Send message</string>
+<string name="chatbot_concise">Concise</string>
+<string name="chatbot_detailed">Detailed</string>
+<string name="chatbot_data_sources">Live data: %1$s</string>
+<string name="chatbot_open_schedule">Open schedule</string>
+<string name="chatbot_open_standings">Open standings</string>
+<string name="chatbot_open_telemetry">Open telemetry</string>
+<string name="chatbot_open_news">Open news</string>
 </resources>

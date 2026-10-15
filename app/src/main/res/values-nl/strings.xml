@@ -42,7 +42,7 @@
     <string name="privacy_trust_local_first">Lokaal Eerst &amp; Cloud</string>
     <string name="privacy_trust_no_data_selling">Geen Gegevensverkoop</string>
     <string name="privacy_share_subject">PitWall — Privacybeleid</string>
-    <string name="privacy_share_text">Lees het Privacybeleid van PitWall: https://jenil.dev/pitwall-privacy</string>
+    <string name="privacy_share_text">Lees het Privacybeleid van PitWall: https://pitwall-apex.vercel.app/privacy</string>
     <string name="privacy_share_chooser">Privacybeleid Delen</string>
     <string name="privacy_share_content_description">Beleid delen</string>
     <string name="privacy_document_label">PITWALL JURIDISCH DOCUMENT</string>
@@ -55,7 +55,7 @@
     <string name="privacy_section_label">SECTIE %1$02d</string>
     <string name="privacy_footer_title">Juridische Informatie &amp; Vragen</string>
     <string name="privacy_footer_body">Dit beleid kan worden bijgewerkt naarmate PitWall zich ontwikkelt. Gebruik de onderstaande opties voor het volledige webbeleid of voor privacyvragen.</string>
-    <string name="privacy_web_url">https://jenil.dev/pitwall-privacy</string>
+    <string name="privacy_web_url">https://pitwall-apex.vercel.app/privacy</string>
     <string name="privacy_read_full_web_policy">Volledige Webbeleid Lezen</string>
     <string name="privacy_contact_email_uri">mailto:support.pitwall@gmail.com?subject=PitWall%20Privacyvraag</string>
     <string name="privacy_contact_data_protection">Contact Gegevensbescherming</string>
@@ -231,6 +231,7 @@
     <string name="chatbot_placeholder">Vraag Apex van alles...</string>
     <string name="chatbot_welcome">Apex geïnitialiseerd. Live telemetrie actief. Hoe kan ik je racestrategie ondersteunen?</string>
     <string name="chatbot_error">Sorry, er is een probleem opgetreden bij het verbinden met Apex.</string>
+    <string name="chatbot_account_required">Apex AI is alleen beschikbaar voor geregistreerde Pitwall-accounts. Log in of maak een account aan.</string>
     <string name="chatbot_beta">BETA</string>
     <string name="chatbot_powered_by">Aangedreven door Pitwall</string>
     <string name="chatbot_clear_chat">Chat Wissen</string>
@@ -325,4 +326,22 @@
     <string name="widget_pts_format">%1$s PNT</string>
     <string name="widget_no_standings_title">Geen standgegevens</string>
     <string name="widget_no_standings_subtitle">Open F1Comp om de stand te verversen</string>
+    <string name="chatbot_references">Referentiemateriaal: %1$s</string>
+    <string name="chatbot_thinking_status">Apex bereidt een antwoord voor</string>
+<string name="chatbot_retry">Opnieuw proberen</string>
+<string name="chatbot_copy_response">Antwoord kopiëren</string>
+<string name="chatbot_share_response">Antwoord delen</string>
+<string name="chatbot_read_aloud">Antwoord voorlezen</string>
+<string name="chatbot_voice_input">Spraakinvoer gebruiken</string>
+<string name="chatbot_stop_response">Antwoord stoppen</string>
+<string name="chatbot_copied">Antwoord gekopieerd</string>
+<string name="chatbot_voice_unavailable">Spraakinvoer is niet beschikbaar op dit apparaat</string>
+<string name="chatbot_send_message">Bericht verzenden</string>
+<string name="chatbot_concise">Kort</string>
+<string name="chatbot_detailed">Gedetailleerd</string>
+<string name="chatbot_data_sources">Opgehaalde gegevens: %1$s</string>
+<string name="chatbot_open_schedule">Schema openen</string>
+<string name="chatbot_open_standings">Stand openen</string>
+<string name="chatbot_open_telemetry">Telemetrie openen</string>
+<string name="chatbot_open_news">Nieuws openen</string>
 </resources>

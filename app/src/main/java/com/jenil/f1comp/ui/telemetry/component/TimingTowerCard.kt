@@ -104,7 +104,7 @@ fun TimingTowerCard(
                     )
                 ) {
                     Text(
-                        text = sessionType.uppercase(),
+                        text = "${sessionType.uppercase()} · ${sortedDrivers.size} CARS",
                         modifier = Modifier.padding(horizontal = 8.dp, vertical = 4.dp),
                         style = MaterialTheme.typography.labelSmall.copy(
                             fontFamily = FontFamily.Monospace,
@@ -115,6 +115,7 @@ fun TimingTowerCard(
                         )
                     )
                 }
+
             }
 
             HorizontalDivider(
@@ -169,7 +170,7 @@ fun TimingTowerCard(
                         modifier = Modifier.weight(1f)
                     )
                     if (showGaps) Text(
-                        text = "GAP",
+                        text = if (sessionType.contains("Practice", ignoreCase = true) || sessionType.contains("Qualifying", ignoreCase = true)) "TIME" else "GAP",
                         style = MaterialTheme.typography.labelSmall.copy(
                             fontFamily = FontFamily.Monospace,
                             color = MaterialTheme.colorScheme.onSurfaceVariant,

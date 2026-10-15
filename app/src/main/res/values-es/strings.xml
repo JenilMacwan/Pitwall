@@ -42,7 +42,7 @@
     <string name="privacy_trust_local_first">Local Primero y Nube</string>
     <string name="privacy_trust_no_data_selling">Sin Venta de Datos</string>
     <string name="privacy_share_subject">PitWall — Política de Privacidad</string>
-    <string name="privacy_share_text">Lee la Política de Privacidad de PitWall: https://jenil.dev/pitwall-privacy</string>
+    <string name="privacy_share_text">Lee la Política de Privacidad de PitWall: https://pitwall-apex.vercel.app/privacy</string>
     <string name="privacy_share_chooser">Compartir Política de Privacidad</string>
     <string name="privacy_share_content_description">Compartir política</string>
     <string name="privacy_document_label">DOCUMENTO LEGAL DE PITWALL</string>
@@ -55,7 +55,7 @@
     <string name="privacy_section_label">SECCIÓN %1$02d</string>
     <string name="privacy_footer_title">Avisos Legales y Consultas</string>
     <string name="privacy_footer_body">Esta política se puede actualizar a medida que PitWall evolucione. Para ver la política web completa o hacer una consulta, usa las opciones siguientes.</string>
-    <string name="privacy_web_url">https://jenil.dev/pitwall-privacy</string>
+    <string name="privacy_web_url">https://pitwall-apex.vercel.app/privacy</string>
     <string name="privacy_read_full_web_policy">Leer Política Web Completa</string>
     <string name="privacy_contact_email_uri">mailto:support.pitwall@gmail.com?subject=PitWall%20Consulta%20Privacidad</string>
     <string name="privacy_contact_data_protection">Contacto de Protección de Datos</string>
@@ -231,6 +231,7 @@
     <string name="chatbot_placeholder">Pregunta a Apex lo que quieras...</string>
     <string name="chatbot_welcome">Apex inicializado. Enlace de telemetría activo. ¿Cómo puedo ayudarte con tu estrategia?</string>
     <string name="chatbot_error">Lo siento, encontré un problema al conectar con Apex.</string>
+    <string name="chatbot_account_required">Apex IA solo está disponible para cuentas registradas de Pitwall. Inicia sesión o crea una cuenta.</string>
     <string name="chatbot_beta">BETA</string>
     <string name="chatbot_powered_by">Desarrollado por Pitwall</string>
     <string name="chatbot_clear_chat">Limpiar Chat</string>
@@ -325,4 +326,22 @@
     <string name="widget_pts_format">%1$s PTS</string>
     <string name="widget_no_standings_title">Sin datos de clasificación</string>
     <string name="widget_no_standings_subtitle">Abre F1Comp para actualizar la clasificación</string>
+    <string name="chatbot_references">Material de referencia: %1$s</string>
+    <string name="chatbot_thinking_status">Apex está preparando una respuesta</string>
+<string name="chatbot_retry">Reintentar</string>
+<string name="chatbot_copy_response">Copiar respuesta</string>
+<string name="chatbot_share_response">Compartir respuesta</string>
+<string name="chatbot_read_aloud">Leer respuesta en voz alta</string>
+<string name="chatbot_voice_input">Usar entrada de voz</string>
+<string name="chatbot_stop_response">Detener respuesta</string>
+<string name="chatbot_copied">Respuesta copiada</string>
+<string name="chatbot_voice_unavailable">La entrada de voz no está disponible en este dispositivo</string>
+<string name="chatbot_send_message">Enviar mensaje</string>
+<string name="chatbot_concise">Breve</string>
+<string name="chatbot_detailed">Detallada</string>
+<string name="chatbot_data_sources">Datos consultados: %1$s</string>
+<string name="chatbot_open_schedule">Abrir calendario</string>
+<string name="chatbot_open_standings">Abrir clasificación</string>
+<string name="chatbot_open_telemetry">Abrir telemetría</string>
+<string name="chatbot_open_news">Abrir noticias</string>
 </resources>

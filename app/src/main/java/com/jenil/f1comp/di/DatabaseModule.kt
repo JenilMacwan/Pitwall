@@ -21,6 +21,10 @@ object DatabaseModule {
 
     @Provides
     @Singleton
+    fun provideChatMessageDao(db: AppDatabase) = db.chatMessageDao
+
+    @Provides
+    @Singleton
     fun provideScheduleDao(db: AppDatabase) = db.scheduleDao
 
     @Provides

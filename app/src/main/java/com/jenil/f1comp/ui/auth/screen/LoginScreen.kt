@@ -355,10 +355,7 @@ fun LoginScreen(
                         viewModel.forgotPassword(email)
                     },
                     onGuestClick = {
-                        settingsViewModel.setFirstLaunchCompleted()
-                        navController.navigate("home") {
-                            popUpTo("login") { inclusive = true }
-                        }
+                        viewModel.signInAnonymously()
                     }
                 )
             } else {

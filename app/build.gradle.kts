@@ -31,13 +31,7 @@ android {
         versionCode = 3
         versionName = "1.2.2"
 
-        testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
-
-        val secretApiKey = System.getenv("CHAT_API_KEY")
-            ?: localProperties.getProperty("CHAT_API_KEY")
-            ?: ""
-        buildConfigField("String", "CHAT_API_KEY", "\"$secretApiKey\"")
-    }
+        testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"    }
 
     buildTypes {
         release {

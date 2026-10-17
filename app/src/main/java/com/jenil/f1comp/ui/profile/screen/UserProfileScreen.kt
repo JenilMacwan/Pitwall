@@ -1044,7 +1044,7 @@ fun UserProfileScreen(
                     title = stringResource(R.string.profile_whatsapp_support),
                     subtitle = stringResource(R.string.profile_settings_community_subtitle),
                     onClick = {
-                        val uri = "https://wa.me/?text=Hello%20PitWall%20Support!".toUri()
+                        val uri = "".toUri()
                         val intent = Intent(Intent.ACTION_VIEW, uri)
                         try {
                             context.startActivity(intent)
@@ -1123,13 +1123,13 @@ fun UserProfileScreen(
                             SocialButton(
                                 label = "Twitter / X",
                                 onClick = {
-                                    openUrl(context, "https://x.com/")
+                                    openUrl(context, "https://x.com/pit_wall_app")
                                 }
                             )
                             SocialButton(
                                 label = "Instagram",
                                 onClick = {
-                                    openUrl(context, "https://instagram.com/")
+                                    openUrl(context, "https://instagram.com/pitwall__app")
                                 }
                             )
                             SocialButton(

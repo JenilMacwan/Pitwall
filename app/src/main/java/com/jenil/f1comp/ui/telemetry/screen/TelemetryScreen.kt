@@ -32,12 +32,16 @@ import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
+import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
@@ -45,6 +49,7 @@ import androidx.compose.ui.unit.sp
 import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavController
+import com.jenil.f1comp.R
 import com.jenil.f1comp.ui.F1ScreenPadding
 import com.jenil.f1comp.ui.telemetry.component.CompactTelemetryHeader
 import com.jenil.f1comp.ui.telemetry.component.RaceConditionBanner
@@ -53,8 +58,14 @@ import com.jenil.f1comp.ui.telemetry.component.TelemetryHeader
 import com.jenil.f1comp.ui.telemetry.component.TimingTowerCard
 import com.jenil.f1comp.ui.theme.F1Red
 import com.jenil.f1comp.viewmodel.LiveTelemetryViewModel
+import com.jenil.f1comp.viewmodel.NextRaceViewModel
+import com.jenil.f1comp.viewmodel.ScheduleViewModel
 import com.jenil.f1comp.viewmodel.SettingsViewModel
 import com.jenil.f1comp.viewmodel.TelemetryUiState
+import kotlinx.coroutines.delay
+import java.time.LocalDate
+import java.time.ZoneId
+import kotlin.time.Duration.Companion.seconds
 
 @Composable
 fun TelemetryScreen(
@@ -62,15 +73,36 @@ fun TelemetryScreen(
     title: String = "Live Telemetry",
     navController: NavController,
     telemetryViewModel: LiveTelemetryViewModel = hiltViewModel(),
-    settingsViewModel: SettingsViewModel = hiltViewModel()
+    settingsViewModel: SettingsViewModel = hiltViewModel(),
+    nextRaceViewModel: NextRaceViewModel = hiltViewModel(),
+    scheduleViewModel: ScheduleViewModel = hiltViewModel()
 ) {
     val telemetryData by telemetryViewModel.telemetryData.collectAsState()
     val telemetryUiState by telemetryViewModel.telemetryUiState.collectAsState()
+    val lastUpdateAtMillis by telemetryViewModel.lastUpdateAtMillis.collectAsStateWithLifecycle()
     val rawHeaderStyle by settingsViewModel.telemetryHeaderStyle.collectAsStateWithLifecycle()
     val headerStyle = rawHeaderStyle ?: "DEFAULT"
     val showTowerGaps by settingsViewModel.telemetryTowerShowGaps.collectAsStateWithLifecycle()
     val showTowerSectors by settingsViewModel.telemetryTowerShowSectors.collectAsStateWithLifecycle()
     val showTowerTyres by settingsViewModel.telemetryTowerShowTyres.collectAsStateWithLifecycle()
+    val nextRaceState by nextRaceViewModel.uiState.collectAsStateWithLifecycle()
+    val raceSchedule by scheduleViewModel.schedule.collectAsStateWithLifecycle()
+
+    var clockNow by remember { androidx.compose.runtime.mutableLongStateOf(System.currentTimeMillis()) }
+    LaunchedEffect(Unit) {
+        while (true) {
+            clockNow = System.currentTimeMillis()
+            delay(1.seconds)
+        }
+    }
+    val feedAgeSeconds = lastUpdateAtMillis?.let { ((clockNow - it) / 1000).coerceAtLeast(0) }
+    val feedStatusText = when {
+        telemetryUiState is TelemetryUiState.Error && feedAgeSeconds != null -> stringResource(R.string.telemetry_feed_disconnected, feedAgeSeconds)
+        telemetryUiState is TelemetryUiState.Error -> stringResource(R.string.telemetry_feed_unavailable)
+        feedAgeSeconds != null && feedAgeSeconds > 30 -> stringResource(R.string.telemetry_feed_delayed, feedAgeSeconds)
+        feedAgeSeconds != null -> stringResource(R.string.telemetry_feed_updated, feedAgeSeconds)
+        else -> stringResource(R.string.telemetry_feed_waiting)
+    }
 
     val scrollState = rememberScrollState()
 
@@ -107,7 +139,7 @@ fun TelemetryScreen(
             IconButton(onClick = { navController.popBackStack() }) {
                 Icon(
                     imageVector = Icons.AutoMirrored.Rounded.ArrowBack,
-                    contentDescription = "Back",
+                    contentDescription = stringResource(R.string.common_back),
                     tint = MaterialTheme.colorScheme.onSurface
                 )
             }
@@ -121,7 +153,7 @@ fun TelemetryScreen(
             IconButton(onClick = { navController.navigate("telemetry_settings") }) {
                 Icon(
                     imageVector = Icons.Outlined.Settings,
-                    contentDescription = "Telemetry Settings",
+                    contentDescription = stringResource(R.string.accessibility_telemetry_settings),
                     tint = MaterialTheme.colorScheme.onSurface
                 )
             }
@@ -186,7 +218,7 @@ fun TelemetryScreen(
                         ) {
                             Icon(
                                 imageVector = Icons.Outlined.CloudOff,
-                                contentDescription = "Connection Error",
+                                contentDescription = stringResource(R.string.accessibility_connection_error),
                                 tint = F1Red,
                                 modifier = Modifier.size(48.dp)
                             )
@@ -217,7 +249,7 @@ fun TelemetryScreen(
                             ) {
                                 Icon(
                                     imageVector = Icons.Outlined.Refresh,
-                                    contentDescription = "Retry",
+                                    contentDescription = stringResource(R.string.accessibility_retry),
                                     modifier = Modifier.size(18.dp)
                                 )
                                 Spacer(modifier = Modifier.width(8.dp))
@@ -235,13 +267,136 @@ fun TelemetryScreen(
                 }
             }
 
-            // Display telemetry cards (with banner if stream interrupted or no live session active)
+            telemetryUiState is TelemetryUiState.Success && !isLiveSessionActive -> {
+                val nextRace = nextRaceState.nextRace
+                val scheduledRace = remember(nextRace, raceSchedule) {
+                    nextRace?.let { next -> raceSchedule.firstOrNull { it.round == next.round } }
+                }
+                Column(
+                    modifier = Modifier
+                        .fillMaxSize()
+                        .verticalScroll(scrollState)
+                        .padding(horizontal = 16.dp, vertical = 12.dp),
+                    verticalArrangement = Arrangement.spacedBy(12.dp)
+                ) {
+                    if (nextRace != null) {
+                        Card(
+                            modifier = Modifier.fillMaxWidth(),
+                            shape = RoundedCornerShape(16.dp),
+                            colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surfaceVariant.copy(alpha = 0.55f))
+                        ) {
+                            Column(modifier = Modifier.fillMaxWidth().padding(16.dp)) {
+                                Text(
+                                    text = "NEXT SESSION · ROUND ${nextRace.round}",
+                                    style = MaterialTheme.typography.labelMedium,
+                                    fontFamily = FontFamily.Monospace,
+                                    fontWeight = FontWeight.Bold,
+                                    color = MaterialTheme.colorScheme.primary
+                                )
+                                Spacer(modifier = Modifier.height(6.dp))
+                                Text(
+                                    text = "${nextRace.raceName} · ${nextRace.sessionName}",
+                                    style = MaterialTheme.typography.titleMedium,
+                                    color = MaterialTheme.colorScheme.onSurface
+                                )
+                                scheduledRace?.let { race ->
+                                    val (date, time) = com.jenil.f1comp.ui.schedule.components.formatSessionDateTime(
+                                        race.grandPrix,
+                                        race.time
+                                    )
+                                    Spacer(modifier = Modifier.height(4.dp))
+                                    Text(
+                                        text = "$date · $time",
+                                        style = MaterialTheme.typography.bodyMedium,
+                                        color = MaterialTheme.colorScheme.onSurfaceVariant
+                                    )
+                                    Text(
+                                        text = stringResource(R.string.telemetry_device_timezone, ZoneId.systemDefault().id),
+                                        style = MaterialTheme.typography.bodySmall,
+                                        color = MaterialTheme.colorScheme.onSurfaceVariant
+                                    )
+                                }
+                            }
+                        }
+                    }
+                    Card(
+                        modifier = Modifier.fillMaxWidth(),
+                        shape = RoundedCornerShape(16.dp),
+                        colors = CardDefaults.cardColors(
+                            containerColor = MaterialTheme.colorScheme.surface
+                        ),
+                        border = BorderStroke(
+                            1.dp,
+                            MaterialTheme.colorScheme.outlineVariant.copy(alpha = 0.5f)
+                        )
+                    ) {
+                        Column(
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .padding(20.dp),
+                            horizontalAlignment = Alignment.CenterHorizontally
+                        ) {
+                            Icon(
+                                imageVector = Icons.Outlined.Info,
+                                contentDescription = null,
+                                tint = MaterialTheme.colorScheme.primary,
+                                modifier = Modifier.size(40.dp)
+                            )
+                            Spacer(modifier = Modifier.height(16.dp))
+                            Text(
+                                text = "No live session right now",
+                                style = MaterialTheme.typography.titleLarge,
+                                color = MaterialTheme.colorScheme.onSurface,
+                                fontWeight = FontWeight.Bold
+                            )
+                            Spacer(modifier = Modifier.height(8.dp))
+                            Text(
+                                text = "Live timing appears here during a session. Check the schedule for the next race weekend.",
+                                style = MaterialTheme.typography.bodyMedium,
+                                color = MaterialTheme.colorScheme.onSurfaceVariant
+                            )
+                            Spacer(modifier = Modifier.height(8.dp))
+                            Text(
+                                text = feedStatusText,
+                                style = MaterialTheme.typography.bodySmall,
+                                color = MaterialTheme.colorScheme.onSurfaceVariant
+                            )
+                            Spacer(modifier = Modifier.height(12.dp))
+                            Row(
+                                modifier = Modifier.fillMaxWidth(),
+                                horizontalArrangement = Arrangement.SpaceEvenly
+                            ) {
+                                TextButton(onClick = { navController.navigate("schedule") }) { Text(stringResource(R.string.telemetry_action_schedule)) }
+                                TextButton(onClick = { navController.navigate("race_result/last/${LocalDate.now().year}") }) { Text(stringResource(R.string.telemetry_action_latest_results)) }
+                                TextButton(onClick = { navController.navigate("team_radio") }) { Text(stringResource(R.string.telemetry_action_team_radio)) }
+                            }
+                            TextButton(onClick = { navController.navigate("news") }) { Text(stringResource(R.string.telemetry_action_news)) }
+                        }
+                    }
+                }
+            }
+
+            // Display telemetry cards only when session data is present.
             else -> {
                 Column(
                     modifier = Modifier
                         .fillMaxSize()
                         .verticalScroll(scrollState)
                 ) {
+                    Surface(
+                        modifier = Modifier.fillMaxWidth().padding(horizontal = 16.dp, vertical = 4.dp),
+                        color = if (feedAgeSeconds != null && feedAgeSeconds > 30 || telemetryUiState is TelemetryUiState.Error)
+                            MaterialTheme.colorScheme.errorContainer.copy(alpha = 0.55f)
+                        else MaterialTheme.colorScheme.surfaceVariant,
+                        shape = RoundedCornerShape(8.dp)
+                    ) {
+                        Text(
+                            text = feedStatusText,
+                            style = MaterialTheme.typography.bodySmall,
+                            color = MaterialTheme.colorScheme.onSurfaceVariant,
+                            modifier = Modifier.padding(horizontal = 12.dp, vertical = 8.dp)
+                        )
+                    }
                     // Banner 1: Stream interrupted error banner
                     if (telemetryUiState is TelemetryUiState.Error) {
                         Surface(
@@ -263,7 +418,7 @@ fun TelemetryScreen(
                                 ) {
                                     Icon(
                                         imageVector = Icons.Outlined.CloudOff,
-                                        contentDescription = "Error",
+                                        contentDescription = stringResource(R.string.accessibility_error),
                                         tint = F1Red,
                                         modifier = Modifier.size(16.dp)
                                     )
@@ -284,7 +439,7 @@ fun TelemetryScreen(
                                 ) {
                                     Icon(
                                         imageVector = Icons.Outlined.Refresh,
-                                        contentDescription = "Retry",
+                                        contentDescription = stringResource(R.string.accessibility_retry),
                                         tint = F1Red,
                                         modifier = Modifier.size(16.dp)
                                     )
@@ -312,7 +467,7 @@ fun TelemetryScreen(
                                 ) {
                                     Icon(
                                         imageVector = Icons.Outlined.Info,
-                                        contentDescription = "No Live Session",
+                                        contentDescription = stringResource(R.string.accessibility_no_live_session),
                                         tint = bannerColor,
                                         modifier = Modifier.size(16.dp)
                                     )
@@ -333,7 +488,7 @@ fun TelemetryScreen(
                                 ) {
                                     Icon(
                                         imageVector = Icons.Outlined.Refresh,
-                                        contentDescription = "Refresh",
+                                        contentDescription = stringResource(R.string.accessibility_refresh),
                                         tint = bannerColor,
                                         modifier = Modifier.size(16.dp)
                                     )

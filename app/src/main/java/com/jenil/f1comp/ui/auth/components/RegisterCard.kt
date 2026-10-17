@@ -18,6 +18,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.layout.widthIn
+import androidx.compose.foundation.selection.toggleable
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.icons.Icons
@@ -44,6 +45,7 @@ import androidx.compose.material3.OutlinedTextFieldDefaults
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -56,6 +58,8 @@ import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.semantics.Role
 import androidx.compose.ui.text.LinkAnnotation
 import androidx.compose.ui.text.SpanStyle
 import androidx.compose.ui.text.TextLinkStyles
@@ -68,7 +72,6 @@ import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.ui.text.style.TextDecoration
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.text.withLink
-import androidx.compose.ui.text.withStyle
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -113,8 +116,19 @@ fun RegisterCard(
     var selectedDriver by rememberSaveable { mutableStateOf<String?>(null) }
     var driverExpanded by rememberSaveable { mutableStateOf(false) }
 
-    var alertsChecked by rememberSaveable { mutableStateOf(true) }
-    var termsChecked by rememberSaveable { mutableStateOf(true) }
+    var showPersonalization by rememberSaveable { mutableStateOf(false) }
+    var termsChecked by rememberSaveable { mutableStateOf(false) }
+    var registrationStep by rememberSaveable { mutableStateOf(1) }
+
+    val passwordStrength = remember(passwordState) { calculatePasswordStrength(passwordState) }
+
+    LaunchedEffect(authUiState) {
+        if (authUiState is AuthUiState.Error &&
+            authUiState.targetField in setOf(AuthErrorField.EMAIL, AuthErrorField.PASSWORD)
+        ) {
+            registrationStep = 1
+        }
+    }
 
     val teams = remember(constructorProfiles) {
         if (constructorProfiles.isNotEmpty()) {
@@ -134,12 +148,27 @@ fun RegisterCard(
         }
     }
 
-    val neonGreen = Color(0xFF00E676)
-
     Column(
         modifier = modifier.fillMaxWidth(),
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
+        Row(
+            modifier = Modifier.fillMaxWidth().padding(horizontal = 8.dp, vertical = 8.dp),
+            verticalAlignment = Alignment.CenterVertically
+        ) {
+            Text(
+                text = stringResource(if (registrationStep == 1) R.string.signup_step_account else R.string.signup_step_personalize),
+                style = MaterialTheme.typography.titleSmall,
+                color = Color.White,
+                fontWeight = FontWeight.SemiBold,
+                modifier = Modifier.weight(1f)
+            )
+            Text(
+                text = if (registrationStep == 1) "1 / 2" else "2 / 2",
+                style = MaterialTheme.typography.labelMedium,
+                color = Color.White.copy(alpha = 0.72f)
+            )
+        }
         Card(
             modifier = Modifier
                 .fillMaxWidth()
@@ -156,22 +185,32 @@ fun RegisterCard(
                 modifier = Modifier.padding(16.dp),
                 horizontalAlignment = Alignment.CenterHorizontally
             ) {
+                if (registrationStep == 2) {
+                    OutlinedButton(
+                        onClick = { registrationStep = 1 },
+                        modifier = Modifier.align(Alignment.Start),
+                        shape = RoundedCornerShape(12.dp),
+                        colors = ButtonDefaults.outlinedButtonColors(contentColor = Color.White)
+                    ) { Text(stringResource(R.string.signup_back_account)) }
+                    Text(
+                        text = listOf(callsignState.takeIf { it.isNotBlank() }, emailState).filterNotNull().joinToString(" · "),
+                        style = MaterialTheme.typography.bodySmall,
+                        color = Color.White.copy(alpha = 0.75f),
+                        modifier = Modifier.align(Alignment.Start).padding(bottom = 12.dp)
+                    )
+                }
+
+                if (registrationStep == 1) {
                 // 1. CALLSIGN / FULL NAME
                 Row(
                     modifier = Modifier.fillMaxWidth(),
                     verticalAlignment = Alignment.CenterVertically
                 ) {
                     Text(
-                        text = "CALLSIGN / FULL NAME",
+                        text = stringResource(R.string.auth_name_optional),
                         style = MaterialTheme.typography.bodyMedium,
                         fontWeight = FontWeight.Bold,
                         color = Color.White.copy(alpha = 0.9f)
-                    )
-                    Spacer(modifier = Modifier.weight(1f))
-                    Text(
-                        text = "REQ // S-01",
-                        style = MaterialTheme.typography.bodySmall,
-                        color = Color.White.copy(alpha = 0.5f)
                     )
                 }
                 Spacer(modifier = Modifier.height(6.dp))
@@ -181,7 +220,7 @@ fun RegisterCard(
                     leadingIcon = {
                         Icon(
                             imageVector = Icons.Outlined.Person,
-                            contentDescription = "User Icon",
+                            contentDescription = null,
                             tint = Color.DarkGray
                         )
                     },
@@ -215,16 +254,10 @@ fun RegisterCard(
                     verticalAlignment = Alignment.CenterVertically
                 ) {
                     Text(
-                        text = "OFFICIAL EMAIL ADDRESS",
+                        text = stringResource(R.string.auth_email_address),
                         style = MaterialTheme.typography.bodyMedium,
                         fontWeight = FontWeight.Bold,
                         color = Color.White.copy(alpha = 0.9f)
-                    )
-                    Spacer(modifier = Modifier.weight(1f))
-                    Text(
-                        text = "COMM LINK",
-                        style = MaterialTheme.typography.bodySmall,
-                        color = Color.White.copy(alpha = 0.5f)
                     )
                 }
                 Spacer(modifier = Modifier.height(6.dp))
@@ -235,7 +268,7 @@ fun RegisterCard(
                     leadingIcon = {
                         Icon(
                             imageVector = Icons.Outlined.Email,
-                            contentDescription = "Email Icon",
+                            contentDescription = null,
                             tint = Color.DarkGray
                         )
                     },
@@ -271,15 +304,35 @@ fun RegisterCard(
                         modifier = Modifier.align(Alignment.Start)
                     )
                 }
-                Spacer(modifier = Modifier.height(10.dp))
+                Spacer(modifier = Modifier.height(8.dp))
+                }
 
-                // 3. FAVORITE CONSTRUCTOR / TEAM
+                if (registrationStep == 2) {
+                OutlinedButton(
+                    onClick = { showPersonalization = !showPersonalization },
+                    modifier = Modifier.fillMaxWidth(),
+                    shape = RoundedCornerShape(12.dp),
+                    colors = ButtonDefaults.outlinedButtonColors(contentColor = Color.White)
+                ) {
+                    Text(stringResource(if (showPersonalization) R.string.auth_hide_optional_favorites else R.string.auth_add_optional_favorites))
+                }
+                Text(
+                    text = stringResource(R.string.auth_favorites_hint),
+                    style = MaterialTheme.typography.bodySmall,
+                    color = Color.White.copy(alpha = 0.75f),
+                    modifier = Modifier
+                        .align(Alignment.Start)
+                        .padding(top = 4.dp, bottom = 8.dp)
+                )
+
+                if (showPersonalization) {
+                // Optional personalization: account creation does not depend on these choices.
                 Row(
                     modifier = Modifier.fillMaxWidth(),
                     verticalAlignment = Alignment.CenterVertically
                 ) {
                     Text(
-                        text = "FAVORITE CONSTRUCTOR / TEAM",
+                        text = stringResource(R.string.auth_favorite_team),
                         style = MaterialTheme.typography.bodyMedium,
                         fontWeight = FontWeight.Bold,
                         color = Color.White.copy(alpha = 0.9f)
@@ -313,7 +366,7 @@ fun RegisterCard(
                             )
                             Spacer(modifier = Modifier.width(12.dp))
                             Text(
-                                text = selectedTeam ?: "Select Team",
+                                text = selectedTeam ?: stringResource(R.string.auth_select_team),
                                 style = MaterialTheme.typography.bodyMedium,
                                 color = if (selectedTeam != null) Color.White else Color.White.copy(alpha = 0.5f),
                                 fontWeight = FontWeight.SemiBold
@@ -321,7 +374,7 @@ fun RegisterCard(
                             Spacer(modifier = Modifier.weight(1f))
                             Icon(
                                 imageVector = Icons.Outlined.KeyboardArrowDown,
-                                contentDescription = "Dropdown",
+                                contentDescription = null,
                                 tint = Color.White.copy(alpha = 0.7f)
                             )
                         }
@@ -374,7 +427,7 @@ fun RegisterCard(
                                     if (selected) {
                                         Icon(
                                             imageVector = Icons.Default.Check,
-                                            contentDescription = "Selected",
+                                            contentDescription = stringResource(R.string.common_selected),
                                             tint = MaterialTheme.colorScheme.primary,
                                         )
                                     }
@@ -395,7 +448,7 @@ fun RegisterCard(
                     verticalAlignment = Alignment.CenterVertically
                 ) {
                     Text(
-                        text = "FAVORITE DRIVER / RACER",
+                        text = stringResource(R.string.auth_favorite_driver),
                         style = MaterialTheme.typography.bodyMedium,
                         fontWeight = FontWeight.Bold,
                         color = Color.White.copy(alpha = 0.9f)
@@ -428,7 +481,7 @@ fun RegisterCard(
                             )
                             Spacer(modifier = Modifier.width(12.dp))
                             Text(
-                                text = selectedDriver ?: "Select Driver",
+                                text = selectedDriver ?: stringResource(R.string.auth_select_driver),
                                 style = MaterialTheme.typography.bodyMedium,
                                 color = if (selectedDriver != null) Color.White else Color.White.copy(alpha = 0.5f),
                                 fontWeight = FontWeight.SemiBold
@@ -436,7 +489,7 @@ fun RegisterCard(
                             Spacer(modifier = Modifier.weight(1f))
                             Icon(
                                 imageVector = Icons.Outlined.KeyboardArrowDown,
-                                contentDescription = "Dropdown",
+                                contentDescription = null,
                                 tint = Color.White.copy(alpha = 0.7f)
                             )
                         }
@@ -488,7 +541,7 @@ fun RegisterCard(
                                     if (selected) {
                                         Icon(
                                             imageVector = Icons.Default.Check,
-                                            contentDescription = "Selected",
+                                            contentDescription = stringResource(R.string.common_selected),
                                             tint = MaterialTheme.colorScheme.primary,
                                         )
                                     }
@@ -502,25 +555,22 @@ fun RegisterCard(
                     }
                 }
                 Spacer(modifier = Modifier.height(10.dp))
+                }
+                }
 
-                // 5. CREATE PADDOCK PASSKEY
+                if (registrationStep == 1) {
+                // 5. CREATE PASSWORD
                 Row(
                     modifier = Modifier.fillMaxWidth(),
                     verticalAlignment = Alignment.CenterVertically
                 ) {
                     Text(
-                        text = "CREATE PADDOCK PASSKEY",
+                        text = stringResource(R.string.auth_password),
                         style = MaterialTheme.typography.bodyMedium,
                         fontWeight = FontWeight.Bold,
                         color = Color.White.copy(alpha = 0.9f)
                     )
                     Spacer(modifier = Modifier.weight(1f))
-                    Text(
-                        text = "ENCRYPTED // SHA-256",
-                        style = MaterialTheme.typography.bodySmall,
-                        fontWeight = FontWeight.Bold,
-                        color = neonGreen
-                    )
                 }
                 Spacer(modifier = Modifier.height(6.dp))
                 OutlinedTextField(
@@ -533,7 +583,7 @@ fun RegisterCard(
                     leadingIcon = {
                         Icon(
                             imageVector = Icons.Outlined.Lock,
-                            contentDescription = "Lock Icon",
+                            contentDescription = null,
                             tint = Color.DarkGray
                         )
                     },
@@ -546,7 +596,7 @@ fun RegisterCard(
                         ) {
                             Icon(
                                 imageVector = Icons.Outlined.RemoveRedEye,
-                                contentDescription = "Toggle password visibility",
+                                contentDescription = stringResource(R.string.auth_toggle_password),
                                 tint = Color.DarkGray
                             )
                         }
@@ -586,21 +636,27 @@ fun RegisterCard(
                 Spacer(modifier = Modifier.height(10.dp))
 
                 // 6. STRENGTH SPECTRUM
-                val passwordStrength = remember(passwordState) { calculatePasswordStrength(passwordState) }
-
                 Row(
                     modifier = Modifier.fillMaxWidth(),
                     verticalAlignment = Alignment.CenterVertically
                 ) {
                     Text(
-                        text = "STRENGTH SPECTRUM",
+                        text = stringResource(R.string.auth_password_requirements),
                         style = MaterialTheme.typography.bodySmall,
                         fontWeight = FontWeight.Bold,
                         color = Color.White.copy(alpha = 0.8f)
                     )
                     Spacer(modifier = Modifier.weight(1f))
                     Text(
-                        text = passwordStrength.label,
+                        text = stringResource(
+                            when (passwordStrength.label) {
+                                "Set a password" -> R.string.auth_set_password
+                                "Strong" -> R.string.auth_strength_strong
+                                "Good" -> R.string.auth_strength_good
+                                "Fair" -> R.string.auth_strength_fair
+                                else -> R.string.auth_strength_weak
+                            }
+                        ),
                         style = MaterialTheme.typography.bodySmall,
                         fontWeight = FontWeight.Bold,
                         color = passwordStrength.color
@@ -639,7 +695,7 @@ fun RegisterCard(
                     horizontalArrangement = Arrangement.SpaceBetween,
                     verticalAlignment = Alignment.CenterVertically
                 ) {
-                    RequirementChip(label = "8+ Chars", isMet = passwordStrength.hasMinLength)
+                    RequirementChip(label = stringResource(R.string.auth_password_length), isMet = passwordStrength.hasMinLength)
                     RequirementChip(label = "A-Z", isMet = passwordStrength.hasUppercase)
                     RequirementChip(label = "a-z", isMet = passwordStrength.hasLowercase)
                     RequirementChip(label = "0-9", isMet = passwordStrength.hasDigit)
@@ -647,37 +703,19 @@ fun RegisterCard(
                 }
                 Spacer(modifier = Modifier.height(14.dp))
 
-                // 7. CHECKBOXES
-                // Checkbox 1: Audio alerts
-                Row(
-                    modifier = Modifier
-                        .widthIn(max = 488.dp)
-                        .fillMaxWidth()
-                        .padding(vertical = 4.dp),
-                    verticalAlignment = Alignment.CenterVertically
+                Button(
+                    onClick = { registrationStep = 2 },
+                    enabled = emailState.isNotBlank() && passwordStrength.isStrong,
+                    modifier = Modifier.fillMaxWidth(),
+                    shape = RoundedCornerShape(12.dp),
+                    colors = ButtonDefaults.buttonColors(containerColor = F1Red)
                 ) {
-                    RoundedCheckbox(
-                        checked = alertsChecked,
-                        onCheckedChange = { alertsChecked = it },
-                        modifier = Modifier.padding(start = 2.dp)
-                    )
-                    Spacer(modifier = Modifier.width(10.dp))
-                    val audioText = buildAnnotatedString {
-                        append("Receive ")
-                        withStyle(SpanStyle(fontWeight = FontWeight.Bold, color = Color.White)) {
-                            append("updates, promotions and other information")
-                        }
-                        append(" about the app over mail.")
-                    }
-                    Text(
-                        text = audioText,
-                        style = MaterialTheme.typography.bodySmall,
-                        color = Color.White.copy(alpha = 0.85f)
-                    )
+                    Text(stringResource(R.string.signup_continue))
                 }
-                Spacer(modifier = Modifier.height(6.dp))
+                }
 
-                // Checkbox 2: Terms & Regulations
+                if (registrationStep == 2) {
+                // Required legal acceptance is explicit; optional marketing consent is not collected here.
                 Row(
                     modifier = Modifier
                         .widthIn(max = 488.dp)
@@ -710,7 +748,7 @@ fun RegisterCard(
                         ) {
                             append("PitWall Terms")
                         }
-                        append(" & Data Regulations.")
+                        append(".")
                     }
                     Text(
                         text = termsText,
@@ -769,7 +807,7 @@ fun RegisterCard(
                             )
                         } else {
                             Text(
-                                text = "///  CREATE PADDOCK ACCOUNT   ->",
+                            text = stringResource(R.string.auth_create_account),
                                 style = MaterialTheme.typography.titleSmall,
                                 fontWeight = FontWeight.Bold,
                                 color = Color.White,
@@ -793,7 +831,7 @@ fun RegisterCard(
                         thickness = 1.dp
                     )
                     Text(
-                        text = "//  OR CONNECT VIA TELEMETRY  //",
+                        text = stringResource(R.string.auth_or_sign_up_with),
                         style = MaterialTheme.typography.bodySmall,
                         color = Color.White.copy(alpha = 0.5f),
                         modifier = Modifier.padding(horizontal = 8.dp)
@@ -811,7 +849,7 @@ fun RegisterCard(
                     onClick = {
                         onGoogleClick(callsignState, selectedTeam, selectedDriver)
                     },
-                    enabled = !isLoadingG,
+                    enabled = !isLoadingG && termsChecked,
                     modifier = Modifier
                         .align(Alignment.CenterHorizontally)
                         .height(44.dp),
@@ -828,17 +866,18 @@ fun RegisterCard(
                     ) {
                         Image(
                             painter = painterResource(id = R.drawable.ic_google),
-                            contentDescription = "Google",
+                            contentDescription = null,
                             modifier = Modifier.size(20.dp)
                         )
                         Spacer(modifier = Modifier.width(10.dp))
                         Text(
-                            text = "Continue with Google",
+                            text = stringResource(R.string.auth_continue_google),
                             style = MaterialTheme.typography.bodyMedium,
                             fontWeight = FontWeight.SemiBold,
                             color = Color.White
                         )
                     }
+                }
                 }
             }
         }
@@ -858,13 +897,13 @@ fun RegisterCard(
                 verticalAlignment = Alignment.CenterVertically
             ) {
                 Text(
-                    text = "Already holding paddock credentials? ",
+                    text = stringResource(R.string.auth_already_have_account) + " ",
                     style = MaterialTheme.typography.bodySmall,
                     color = Color.White.copy(alpha = 0.85f)
                 )
                 Spacer(modifier = Modifier.width(4.dp))
                 Text(
-                    text = "SIGN IN",
+                        text = stringResource(R.string.auth_sign_in),
                     style = MaterialTheme.typography.bodySmall,
                     fontWeight = FontWeight.Bold,
                     color = F1Red,
@@ -895,7 +934,7 @@ private fun calculatePasswordStrength(password: String): PasswordStrength {
     if (password.isEmpty()) {
         return PasswordStrength(
             score = 0,
-            label = "ENTER PASSKEY",
+            label = "Set a password",
             color = Color.Gray,
             hasMinLength = false,
             hasUppercase = false,
@@ -918,10 +957,10 @@ private fun calculatePasswordStrength(password: String): PasswordStrength {
     if (hasSpecialChar) score++
 
     val (label, color) = when {
-        score == 4 && hasMinLength -> "TELEMETRY SECURE // STRONG" to Color(0xFF00E676)
-        score >= 3 -> "OPTIMAL // GOOD" to Color(0xFFFFD700)
-        score >= 2 -> "MODERATE" to Color(0xFFFF9800)
-        else -> "WEAK // INSECURE" to Color(0xFFE10600)
+        score == 4 && hasMinLength -> "Strong" to Color(0xFF00E676)
+        score >= 3 -> "Good" to Color(0xFFFFD700)
+        score >= 2 -> "Fair" to Color(0xFFFF9800)
+        else -> "Weak" to Color(0xFFE10600)
     }
 
     return PasswordStrength(
@@ -939,7 +978,7 @@ private fun calculatePasswordStrength(password: String): PasswordStrength {
 @Composable
 private fun RequirementChip(label: String, isMet: Boolean) {
     val activeColor = Color(0xFF00E676)
-    val inactiveColor = Color.White.copy(alpha = 0.35f)
+    val inactiveColor = Color.White.copy(alpha = 0.65f)
     Text(
         text = if (isMet) "✓ $label" else "• $label",
         style = MaterialTheme.typography.labelSmall,
@@ -963,23 +1002,29 @@ fun RoundedCheckbox(
     Box(
         contentAlignment = Alignment.Center,
         modifier = modifier
-            .size(20.dp)
-            .clip(shape)
-            .background(if (checked) checkedColor else Color.Transparent)
-            .border(
-                width = if (checked) 0.dp else 1.5.dp,
-                color = if (checked) Color.Transparent else uncheckedBorderColor,
-                shape = shape
-            )
-            .clickable { onCheckedChange(!checked) }
+            .size(48.dp)
+            .toggleable(value = checked, onValueChange = onCheckedChange, role = Role.Checkbox)
     ) {
-        if (checked) {
-            Icon(
-                imageVector = Icons.Default.Check,
-                contentDescription = null,
-                tint = Color.White,
-                modifier = Modifier.size(14.dp)
-            )
+        Box(
+            modifier = Modifier
+                .size(20.dp)
+                .clip(shape)
+                .background(if (checked) checkedColor else Color.Transparent)
+                .border(
+                    width = if (checked) 0.dp else 1.5.dp,
+                    color = if (checked) Color.Transparent else uncheckedBorderColor,
+                    shape = shape
+                ),
+            contentAlignment = Alignment.Center
+        ) {
+            if (checked) {
+                Icon(
+                    imageVector = Icons.Default.Check,
+                    contentDescription = null,
+                    tint = Color.White,
+                    modifier = Modifier.size(14.dp)
+                )
+            }
         }
     }
 }

@@ -18,11 +18,13 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import coil.compose.AsyncImage
 import coil.request.ImageRequest
+import com.jenil.f1comp.R
 
 @Composable
 fun CarImageCard(
@@ -58,13 +60,13 @@ fun CarImageCard(
                             .data(carUrl)
                             .crossfade(true)
                             .build(),
-                        contentDescription = "F1 Car: $chassisName",
+                        contentDescription = stringResource(R.string.accessibility_f1_car, chassisName),
                         modifier = Modifier.fillMaxWidth(),
                         contentScale = ContentScale.Fit
                     )
                 } else {
                     Text(
-                        text = "No image available",
+                        text = stringResource(R.string.profile_no_image),
                         style = MaterialTheme.typography.bodyMedium,
                         color = MaterialTheme.colorScheme.onSurfaceVariant
                     )

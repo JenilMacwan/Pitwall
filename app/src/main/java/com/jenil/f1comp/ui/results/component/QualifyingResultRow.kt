@@ -34,6 +34,7 @@ import androidx.compose.ui.geometry.Size
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.jenil.f1comp.data.local.entity.QualifyingResultEntity
@@ -233,7 +234,10 @@ private fun QualifyingResultRowContent(
                             fontFamily = FontFamily.Monospace,
                             fontWeight = FontWeight.Bold,
                             style = MaterialTheme.typography.bodyMedium,
-                            color = MaterialTheme.colorScheme.onSurface
+                            color = MaterialTheme.colorScheme.onSurface,
+                            maxLines = 2,
+                            overflow = TextOverflow.Clip,
+                            modifier = Modifier.weight(1f)
                         )
                         if (posInt == 1 && hasAnyTime) {
                             Spacer(modifier = Modifier.width(6.dp))

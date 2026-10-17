@@ -5,7 +5,6 @@ import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
-import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -42,6 +41,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardType
@@ -65,7 +65,6 @@ fun LoginCard(
     val emailState = rememberSaveable { mutableStateOf("") }
     val passwordState = rememberSaveable { mutableStateOf("") }
     val passwordVisibility = rememberSaveable { mutableStateOf(false) }
-    val checkState = rememberSaveable { mutableStateOf(false) }
     val isLoading = authUiState is AuthUiState.Loading
 
     val isEmailError = authUiState is AuthUiState.Error && (authUiState.targetField == AuthErrorField.EMAIL || authUiState.targetField == AuthErrorField.GENERAL)
@@ -96,21 +95,9 @@ fun LoginCard(
                     verticalAlignment = Alignment.CenterVertically
                 ) {
                     Text(
-                        text = "#",
-                        style = MaterialTheme.typography.bodyMedium,
-                        color = F1Red
-                    )
-                    Spacer(modifier = Modifier.width(2.dp))
-                    Text(
-                        text = "TEAM CREDENTIALS / EMAIL",
+                        text = stringResource(R.string.auth_email),
                         style = MaterialTheme.typography.bodyMedium,
                         color = Color.White.copy(alpha = 0.9f)
-                    )
-                    Spacer(modifier = Modifier.weight(1f))
-                    Text(
-                        text = "HUD // 01",
-                        style = MaterialTheme.typography.bodySmall,
-                        color = Color.White.copy(alpha = 0.6f)
                     )
                 }
                 Spacer(modifier = Modifier.height(12.dp))
@@ -155,21 +142,9 @@ fun LoginCard(
                     verticalAlignment = Alignment.CenterVertically
                 ) {
                     Text(
-                        text = "#",
-                        style = MaterialTheme.typography.bodyMedium,
-                        color = F1Red
-                    )
-                    Spacer(modifier = Modifier.width(2.dp))
-                    Text(
-                        text = "PADDOCK PASSKEY",
+                        text = stringResource(R.string.auth_password),
                         style = MaterialTheme.typography.bodyMedium,
                         color = Color.White.copy(alpha = 0.9f)
-                    )
-                    Spacer(modifier = Modifier.weight(1f))
-                    Text(
-                        text = "SHA-256 ENCRYPTED",
-                        style = MaterialTheme.typography.bodySmall,
-                        color = Color.White.copy(alpha = 0.6f)
                     )
                 }
                 Spacer(modifier = Modifier.height(12.dp))
@@ -189,7 +164,7 @@ fun LoginCard(
                         ) {
                             Icon(
                                 imageVector = Icons.Outlined.RemoveRedEye,
-                                contentDescription = "Toggle password visibility",
+                                contentDescription = stringResource(R.string.auth_toggle_password),
                                 tint = Color.DarkGray
                             )
                         }
@@ -231,22 +206,10 @@ fun LoginCard(
                         .fillMaxWidth(),
                     verticalAlignment = Alignment.CenterVertically
                 ) {
-                    RoundedCheckbox(
-                        checked = checkState.value,
-                        onCheckedChange = {
-                            checkState.value = it
-                        }
-                    )
-                    Spacer(modifier = Modifier.width(6.dp))
-                    Text(
-                        text = "Remember Pit Pass",
-                        style = MaterialTheme.typography.bodyMedium,
-                        color = Color.White
-                    )
                     Spacer(modifier = Modifier.weight(1f))
                     Text(
-                        text = "Forgot Passkey ?",
-                        style = MaterialTheme.typography.bodySmall,
+                        text = stringResource(R.string.auth_forgot_password),
+                        style = MaterialTheme.typography.bodyMedium,
                         color = F1Red,
                         modifier = Modifier.clickable {
                             onForgotPasswordClick(emailState.value)
@@ -296,7 +259,7 @@ fun LoginCard(
                             )
                         } else {
                             Text(
-                                text = "ACCESS PITWALL PADDOCK /// >>>",
+                                text = stringResource(R.string.auth_sign_in),
                                 style = MaterialTheme.typography.titleSmall,
                                 fontWeight = FontWeight.Bold,
                                 color = Color.White
@@ -319,7 +282,7 @@ fun LoginCard(
                         thickness = 1.dp
                     )
                     Text(
-                        text = "//  OR CONNECT VIA TELEMETRY  //",
+                        text = stringResource(R.string.auth_or_sign_in_with),
                         style = MaterialTheme.typography.bodySmall,
                         color = Color.White.copy(alpha = 0.5f),
                         modifier = Modifier.padding(horizontal = 8.dp)
@@ -353,12 +316,12 @@ fun LoginCard(
                     ) {
                         Image(
                             painter = painterResource(id = R.drawable.ic_google),
-                            contentDescription = "Google",
+                            contentDescription = null,
                             modifier = Modifier.size(20.dp)
                         )
                         Spacer(modifier = Modifier.width(10.dp))
                         Text(
-                            text = "Continue with Google",
+                            text = stringResource(R.string.auth_continue_google),
                             style = MaterialTheme.typography.bodyMedium,
                             fontWeight = FontWeight.SemiBold,
                             color = Color.White
@@ -377,16 +340,21 @@ fun LoginCard(
             border = BorderStroke(1.dp, Color.White.copy(alpha = 0.2f)),
             modifier = Modifier.clickable { onGuestClick() }
         ) {
-            Row(
-                modifier = Modifier.padding(horizontal = 20.dp, vertical = 10.dp),
-                horizontalArrangement = Arrangement.Center,
-                verticalAlignment = Alignment.CenterVertically
+            Column(
+                modifier = Modifier.padding(horizontal = 20.dp, vertical = 12.dp),
+                horizontalAlignment = Alignment.CenterHorizontally
             ) {
                 Text(
-                    text = "CONTINUE AS PADDOCK GUEST ->",
-                    style = MaterialTheme.typography.bodySmall,
+                    text = stringResource(R.string.auth_continue_guest),
+                    style = MaterialTheme.typography.bodyMedium,
                     fontWeight = FontWeight.SemiBold,
-                    color = Color.White.copy(alpha = 0.85f)
+                    color = Color.White
+                )
+                Spacer(modifier = Modifier.height(2.dp))
+                Text(
+                    text = stringResource(R.string.auth_browse_guest_subtitle),
+                    style = MaterialTheme.typography.bodySmall,
+                    color = Color.White.copy(alpha = 0.75f)
                 )
             }
         }

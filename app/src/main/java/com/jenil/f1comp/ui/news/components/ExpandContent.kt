@@ -1,5 +1,6 @@
 package com.jenil.f1comp.ui.news.components
 
+import android.content.Intent
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
@@ -12,7 +13,13 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.rounded.Bookmark
+import androidx.compose.material.icons.rounded.BookmarkBorder
+import androidx.compose.material.icons.rounded.Share
 import androidx.compose.material3.HorizontalDivider
+import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -21,8 +28,10 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalUriHandler
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -32,13 +41,19 @@ import com.jenil.f1comp.data.local.entity.NewsEntity
 import com.jenil.f1comp.util.DateParserUtil
 
 @Composable
-fun ExpandedNewsContent(news: NewsEntity, isFirstItem: Boolean) {
+fun ExpandedNewsContent(
+    news: NewsEntity,
+    isFirstItem: Boolean,
+    isSaved: Boolean,
+    onSaveToggle: () -> Unit
+) {
 
     val timeAgo = remember(news.published) {
         DateParserUtil.getTimeAgo(news.published)
     }
 
     val uriHandler = LocalUriHandler.current
+    val context = LocalContext.current
     Column(
         modifier = Modifier.fillMaxWidth()
     ) {
@@ -52,7 +67,7 @@ fun ExpandedNewsContent(news: NewsEntity, isFirstItem: Boolean) {
         ) {
             AsyncImage(
                 model = news.image,
-                contentDescription = "News Image",
+                contentDescription = null,
                 modifier = Modifier.fillMaxWidth(),
                 contentScale = ContentScale.Crop,
                 placeholder = painterResource(R.drawable.ic_news_placeholder),
@@ -70,7 +85,7 @@ fun ExpandedNewsContent(news: NewsEntity, isFirstItem: Boolean) {
             ) {
                 if (isFirstItem) {
                     Text(
-                        text = "FEATURED",
+                        text = stringResource(R.string.news_featured).uppercase(),
                         color = MaterialTheme.colorScheme.primary,
                         fontSize = 12.sp,
                         fontWeight = FontWeight.Bold,
@@ -117,23 +132,48 @@ fun ExpandedNewsContent(news: NewsEntity, isFirstItem: Boolean) {
 
             // Clear call-to-action button
             Row(
-                modifier = Modifier
-                    .align(Alignment.End)
-                    .clip(RoundedCornerShape(8.dp))
-                    .clickable {
-                        if (news.link.isNotEmpty()) {
-                            uriHandler.openUri(news.link)
-                        }
-                    }
-                    .padding(horizontal = 8.dp, vertical = 6.dp),
+                modifier = Modifier.fillMaxWidth(),
                 verticalAlignment = Alignment.CenterVertically
             ) {
-                Text(
-                    text = "Read Full Article →",
-                    color = MaterialTheme.colorScheme.primary,
-                    style = MaterialTheme.typography.labelLarge,
-                    fontWeight = FontWeight.Bold
-                )
+                IconButton(onClick = onSaveToggle) {
+                    Icon(
+                        imageVector = if (isSaved) Icons.Rounded.Bookmark else Icons.Rounded.BookmarkBorder,
+                        contentDescription = stringResource(if (isSaved) R.string.news_remove_saved else R.string.news_save_article),
+                        tint = MaterialTheme.colorScheme.primary
+                    )
+                }
+                IconButton(
+                    onClick = {
+                        val shareIntent = Intent(Intent.ACTION_SEND).apply {
+                            type = "text/plain"
+                            putExtra(Intent.EXTRA_SUBJECT, news.title)
+                            putExtra(Intent.EXTRA_TEXT, "${news.title}\n${news.link}")
+                            addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
+                        }
+                        context.startActivity(Intent.createChooser(shareIntent, context.getString(R.string.accessibility_share_article)))
+                    }
+                ) {
+                    Icon(
+                        imageVector = Icons.Rounded.Share,
+                        contentDescription = stringResource(R.string.accessibility_share_article),
+                        tint = MaterialTheme.colorScheme.onSurfaceVariant
+                    )
+                }
+                Spacer(modifier = Modifier.weight(1f))
+                Row(
+                    modifier = Modifier
+                        .clip(RoundedCornerShape(8.dp))
+                        .clickable { if (news.link.isNotEmpty()) uriHandler.openUri(news.link) }
+                        .padding(horizontal = 8.dp, vertical = 10.dp),
+                    verticalAlignment = Alignment.CenterVertically
+                ) {
+                    Text(
+                        text = stringResource(R.string.news_read_full_article),
+                        color = MaterialTheme.colorScheme.primary,
+                        style = MaterialTheme.typography.labelLarge,
+                        fontWeight = FontWeight.Bold
+                    )
+                }
             }
         }
     }

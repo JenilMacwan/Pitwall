@@ -16,7 +16,11 @@ class HomeScreenTest {
     fun homeScreen_showsTitle() {
         composeTestRule.setContent {
             F1CompTheme {
-                HomeScreen(navController = rememberNavController())
+                HomeScreen(
+                    navController = rememberNavController(),
+                    onDrawerClick = {},
+                    onDetailClick = {}
+                )
             }
         }
 

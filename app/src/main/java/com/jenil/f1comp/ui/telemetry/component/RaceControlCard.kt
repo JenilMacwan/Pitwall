@@ -32,6 +32,7 @@ import androidx.compose.ui.geometry.CornerRadius
 import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.geometry.Size
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.AnnotatedString
 import androidx.compose.ui.text.SpanStyle
 import androidx.compose.ui.text.buildAnnotatedString
@@ -41,6 +42,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.jenil.f1comp.R
 import com.jenil.f1comp.data.model.RaceControlMessage
 import com.jenil.f1comp.ui.theme.F1CompTheme
 import com.jenil.f1comp.ui.theme.F1Red
@@ -125,13 +127,13 @@ fun RaceControlCard(
                 ) {
                     Icon(
                         imageVector = Icons.Outlined.Warning,
-                        contentDescription = "Race Control Warning",
+                        contentDescription = stringResource(R.string.accessibility_race_control_warning),
                         tint = warningColor,
                         modifier = Modifier.size(18.dp)
                     )
                     Spacer(modifier = Modifier.width(8.dp))
                     Text(
-                        text = "FIA RACE CONTROL",
+                        text = stringResource(R.string.telemetry_race_control).uppercase(),
                         style = MaterialTheme.typography.titleMedium.copy(
                             fontFamily = FontFamily.Monospace,
                             fontWeight = FontWeight.Bold,
@@ -151,7 +153,7 @@ fun RaceControlCard(
                     )
                 ) {
                     Text(
-                        text = "AUTO-FEED ACTIVE",
+                        text = stringResource(R.string.telemetry_feed_active).uppercase(),
                         modifier = Modifier.padding(horizontal = 8.dp, vertical = 4.dp),
                         style = MaterialTheme.typography.labelSmall.copy(
                             fontFamily = FontFamily.Monospace,
@@ -177,7 +179,7 @@ fun RaceControlCard(
                     contentAlignment = Alignment.Center
                 ) {
                     Text(
-                        text = "NO RACE CONTROL MESSAGES",
+                        text = stringResource(R.string.telemetry_no_messages).uppercase(),
                         style = MaterialTheme.typography.bodyMedium.copy(
                             fontFamily = FontFamily.Monospace,
                             fontWeight = FontWeight.Bold,

@@ -21,11 +21,13 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavController
+import com.jenil.f1comp.R
 import com.jenil.f1comp.ui.F1ScreenPadding
 import com.jenil.f1comp.ui.profile.components.DriverProfileCard
 import com.jenil.f1comp.ui.profile.components.ProfileLoadingState
@@ -55,10 +57,13 @@ fun ProfileScreen(
     val driverStandings by driverStandingsViewModel.driverStandings.collectAsStateWithLifecycle()
 
     val driverProfile = remember(driverProfiles, profileId) {
-        driverProfiles.find { it.driverId == profileId || it.fullName == profileId }
+        val normalizedId = profileId.replace(Regex("\\s+#?\\d+$"), "").trim()
+        driverProfiles.find { it.driverId == profileId || it.fullName == profileId || it.fullName == normalizedId }
     }
     val constructorProfile = remember(constructorProfiles, profileId) {
-        constructorProfiles.find { it.constructorId == profileId || it.name == profileId }
+        constructorProfiles.find {
+            it.constructorId == profileId || it.name == profileId || it.fullName == profileId
+        }
     }
 
     val scrollState = rememberScrollState()
@@ -78,7 +83,7 @@ fun ProfileScreen(
             IconButton(onClick = { navController.popBackStack() }) {
                 Icon(
                     imageVector = Icons.AutoMirrored.Rounded.ArrowBack,
-                    contentDescription = "Back",
+                    contentDescription = stringResource(R.string.common_back),
                     tint = MaterialTheme.colorScheme.onSurface
                 )
             }
@@ -131,10 +136,10 @@ fun ProfileScreen(
                             teamName = driverProfile.team ?: "Unknown",
                             driverNumber = driverProfile.number,
                             nationality = driverProfile.nationality ?: "Unknown",
-                            wins = driverProfile.careerStats?.currentSeason?.wins?.toString() ?: "0",
-                            podiums = driverProfile.careerStats?.currentSeason?.podiums?.toString() ?: "0",
-                            points = driverProfile.careerStats?.currentSeason?.points ?: "0",
-                            poles = driverProfile.careerStats?.currentSeason?.poles?.toString() ?: "0",
+                            wins = driverProfile.careerStats?.currentSeason?.wins?.toString() ?: "—",
+                            podiums = driverProfile.careerStats?.currentSeason?.podiums?.toString() ?: "—",
+                            points = driverProfile.careerStats?.currentSeason?.points ?: "—",
+                            poles = driverProfile.careerStats?.currentSeason?.poles?.toString() ?: "—",
                             about = driverProfile.about ?: "No information available.",
                             born = driverProfile.born ?: "No information available.",
                             debut = driverProfile.debut ?: "No information available.",
@@ -169,9 +174,9 @@ fun ProfileScreen(
                             chassis = ProfileUtils.getChassis(constructorProfile.constructorId),
                             powerUnit = ProfileUtils.getPowerUnit(constructorProfile.constructorId),
                             teamBoss = ProfileUtils.getTeamPrincipal(constructorProfile.constructorId),
-                            standing = constructorProfile.careerStats?.currentSeason?.position ?: "0",
-                            points = constructorProfile.careerStats?.currentSeason?.points ?: "0",
-                            podiums = constructorProfile.careerStats?.currentSeason?.podiums?.toString() ?: "0",
+                            standing = constructorProfile.careerStats?.currentSeason?.position ?: "—",
+                            points = constructorProfile.careerStats?.currentSeason?.points ?: "—",
+                            podiums = constructorProfile.careerStats?.currentSeason?.podiums?.toString() ?: "—",
                             wins = constructorProfile.careerStats?.wins?.toString() ?: "0",
                             totalRaces = constructorProfile.careerStats?.totalRaces?.toString() ?: "0",
                             wdc = constructorProfile.careerStats?.driverChampionships?.toString() ?: "0",

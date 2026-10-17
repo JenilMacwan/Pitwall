@@ -151,7 +151,7 @@
     <string name="news_read_more">LEES VOLLEDIG ARTIKEL</string>
 
     <!-- Profile Screen -->
-    <string name="profile_title">PADDOCK COUREURSPROFIEL</string>
+    <string name="profile_title">Paddockprofiel</string>
     <string name="profile_paddock_pass">PADDOCK PAS ACTIEF</string>
     <string name="profile_guest_pass">GAST PADDOCK PAS</string>
     <string name="profile_guest_desc">Meld u aan of activeer uw profiel om telemetrie en meldingen te synchroniseren.</string>
@@ -229,14 +229,14 @@
     <string name="chatbot_title">Apex AI-assistent</string>
     <string name="chatbot_subtitle">Jouw F1-telemetrie &amp; Strategiespecialist</string>
     <string name="chatbot_placeholder">Vraag Apex van alles...</string>
-    <string name="chatbot_welcome">Apex geïnitialiseerd. Live telemetrie actief. Hoe kan ik je racestrategie ondersteunen?</string>
+    <string name="chatbot_welcome">Hoi, ik ben Apex. Vraag me naar de F1-kalender, standen, wedstrijdleiding of recent nieuws. Ik toon databronnen wanneer die beschikbaar zijn.</string>
     <string name="chatbot_error">Sorry, er is een probleem opgetreden bij het verbinden met Apex.</string>
     <string name="chatbot_account_required">Apex AI is alleen beschikbaar voor geregistreerde Pitwall-accounts. Log in of maak een account aan.</string>
     <string name="chatbot_beta">BETA</string>
     <string name="chatbot_powered_by">Aangedreven door Pitwall</string>
     <string name="chatbot_clear_chat">Chat Wissen</string>
     <string name="chatbot_reset_msg">Pitwall-link gereset. Stand-by voor nieuwe instructies.</string>
-    <string name="chatbot_disclaimer">Apex is in beta. AI-gegenereerde antwoorden kunnen onnauwkeurig zijn.</string>
+    <string name="chatbot_disclaimer">Apex is in bèta; antwoorden kunnen traag of onnauwkeurig zijn. Controleer vermelde bronnen wanneer die beschikbaar zijn.</string>
     <string name="prompt_aero_rules">🏎️ Aero-regels 2026</string>
     <string name="prompt_driver_standings">📊 Coureursstand</string>
     <string name="prompt_next_race">🏁 Volgende Race</string>
@@ -344,4 +344,24 @@
 <string name="chatbot_open_standings">Stand openen</string>
 <string name="chatbot_open_telemetry">Telemetrie openen</string>
 <string name="chatbot_open_news">Nieuws openen</string>
+<string name="chatbot_no_sources">Aan dit antwoord is geen app-bron gekoppeld. Controleer tijdgevoelige informatie voordat je erop vertrouwt.</string>
+<string name="signup_step_account">Stap 1 van 2 · Accountgegevens</string>
+<string name="signup_step_personalize">Stap 2 van 2 · Personaliseer</string>
+<string name="signup_back_account">Terug naar accountgegevens</string>
+<string name="signup_continue">Doorgaan</string>
+<string name="schedule_device_timezone">Racetijden gebruiken de tijdzone van je apparaat (%1$s).</string>
+<string name="telemetry_feed_disconnected">Feed verbroken · laatste update %1$d seconden geleden</string>
+<string name="telemetry_feed_unavailable">Feed niet beschikbaar · verbind opnieuw</string>
+<string name="telemetry_feed_delayed">Feed vertraagd · laatste update %1$d seconden geleden</string>
+<string name="telemetry_feed_updated">Bijgewerkt %1$d seconden geleden</string>
+<string name="telemetry_feed_waiting">Wachten op de eerste update</string>
+<string name="telemetry_device_timezone">Tijd op je apparaat · %1$s</string>
+    <string name="profile_guest_heading">Verdergaan als gast</string>
+    <string name="profile_guest_body">Je kunt de app zonder account bekijken. Meld je aan om favorieten op te slaan en voorkeuren en meldingen op verschillende apparaten te synchroniseren.</string>
+    <string name="profile_sign_in_or_register">Inloggen of account maken</string>
+    <string name="profile_favorites_header">Je favoriete teams en coureurs</string>
+    <string name="profile_favorite_team">Favoriet team</string>
+    <string name="profile_favorite_driver">Favoriete coureur</string>
+    <string name="profile_favorites_required_title">Log in om favorieten op te slaan</string>
+    <string name="profile_favorites_required_body">Je kunt zonder account blijven rondkijken. Log in of maak een account om favoriete teams en coureurs op te slaan.</string>
 </resources>

@@ -10,7 +10,9 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.hapticfeedback.HapticFeedbackType
 import androidx.compose.ui.platform.LocalHapticFeedback
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
+import com.jenil.f1comp.R
 
 
 @Composable
@@ -32,7 +34,7 @@ fun ApexFab(
         ) {
             Icon(
                 imageVector = apexMark,
-                contentDescription = "Ask Apex",
+                contentDescription = stringResource(R.string.accessibility_ask_apex),
                 modifier = Modifier.size(26.dp)
             )
         }

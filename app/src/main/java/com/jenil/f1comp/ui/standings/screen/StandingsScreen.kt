@@ -52,7 +52,6 @@ import com.jenil.f1comp.ui.home.components.StandingToggle
 import com.jenil.f1comp.ui.standings.components.StandingsCard
 import com.jenil.f1comp.viewmodel.ConstructorStandingsViewModel
 import com.jenil.f1comp.viewmodel.DriverStandingsViewModel
-import com.jenil.f1comp.viewmodel.NextRaceViewModel
 import com.jenil.f1comp.viewmodel.ScheduleViewModel
 import java.time.LocalDate
 
@@ -64,19 +63,15 @@ fun StandingsScreen(
     driverViewModel: DriverStandingsViewModel = hiltViewModel(),
     constructorViewModel: ConstructorStandingsViewModel = hiltViewModel(),
     scheduleViewModel: ScheduleViewModel = hiltViewModel(),
-    nextRaceViewModel: NextRaceViewModel = hiltViewModel()
 ) {
     val driverStandings by driverViewModel.driverStandings.collectAsStateWithLifecycle()
     val constructorStandings by constructorViewModel.constructorStandings.collectAsStateWithLifecycle()
     val raceSchedule by scheduleViewModel.schedule.collectAsStateWithLifecycle()
-    val nextRaceUiState by nextRaceViewModel.uiState.collectAsStateWithLifecycle()
-
     val totalRaces = remember(raceSchedule) {
         raceSchedule.size.takeIf { it > 0 } ?: 24
     }
-    val currentRound = remember(raceSchedule, nextRaceUiState) {
-        nextRaceUiState.nextRace?.round
-            ?: raceSchedule.count { it.isCompleted }.let { if (it > 0) it.toString() else "1" }
+    val completedRounds = remember(raceSchedule) {
+        raceSchedule.count { it.isCompleted }
     }
 
     val scrollState = rememberScrollState()
@@ -112,7 +107,7 @@ fun StandingsScreen(
                     IconButton(onClick = onDrawerClick) {
                         Icon(
                             painter = painterResource(R.drawable.ic_menu),
-                            contentDescription = "Menu",
+                            contentDescription = stringResource(R.string.accessibility_menu),
                             tint = MaterialTheme.colorScheme.onSurface
                         )
                     }
@@ -126,7 +121,7 @@ fun StandingsScreen(
                 )
             }
 
-            // Round Progress Pill (e.g. R14 / 24)
+                // Round context for this season's standings snapshot.
             Surface(
                 shape = CircleShape,
                 color = MaterialTheme.colorScheme.surfaceContainerHigh.copy(alpha = 0.8f),
@@ -144,7 +139,7 @@ fun StandingsScreen(
                     )
                     Spacer(modifier = Modifier.width(6.dp))
                     Text(
-                        text = "R$currentRound / $totalRaces",
+                        text = "After R$completedRounds / $totalRaces",
                         style = MaterialTheme.typography.labelSmall,
                         fontFamily = FontFamily.Monospace,
                         fontWeight = FontWeight.Bold,
@@ -197,7 +192,7 @@ fun StandingsScreen(
                     Spacer(modifier = Modifier.width(4.dp))
                     Icon(
                         imageVector = Icons.AutoMirrored.Rounded.HelpOutline,
-                        contentDescription = "Points System Info",
+                        contentDescription = stringResource(R.string.accessibility_points_system_info),
                         tint = MaterialTheme.colorScheme.onSurfaceVariant,
                         modifier = Modifier.size(14.dp)
                     )

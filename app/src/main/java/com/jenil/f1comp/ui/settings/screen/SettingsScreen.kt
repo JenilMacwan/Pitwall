@@ -68,6 +68,8 @@ import androidx.compose.ui.unit.dp
 import androidx.core.content.ContextCompat
 import androidx.core.net.toUri
 import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
+import androidx.lifecycle.Lifecycle
+import androidx.lifecycle.compose.LifecycleEventEffect
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavController
 import com.jenil.f1comp.BuildConfig
@@ -110,6 +112,7 @@ fun SettingsScreen(
     var pendingAction by remember { mutableStateOf<(() -> Unit)?>(null) }
     var showClearConfirm by rememberSaveable { mutableStateOf(false) }
     var isSyncing by remember { mutableStateOf(false) }
+    var calendarStatus by rememberSaveable { mutableStateOf<String?>(null) }
 
     val snackbarHostState = remember { SnackbarHostState() }
     val scope = rememberCoroutineScope()
@@ -120,6 +123,22 @@ fun SettingsScreen(
     val liveRaceEvents by settingsViewModel.isLiveRaceEventsEnabled.collectAsStateWithLifecycle()
     val standingsUpdates by settingsViewModel.isStandingsUpdatesEnabled.collectAsStateWithLifecycle()
     val favorites by settingsViewModel.isFavoritesUpdatesEnabled.collectAsStateWithLifecycle()
+    var notificationPermissionGranted by remember {
+        mutableStateOf(
+            Build.VERSION.SDK_INT < Build.VERSION_CODES.TIRAMISU ||
+                ContextCompat.checkSelfPermission(
+                    context,
+                    Manifest.permission.POST_NOTIFICATIONS
+                ) == PackageManager.PERMISSION_GRANTED
+        )
+    }
+    LifecycleEventEffect(Lifecycle.Event.ON_RESUME) {
+        notificationPermissionGranted = Build.VERSION.SDK_INT < Build.VERSION_CODES.TIRAMISU ||
+            ContextCompat.checkSelfPermission(
+                context,
+                Manifest.permission.POST_NOTIFICATIONS
+            ) == PackageManager.PERMISSION_GRANTED
+    }
 
     val calendarPermissionLauncher = rememberLauncherForActivityResult(
         contract = ActivityResultContracts.RequestMultiplePermissions()
@@ -140,8 +159,13 @@ fun SettingsScreen(
     val notificationPermissionLauncher = rememberLauncherForActivityResult(
         contract = ActivityResultContracts.RequestPermission()
     ) { isGranted ->
+        notificationPermissionGranted = isGranted
         if (isGranted) {
             pendingAction?.invoke()
+        } else {
+            scope.launch {
+                snackbarHostState.showSnackbar("Notifications are off. Allow them in Android settings to receive race alerts.")
+            }
         }
         pendingAction = null
     }
@@ -174,16 +198,10 @@ fun SettingsScreen(
             Manifest.permission.WRITE_CALENDAR
         ) == PackageManager.PERMISSION_GRANTED
 
-        val wrappedAction = {
-            isSyncing = true
-            action()
-            isSyncing = false
-        }
-
         if (hasReadPerm && hasWritePerm) {
-            wrappedAction()
+            action()
         } else {
-            pendingAction = wrappedAction
+            pendingAction = action
             calendarPermissionLauncher.launch(
                 arrayOf(Manifest.permission.READ_CALENDAR, Manifest.permission.WRITE_CALENDAR)
             )
@@ -206,25 +224,28 @@ fun SettingsScreen(
                     tint = MaterialTheme.colorScheme.error
                 )
             },
-            title = { Text("Clear all F1 events?") },
-            text = { Text("This removes every F1 race added to your calendar. This can't be undone.") },
+            title = { Text(stringResource(R.string.settings_clear_calendar_dialog_title)) },
+            text = { Text(stringResource(R.string.settings_clear_calendar_dialog_body)) },
             confirmButton = {
                 TextButton(
                     onClick = {
                         showClearConfirm = false
                         runWithPermission {
+                            isSyncing = true
                             removeRacesFromCalendar(context) { message ->
+                                isSyncing = false
+                                calendarStatus = message
                                 scope.launch { snackbarHostState.showSnackbar(message) }
                             }
                         }
                     }
                 ) {
-                    Text("Clear", color = MaterialTheme.colorScheme.error)
+                    Text(stringResource(R.string.common_clear), color = MaterialTheme.colorScheme.error)
                 }
             },
             dismissButton = {
                 TextButton(onClick = { showClearConfirm = false }) {
-                    Text("Cancel")
+                    Text(stringResource(R.string.profile_cancel))
                 }
             }
         )
@@ -374,7 +395,7 @@ fun SettingsScreen(
                     IconButton(onClick = { navController.popBackStack() }) {
                         Icon(
                             imageVector = Icons.AutoMirrored.Rounded.ArrowBack,
-                            contentDescription = "Back",
+                            contentDescription = stringResource(R.string.common_back),
                             tint = MaterialTheme.colorScheme.onSurface
                         )
                     }
@@ -408,8 +429,8 @@ fun SettingsScreen(
                         )
                         SettingsItem(
                             icon = Icons.Outlined.Palette,
-                            title = "Appearance & Theme",
-                            subtitle = "Color swatches, constructor team liveries & dark mode",
+                            title = stringResource(R.string.title_theme),
+                            subtitle = stringResource(R.string.settings_theme_subtitle),
                             onClick = { navController.navigate("theme_settings") }
                         )
                     }
@@ -421,7 +442,7 @@ fun SettingsScreen(
                         SettingsItem(
                             icon = Icons.Outlined.Dashboard,
                             title = stringResource(R.string.title_telemetry_settings),
-                            subtitle = "Header layout style (Default vs. Compact)",
+                            subtitle = stringResource(R.string.settings_header_style_subtitle),
                             onClick = { navController.navigate("telemetry_settings") }
                         )
                     }
@@ -429,6 +450,13 @@ fun SettingsScreen(
                     Spacer(modifier = Modifier.height(24.dp))
 
                     SettingsSection(title = stringResource(R.string.settings_calendar_sync)) {
+                        Text(
+                            text = calendarStatus
+                                ?: "Race times are added in your device time zone to your primary calendar.",
+                            style = MaterialTheme.typography.bodySmall,
+                            color = MaterialTheme.colorScheme.onSurfaceVariant,
+                            modifier = Modifier.padding(horizontal = 16.dp, vertical = 8.dp)
+                        )
                         SettingsItem(
                             icon = Icons.Outlined.Sync,
                             title = stringResource(R.string.settings_sync_all),
@@ -443,7 +471,10 @@ fun SettingsScreen(
                             } else null,
                             onClick = {
                                 runWithPermission {
+                                    isSyncing = true
                                     syncRacesToCalendar(context, raceSchedule) { message ->
+                                        isSyncing = false
+                                        calendarStatus = message
                                         scope.launch { snackbarHostState.showSnackbar(message) }
                                     }
                                 }
@@ -456,7 +487,10 @@ fun SettingsScreen(
                             onClick = {
                                 runWithPermission {
                                     val upcoming = raceSchedule.filter { !it.isCompleted }
+                                    isSyncing = true
                                     syncRacesToCalendar(context, upcoming) { message ->
+                                        isSyncing = false
+                                        calendarStatus = message
                                         scope.launch { snackbarHostState.showSnackbar(message) }
                                     }
                                 }
@@ -474,6 +508,20 @@ fun SettingsScreen(
 
                     // Notifications
                     SettingsSection(title = stringResource(R.string.settings_notifications)) {
+                        Text(
+                            text = "Race and session reminders are scheduled 15 minutes before start, using your device time zone.",
+                            style = MaterialTheme.typography.bodySmall,
+                            color = MaterialTheme.colorScheme.onSurfaceVariant,
+                            modifier = Modifier.padding(horizontal = 16.dp, vertical = 6.dp)
+                        )
+                        if (!notificationPermissionGranted) {
+                            Text(
+                                text = "Android notifications are off. Turning on an alert will ask for permission; you can change it later in Android settings.",
+                                style = MaterialTheme.typography.bodyMedium,
+                                color = MaterialTheme.colorScheme.onSurfaceVariant,
+                                modifier = Modifier.padding(horizontal = 16.dp, vertical = 8.dp)
+                            )
+                        }
                         SettingsSwitchItem(
                             icon = Icons.Outlined.CalendarMonth,
                             title = stringResource(R.string.settings_race_reminders),

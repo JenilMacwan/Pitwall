@@ -49,10 +49,8 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
-import androidx.compose.ui.text.SpanStyle
-import androidx.compose.ui.text.buildAnnotatedString
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.text.withStyle
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -175,6 +173,16 @@ fun LoginScreen(
                     )
                 }
             }
+            AuthUiState.PasswordResetSent -> {
+                coroutineScope.launch {
+                    snackbarHostState.currentSnackbarData?.dismiss()
+                    snackbarHostState.showSnackbar(
+                        message = context.getString(R.string.auth_password_reset_sent),
+                        duration = SnackbarDuration.Long
+                    )
+                    viewModel.resetAuthUiState()
+                }
+            }
             else -> {}
         }
     }
@@ -185,7 +193,7 @@ fun LoginScreen(
     ) {
         Image(
             painter = painterResource(id = R.drawable.login_img),
-            contentDescription = "Login Image",
+            contentDescription = null,
             modifier = Modifier.fillMaxSize(),
             contentScale = ContentScale.Crop
         )
@@ -250,7 +258,7 @@ fun LoginScreen(
                             ) {
                                 Image(
                                     painter = painterResource(id = R.drawable.pitwall_logo),
-                                    contentDescription = "App Logo",
+                                    contentDescription = null,
                                     modifier = Modifier.fillMaxSize(),
                                     contentScale = ContentScale.Fit
                                 )
@@ -266,7 +274,7 @@ fun LoginScreen(
                     )
                 }
                 Text(
-                    text = "BUILT FOR THE OBSESSED",
+                        text = stringResource(R.string.auth_brand_tagline),
                     style = MaterialTheme.typography.titleSmall,
                     fontWeight = FontWeight.Bold,
                     color = Color.White.copy(alpha = 0.9f),
@@ -300,21 +308,14 @@ fun LoginScreen(
                     }
                     Spacer(modifier = Modifier.height(6.dp))
                     Text(
-                        text = "INITIALIZE DRIVER PROFILE",
+                        text = stringResource(R.string.auth_feature_headline),
                         style = MaterialTheme.typography.headlineSmall,
                         fontWeight = FontWeight.Bold,
                         color = Color.White
                     )
                     Spacer(modifier = Modifier.height(4.dp))
-                    val registerSubtitle = buildAnnotatedString {
-                        append("Secure your ")
-                        withStyle(SpanStyle(fontWeight = FontWeight.Bold, color = Color.White)) {
-                            append("Paddock Pass,")
-                        }
-                        append(" and be among the firsts to use PITWALL")
-                    }
                     Text(
-                        text = registerSubtitle,
+                        text = stringResource(R.string.auth_feature_subtitle),
                         style = MaterialTheme.typography.bodySmall,
                         color = Color.White.copy(alpha = 0.8f)
                     )
@@ -444,13 +445,13 @@ fun LoginScreen(
                     ) {
                         Icon(
                             imageVector = Icons.Outlined.Shield,
-                            contentDescription = "Secure",
+                            contentDescription = null,
                             tint = F1Red,
                             modifier = Modifier.size(16.dp)
                         )
                         Spacer(modifier = Modifier.width(6.dp))
                         Text(
-                            text = "FULLY ENCRYPTED AND SECURE",
+                            text = stringResource(R.string.auth_secure_label),
                             style = MaterialTheme.typography.bodySmall,
                             fontWeight = FontWeight.Bold,
                             color = Color.White.copy(alpha = 0.8f),

@@ -69,6 +69,7 @@ fun HomeScreen(
     val driverStandings by driverViewModel.driverStandings.collectAsStateWithLifecycle()
     val constructorStandings by constructorViewModel.constructorStandings.collectAsStateWithLifecycle()
     val raceSchedule by scheduleViewModel.schedule.collectAsStateWithLifecycle()
+    val currentSeason = LocalDate.now().year
 
     val context = LocalContext.current
 
@@ -119,7 +120,7 @@ fun HomeScreen(
                     IconButton(onClick = onDrawerClick) {
                         Icon(
                             painter = painterResource(R.drawable.ic_menu),
-                            contentDescription = "Menu",
+                            contentDescription = stringResource(R.string.accessibility_menu),
                             tint = MaterialTheme.colorScheme.onSurface
                         )
                     }
@@ -137,7 +138,7 @@ fun HomeScreen(
                 ) {
                     Icon(
                         painter = painterResource(R.drawable.ic_profile),
-                        contentDescription = "Profile",
+                        contentDescription = stringResource(R.string.accessibility_profile),
                         tint = MaterialTheme.colorScheme.onSurface
                     )
                 }
@@ -199,7 +200,7 @@ fun HomeScreen(
                     }
 
                     LaunchedEffect(lastRaceId) {
-                        raceResultViewModel.refreshRaceResult(raceId = lastRaceId, year = 2026)
+                        raceResultViewModel.refreshRaceResult(raceId = lastRaceId, year = currentSeason)
                     }
 
                     val currentScheduleEntity = remember(raceSchedule, nextRace.round) {
@@ -246,7 +247,7 @@ fun HomeScreen(
                                     onDriverClick = { driverId -> navController.navigate("profile/true/$driverId") },
                                     onConstructorClick = { teamName -> navController.navigate("profile/false/$teamName") },
                                     onResultClick = {
-                                        navController.navigate("race_result/$lastRaceId/${LocalDate.now().year}")
+                                navController.navigate("race_result/$lastRaceId/$currentSeason")
                                     },
                                     modifier = Modifier.fillMaxWidth()
                                 )

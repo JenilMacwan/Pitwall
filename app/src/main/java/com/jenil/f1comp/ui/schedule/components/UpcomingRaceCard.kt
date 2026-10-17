@@ -37,7 +37,6 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.platform.LocalLocale
 import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
@@ -47,11 +46,6 @@ import com.jenil.f1comp.data.local.entity.ScheduleEntity
 import com.jenil.f1comp.ui.theme.F1Red
 import com.jenil.f1comp.util.FlagImage
 import com.jenil.f1comp.util.ProfileUtils
-import java.time.LocalDate
-import java.time.LocalTime
-import java.time.ZoneId
-import java.time.ZonedDateTime
-import java.time.format.DateTimeFormatter
 
 @Composable
 fun UpcomingRaceCard(
@@ -63,16 +57,7 @@ fun UpcomingRaceCard(
 
     val type = circuit?.type?.let { "$it CIRCUIT" } ?: "N/A"
 
-    val parsedDate = LocalDate.parse(schedule.grandPrix)
-    val parsedTime = LocalTime.parse(schedule.time.removeSuffix("Z"))
-    val localDateTime = ZonedDateTime.of(parsedDate, parsedTime, ZoneId.of("UTC"))
-        .withZoneSameInstant(ZoneId.systemDefault())
-
-    val dateRangeFormatter = DateTimeFormatter.ofPattern("MMM dd, yyyy", LocalLocale.current.platformLocale)
-    val dateText = localDateTime.format(dateRangeFormatter)
-
-    val timeFormatter = DateTimeFormatter.ofPattern("hh:mm a", LocalLocale.current.platformLocale)
-    val timeText = localDateTime.format(timeFormatter)
+    val (dateText, timeText) = formatSessionDateTime(schedule.grandPrix, schedule.time)
 
     Card(
         modifier = modifier
@@ -217,7 +202,7 @@ fun UpcomingRaceCard(
                     )
                     Spacer(modifier = Modifier.width(6.dp))
                     Text(
-                        text = "${schedule.circuitLocation} · $timeText Local",
+                        text = "${schedule.circuitLocation} · $timeText",
                         fontFamily = FontFamily.Monospace,
                         style = MaterialTheme.typography.labelSmall,
                         color = MaterialTheme.colorScheme.onSurfaceVariant

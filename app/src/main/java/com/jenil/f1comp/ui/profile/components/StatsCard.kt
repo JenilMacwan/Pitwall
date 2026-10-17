@@ -28,10 +28,12 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
+import com.jenil.f1comp.R
 
 @Composable
 fun SeasonOverviewCard(
@@ -60,7 +62,7 @@ fun SeasonOverviewCard(
             // Stat 1: Points
             SeasonStatItem(
                 modifier = Modifier.weight(1f),
-                label = "POINTS",
+                label = stringResource(R.string.profile_metric_points).uppercase(),
                 value = points,
                 icon = Icons.Outlined.Insights,
                 accentColor = teamColor
@@ -77,7 +79,7 @@ fun SeasonOverviewCard(
             // Stat 2: Wins
             SeasonStatItem(
                 modifier = Modifier.weight(1f),
-                label = "WINS",
+                label = stringResource(R.string.standings_wins).uppercase(),
                 value = wins,
                 icon = Icons.Outlined.EmojiEvents,
                 accentColor = teamColor
@@ -94,7 +96,7 @@ fun SeasonOverviewCard(
             // Stat 3: Podiums
             SeasonStatItem(
                 modifier = Modifier.weight(1f),
-                label = "PODIUMS",
+                label = stringResource(R.string.standings_podiums).uppercase(),
                 value = podiums,
                 icon = Icons.Outlined.MilitaryTech,
                 accentColor = teamColor
@@ -112,7 +114,7 @@ fun SeasonOverviewCard(
             if (poles != null) {
                 SeasonStatItem(
                     modifier = Modifier.weight(1f),
-                    label = "POLES",
+                    label = stringResource(R.string.profile_metric_poles).uppercase(),
                     value = poles,
                     icon = Icons.Outlined.Timer,
                     accentColor = teamColor

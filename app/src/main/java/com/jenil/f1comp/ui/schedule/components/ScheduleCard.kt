@@ -37,19 +37,17 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.platform.LocalLocale
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import coil.compose.AsyncImage
+import com.jenil.f1comp.R
 import com.jenil.f1comp.data.local.entity.CircuitInfoEntity
 import com.jenil.f1comp.data.local.entity.ScheduleEntity
 import com.jenil.f1comp.util.FlagImage
 import com.jenil.f1comp.util.ProfileUtils
-import java.time.LocalDate
-import java.time.LocalTime
-import java.time.format.DateTimeFormatter
 
 @Composable
 fun ScheduleCard(
@@ -57,18 +55,13 @@ fun ScheduleCard(
     schedule: ScheduleEntity,
     circuit: CircuitInfoEntity? = null,
     isNextRace: Boolean = false,
-    onResultsClick: () -> Unit = {}
+    onResultsClick: () -> Unit = {},
+    onCalendarClick: () -> Unit = {}
 ) {
     var isExpanded by rememberSaveable { mutableStateOf(false) }
     val isCompleted = schedule.isCompleted
 
-    val parsedDate = LocalDate.parse(schedule.grandPrix)
-    val formatter = DateTimeFormatter.ofPattern("EEE, MMM dd, yyyy", LocalLocale.current.platformLocale)
-    val date = parsedDate.format(formatter)
-
-    val parsedTime = LocalTime.parse(schedule.time.removeSuffix("Z"))
-    val timeFormatter = DateTimeFormatter.ofPattern("hh:mm a", LocalLocale.current.platformLocale)
-    val time = parsedTime.format(timeFormatter)
+    val (date, time) = formatSessionDateTime(schedule.grandPrix, schedule.time)
     val laps = circuit?.laps?.toString()?: "N/A"
     val type = circuit?.type?.let { "$it CIRCUIT" } ?: "N/A"
 
@@ -148,6 +141,12 @@ fun ScheduleCard(
                                 color = MaterialTheme.colorScheme.onSurfaceVariant
                             )
                         }
+                        Spacer(modifier = Modifier.height(4.dp))
+                        Text(
+                            text = "$date · $time",
+                            style = MaterialTheme.typography.bodySmall,
+                            color = MaterialTheme.colorScheme.onSurfaceVariant
+                        )
                     }
 
                     Row(
@@ -315,7 +314,7 @@ fun ScheduleCard(
                                 if (circuit?.circuitLayout != null) {
                                     AsyncImage(
                                         model = circuit.circuitLayout,
-                                        contentDescription = "Circuit Layout",
+                                        contentDescription = stringResource(R.string.accessibility_circuit_layout),
                                         modifier = Modifier.size(35.dp),
                                         alignment = Alignment.Center
                                     )
@@ -341,15 +340,26 @@ fun ScheduleCard(
                         )
                         Spacer(modifier = Modifier.height(12.dp))
 
-                        LazyVerticalGrid(
-                            columns = GridCells.Fixed(2),
-                            horizontalArrangement = Arrangement.spacedBy(8.dp),
-                            verticalArrangement = Arrangement.spacedBy(8.dp),
-                            modifier = Modifier
-                                .fillMaxWidth()
-                                .heightIn(max = 300.dp),
-                            userScrollEnabled = false
+                        if (schedule.firstPractice == null && schedule.secondPractice == null &&
+                            schedule.thirdPractice == null && schedule.sprintQualifying == null &&
+                            schedule.sprint == null && schedule.qualifying == null
                         ) {
+                            Text(
+                                text = "Weekend session times are not available yet.",
+                                style = MaterialTheme.typography.bodyMedium,
+                                color = MaterialTheme.colorScheme.onSurfaceVariant,
+                                modifier = Modifier.fillMaxWidth().padding(vertical = 12.dp)
+                            )
+                        } else {
+                            LazyVerticalGrid(
+                                columns = GridCells.Fixed(2),
+                                horizontalArrangement = Arrangement.spacedBy(8.dp),
+                                verticalArrangement = Arrangement.spacedBy(8.dp),
+                                modifier = Modifier
+                                    .fillMaxWidth()
+                                    .heightIn(max = 300.dp),
+                                userScrollEnabled = false
+                            ) {
 
                             schedule.firstPractice?.let {
                                 item { SessionCard("Practice 1", it) }
@@ -373,6 +383,7 @@ fun ScheduleCard(
 
                             schedule.qualifying?.let {
                                 item { SessionCard("Qualifying", it) }
+                            }
                             }
                         }
                         Box(
@@ -434,6 +445,16 @@ fun ScheduleCard(
                                         color = Color(0xFFAAAAAA)
                                     )
                                 }
+                            }
+                        }
+                        if (!isCompleted) {
+                            OutlinedButton(
+                                onClick = onCalendarClick,
+                                modifier = Modifier.fillMaxWidth().padding(top = 8.dp),
+                                shape = RoundedCornerShape(50),
+                                border = BorderStroke(1.dp, MaterialTheme.colorScheme.outline)
+                            ) {
+                                Text(stringResource(R.string.schedule_add_weekend_calendar))
                             }
                         }
                     } else {

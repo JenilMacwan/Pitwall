@@ -24,27 +24,17 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.platform.LocalLocale
 import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import com.jenil.f1comp.data.model.RaceSession
-import java.time.LocalDate
-import java.time.LocalTime
-import java.time.format.DateTimeFormatter
 
 @Composable
 fun SessionCard(
     title: String,
     dateTime: RaceSession
 ) {
-    val parsedTime = LocalTime.parse(dateTime.time.removeSuffix("Z"))
-    val timeFormatter = DateTimeFormatter.ofPattern("hh:mm a", LocalLocale.current.platformLocale)
-    val time = parsedTime.format(timeFormatter)
-
-    val parsedDate = LocalDate.parse(dateTime.date)
-    val formatter = DateTimeFormatter.ofPattern("EEE, MMM dd, yyyy", LocalLocale.current.platformLocale)
-    val date = parsedDate.format(formatter)
+    val (date, time) = formatSessionDateTime(dateTime.date, dateTime.time)
 
     Card(
         shape = RoundedCornerShape(14.dp),

@@ -35,12 +35,14 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import coil.compose.AsyncImage
 import coil.request.ImageRequest
+import com.jenil.f1comp.R
 import com.jenil.f1comp.data.local.entity.DriverProfileEntity
 import com.jenil.f1comp.data.local.entity.DriverStandingsEntity
 import com.jenil.f1comp.data.model.DriverPointsProgression
@@ -193,7 +195,7 @@ fun TeamProfileCard(
                                 .data(carUrl)
                                 .crossfade(true)
                                 .build(),
-                            contentDescription = "F1 Car: $chassis",
+                            contentDescription = stringResource(R.string.accessibility_f1_car, chassis),
                             contentScale = ContentScale.Fit,
                             alignment = Alignment.CenterEnd,
                             modifier = Modifier
@@ -219,7 +221,7 @@ fun TeamProfileCard(
                         )
                         Spacer(modifier = Modifier.height(2.dp))
                         Text(
-                            text = "RANK",
+                            text = stringResource(R.string.profile_rank).uppercase(),
                             fontFamily = FontFamily.Monospace,
                             style = MaterialTheme.typography.labelSmall,
                             fontWeight = FontWeight.Bold,
@@ -244,7 +246,7 @@ fun TeamProfileCard(
                 )
                 Spacer(modifier = Modifier.width(8.dp))
                 Text(
-                    text = "SEASON OVERVIEW",
+                    text = stringResource(R.string.profile_season_overview).uppercase(),
                     style = MaterialTheme.typography.titleSmall,
                     fontWeight = FontWeight.SemiBold,
                     color = MaterialTheme.colorScheme.onSurface
@@ -279,7 +281,7 @@ fun TeamProfileCard(
                     )
                     Spacer(modifier = Modifier.width(8.dp))
                     Text(
-                        text = "POINTS PROGRESSION",
+                        text = stringResource(R.string.profile_points_progression).uppercase(),
                         style = MaterialTheme.typography.titleSmall,
                         fontWeight = FontWeight.SemiBold,
                         color = MaterialTheme.colorScheme.onSurface
@@ -324,7 +326,7 @@ fun TeamProfileCard(
                 )
                 Spacer(modifier = Modifier.width(8.dp))
                 Text(
-                    text = "TECHNICAL SPECIFICATIONS",
+                    text = stringResource(R.string.profile_technical_specifications).uppercase(),
                     style = MaterialTheme.typography.titleSmall,
                     fontWeight = FontWeight.SemiBold,
                     color = MaterialTheme.colorScheme.onSurface
@@ -344,11 +346,11 @@ fun TeamProfileCard(
                         .padding(16.dp),
                     verticalArrangement = Arrangement.spacedBy(12.dp)
                 ) {
-                    SpecRow(label = "Chassis", value = chassis)
+                    SpecRow(label = stringResource(R.string.profile_chassis), value = chassis)
                     HorizontalDivider(color = MaterialTheme.colorScheme.outlineVariant.copy(alpha = 0.4f))
-                    SpecRow(label = "Power Unit", value = powerUnit)
+                    SpecRow(label = stringResource(R.string.profile_power_unit), value = powerUnit)
                     HorizontalDivider(color = MaterialTheme.colorScheme.outlineVariant.copy(alpha = 0.4f))
-                    SpecRow(label = "Team Principal", value = teamBoss)
+                    SpecRow(label = stringResource(R.string.profile_team_principal), value = teamBoss)
                 }
             }
         }
@@ -368,7 +370,7 @@ fun TeamProfileCard(
                     )
                     Spacer(modifier = Modifier.width(8.dp))
                     Text(
-                        text = "2026 DRIVER LINEUP",
+                        text = stringResource(R.string.profile_driver_lineup).uppercase(),
                         style = MaterialTheme.typography.titleSmall,
                         fontWeight = FontWeight.SemiBold,
                         color = MaterialTheme.colorScheme.onSurface
@@ -441,7 +443,7 @@ fun TeamProfileCard(
                 )
                 Spacer(modifier = Modifier.width(8.dp))
                 Text(
-                    text = "CONSTRUCTORS HERITAGE",
+                    text = stringResource(R.string.profile_constructor_heritage).uppercase(),
                     style = MaterialTheme.typography.titleSmall,
                     fontWeight = FontWeight.SemiBold,
                     color = MaterialTheme.colorScheme.onSurface
@@ -480,7 +482,7 @@ fun TeamProfileCard(
                 )
                 Spacer(modifier = Modifier.width(8.dp))
                 Text(
-                    text = "BIOGRAPHY",
+                    text = stringResource(R.string.profile_biography).uppercase(),
                     style = MaterialTheme.typography.titleSmall,
                     fontWeight = FontWeight.SemiBold,
                     color = MaterialTheme.colorScheme.onSurface

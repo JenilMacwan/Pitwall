@@ -24,6 +24,7 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.rounded.ArrowBack
 import androidx.compose.material.icons.rounded.Refresh
+import androidx.compose.material3.Button
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
@@ -72,13 +73,18 @@ fun TeamRadioScreen(
 ) {
     val cachedRadios by viewModel.teamRadios.collectAsStateWithLifecycle()
     val isLoading by viewModel.isLoading.collectAsStateWithLifecycle()
+    val radioError by viewModel.error.collectAsStateWithLifecycle()
     val selectedDriverCode by viewModel.selectedDriverCode.collectAsStateWithLifecycle()
+    val latestSessionLabel = stringResource(R.string.radio_latest_session)
+    val noAudioMessage = stringResource(R.string.radio_no_audio)
+    val playbackFailedMessage = stringResource(R.string.radio_playback_failed)
+    val refreshingRadioDescription = stringResource(R.string.accessibility_refreshing_radio)
 
     val clips = remember(cachedRadios) {
         cachedRadios.map { it.toRadioClip() }
     }
 
-    val sessionTitle = remember(cachedRadios) {
+    val sessionTitle = remember(cachedRadios, latestSessionLabel) {
         val first = cachedRadios.firstOrNull { !it.eventName.isNullOrEmpty() || !it.sessionName.isNullOrEmpty() }
         if (first != null) {
             val event = first.eventName.orEmpty()
@@ -87,10 +93,10 @@ fun TeamRadioScreen(
                 event.isNotEmpty() && session.isNotEmpty() -> "$event · $session"
                 event.isNotEmpty() -> event
                 session.isNotEmpty() -> session
-                else -> "Latest Session"
+                else -> latestSessionLabel
             }
         } else {
-            "Latest Session"
+            latestSessionLabel
         }
     }
 
@@ -161,7 +167,7 @@ fun TeamRadioScreen(
 
         val url = clip.audioUrl
         if (url.isNullOrEmpty()) {
-            playbackError = "No audio available for this clip"
+            playbackError = noAudioMessage
             return
         }
 
@@ -190,7 +196,7 @@ fun TeamRadioScreen(
                 }
                 setOnErrorListener { _, _, _ ->
                     resetPlaybackState()
-                    playbackError = "Couldn't play this clip"
+                    playbackError = playbackFailedMessage
                     true
                 }
                 setOnCompletionListener {
@@ -202,7 +208,7 @@ fun TeamRadioScreen(
             }
         } catch (_: Exception) {
             resetPlaybackState()
-            playbackError = "Couldn't play this clip"
+            playbackError = playbackFailedMessage
         }
     }
 
@@ -213,6 +219,12 @@ fun TeamRadioScreen(
     val filteredClips = remember(clips, selectedDriverCode) {
         if (selectedDriverCode == ALL_DRIVERS) clips
         else clips.filter { it.driverCode.equals(selectedDriverCode, ignoreCase = true) }
+    }
+    val visibleClips = remember(filteredClips, clips, playingClipId) {
+        val activeClip = clips.firstOrNull { it.id == playingClipId }
+        if (activeClip != null && filteredClips.none { it.id == activeClip.id }) {
+            listOf(activeClip) + filteredClips
+        } else filteredClips
     }
 
     val listState = rememberLazyListState()
@@ -232,7 +244,7 @@ fun TeamRadioScreen(
             IconButton(onClick = { navController.popBackStack() }) {
                 Icon(
                     imageVector = Icons.AutoMirrored.Rounded.ArrowBack,
-                    contentDescription = "Back",
+                    contentDescription = stringResource(R.string.common_back),
                     tint = MaterialTheme.colorScheme.onSurface
                 )
             }
@@ -262,14 +274,14 @@ fun TeamRadioScreen(
                     CircularProgressIndicator(
                         modifier = Modifier
                             .size(20.dp)
-                            .semantics { contentDescription = "Refreshing radio clips" },
+                            .semantics { contentDescription = refreshingRadioDescription },
                         strokeWidth = 2.dp,
                         color = MaterialTheme.colorScheme.primary
                     )
                 } else {
                     Icon(
                         imageVector = Icons.Rounded.Refresh,
-                        contentDescription = "Refresh radio clips",
+                        contentDescription = stringResource(R.string.accessibility_refresh_radio),
                         tint = MaterialTheme.colorScheme.onSurfaceVariant
                     )
                 }
@@ -295,6 +307,29 @@ fun TeamRadioScreen(
             }
         }
 
+        AnimatedVisibility(visible = radioError != null && clips.isNotEmpty(), enter = fadeIn(), exit = fadeOut()) {
+            Surface(
+                modifier = Modifier.fillMaxWidth().padding(horizontal = 16.dp, vertical = 4.dp),
+                shape = RoundedCornerShape(8.dp),
+                color = MaterialTheme.colorScheme.surfaceVariant
+            ) {
+                Row(
+                    modifier = Modifier.fillMaxWidth().padding(start = 12.dp, end = 4.dp, top = 4.dp, bottom = 4.dp),
+                    verticalAlignment = Alignment.CenterVertically
+                ) {
+                    Text(
+                        text = stringResource(R.string.radio_refresh_failed),
+                        style = MaterialTheme.typography.bodySmall,
+                        color = MaterialTheme.colorScheme.onSurfaceVariant,
+                        modifier = Modifier.weight(1f)
+                    )
+                    IconButton(onClick = { viewModel.refreshTeamRadio() }) {
+                        Icon(Icons.Rounded.Refresh, contentDescription = stringResource(R.string.accessibility_retry_radio))
+                    }
+                }
+            }
+        }
+
         LazyRowChips(
             driverOptions = driverOptions,
             selectedDriverCode = selectedDriverCode,
@@ -314,11 +349,33 @@ fun TeamRadioScreen(
                 isLoading && clips.isEmpty() -> {
                     item { RadioLoadingState() }
                 }
+                clips.isEmpty() && radioError != null -> {
+                    item {
+                        Column(
+                            modifier = Modifier.fillMaxWidth().padding(vertical = 64.dp),
+                            horizontalAlignment = Alignment.CenterHorizontally
+                        ) {
+                            Text(
+                                text = stringResource(R.string.radio_load_failed),
+                                style = MaterialTheme.typography.titleMedium,
+                                color = MaterialTheme.colorScheme.onSurface
+                            )
+                            Spacer(Modifier.height(8.dp))
+                            Text(
+                                text = stringResource(R.string.radio_connection_retry),
+                                style = MaterialTheme.typography.bodyMedium,
+                                color = MaterialTheme.colorScheme.onSurfaceVariant
+                            )
+                            Spacer(Modifier.height(12.dp))
+                            Button(onClick = { viewModel.refreshTeamRadio() }) { Text(stringResource(R.string.radio_try_again)) }
+                        }
+                    }
+                }
                 filteredClips.isEmpty() -> {
                     item { EmptyRadioState(driverCode = selectedDriverCode) }
                 }
                 else -> {
-                    items(filteredClips, key = { it.id }) { clip ->
+                    items(visibleClips, key = { it.id }) { clip ->
                         val isItemPlaying = playingClipId == clip.id
                         val isItemBuffering = isItemPlaying && isBuffering
                         val knownDuration = cachedDurations[clip.id]
@@ -327,7 +384,7 @@ fun TeamRadioScreen(
                             isItemPlaying && playbackTimeLabel != null -> playbackTimeLabel!!
                             knownDuration != null -> knownDuration
                             clip.durationLabel.isNotEmpty() -> clip.durationLabel
-                            else -> "Radio"
+                            else -> stringResource(R.string.title_radio)
                         }
                         val currentProgress = if (isItemPlaying) playbackProgress else 0f
 

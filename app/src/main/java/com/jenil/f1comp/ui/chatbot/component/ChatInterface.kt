@@ -134,6 +134,14 @@ fun ChatBubble(
                             style = MaterialTheme.typography.labelSmall
                         )
                     }
+                    if (!isUser && message.dataSources.isEmpty() && message.referenceDocuments.isEmpty()) {
+                        Text(
+                            text = stringResource(R.string.chatbot_no_sources),
+                            modifier = Modifier.padding(start = 12.dp, end = 12.dp, bottom = 8.dp),
+                            color = MaterialTheme.colorScheme.onSurfaceVariant,
+                            style = MaterialTheme.typography.labelSmall
+                        )
+                    }
                     if (!isUser && message.referenceDocuments.isNotEmpty()) {
                         Text(
                             text = stringResource(

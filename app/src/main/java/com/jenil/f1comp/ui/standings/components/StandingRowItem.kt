@@ -40,6 +40,7 @@ fun StandingRowItem(
     name: String,
     team: String?,
     points: Int,
+    pointsBehindLeader: Int? = null,
     imageUrl: String? = null,
     isConstructor: Boolean = false,
     onClick: () -> Unit = {},
@@ -201,7 +202,13 @@ fun StandingRowItem(
                 color = MaterialTheme.colorScheme.onSurface
             )
             Text(
-                text = stringResource(R.string.standings_pts),
+                text = if (pointsBehindLeader == null) {
+                    stringResource(R.string.standings_pts)
+                } else if (pointsBehindLeader == 0) {
+                    "Leader"
+                } else {
+                    "−$pointsBehindLeader to P1"
+                },
                 style = MaterialTheme.typography.labelSmall,
                 fontFamily = FontFamily.Monospace,
                 color = MaterialTheme.colorScheme.onSurfaceVariant

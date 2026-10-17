@@ -14,22 +14,28 @@ import androidx.compose.foundation.layout.width
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.rounded.ArrowBack
 import androidx.compose.material.icons.outlined.DarkMode
+import androidx.compose.material3.Card
+import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.OutlinedButton
 import androidx.compose.material3.Switch
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavController
+import com.jenil.f1comp.R
 import com.jenil.f1comp.ui.F1ScreenPadding
 import com.jenil.f1comp.ui.theme.ThemeSelectionSection
+import com.jenil.f1comp.viewmodel.NextRaceViewModel
 import com.jenil.f1comp.viewmodel.SettingsViewModel
 
 @Composable
@@ -41,6 +47,8 @@ fun ThemeSettingsScreen(
     val isDarkModePref by settingsViewModel.isDarkMode.collectAsStateWithLifecycle()
     val selectedThemeId by settingsViewModel.selectedThemeId.collectAsStateWithLifecycle()
     val constructorProfiles by settingsViewModel.constructorProfiles.collectAsStateWithLifecycle()
+    val nextRaceViewModel: NextRaceViewModel = hiltViewModel()
+    val nextRaceState by nextRaceViewModel.uiState.collectAsStateWithLifecycle()
 
     val isDarkMode = isDarkModePref ?: isSystemInDarkTheme()
 
@@ -60,7 +68,7 @@ fun ThemeSettingsScreen(
             IconButton(onClick = { navController.popBackStack() }) {
                 Icon(
                     imageVector = Icons.AutoMirrored.Rounded.ArrowBack,
-                    contentDescription = "Back",
+                    contentDescription = stringResource(R.string.common_back),
                     tint = MaterialTheme.colorScheme.onSurface
                 )
             }
@@ -113,6 +121,56 @@ fun ThemeSettingsScreen(
 
         Spacer(modifier = Modifier.height(8.dp))
 
+        Column(modifier = Modifier.fillMaxWidth().padding(horizontal = 16.dp)) {
+            Text(
+                text = "LIVE PREVIEW",
+                style = MaterialTheme.typography.labelMedium,
+                color = MaterialTheme.colorScheme.onSurfaceVariant
+            )
+            Spacer(modifier = Modifier.height(8.dp))
+            Card(
+                modifier = Modifier.fillMaxWidth(),
+                colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surface)
+            ) {
+                Column(modifier = Modifier.fillMaxWidth().padding(14.dp)) {
+                    Row(verticalAlignment = Alignment.CenterVertically) {
+                        Column(modifier = Modifier.weight(1f)) {
+                            Text(stringResource(R.string.home_next_race), style = MaterialTheme.typography.labelSmall, color = MaterialTheme.colorScheme.onSurfaceVariant)
+                            Text(
+                                text = nextRaceState.nextRace?.raceName ?: "Next race",
+                                style = MaterialTheme.typography.titleMedium,
+                                color = MaterialTheme.colorScheme.onSurface
+                            )
+                        }
+                        Text(
+                            text = "UPCOMING",
+                            style = MaterialTheme.typography.labelSmall,
+                            color = MaterialTheme.colorScheme.primary
+                        )
+                    }
+                    Spacer(modifier = Modifier.height(8.dp))
+                    Row(verticalAlignment = Alignment.CenterVertically) {
+                        androidx.compose.material3.Surface(
+                            modifier = Modifier.weight(1f),
+                            color = MaterialTheme.colorScheme.primary,
+                            shape = MaterialTheme.shapes.small
+                        ) {
+                            Text(
+                                text = "VIEW SCHEDULE",
+                                style = MaterialTheme.typography.labelLarge,
+                                color = MaterialTheme.colorScheme.onPrimary,
+                                modifier = Modifier.padding(horizontal = 12.dp, vertical = 10.dp)
+                            )
+                        }
+                        Spacer(modifier = Modifier.width(8.dp))
+                        Text(stringResource(R.string.common_selected), style = MaterialTheme.typography.labelMedium, color = MaterialTheme.colorScheme.primary)
+                    }
+                }
+            }
+        }
+
+        Spacer(modifier = Modifier.height(12.dp))
+
         // Theme Selection Section (Constructor Teams list inside is vertically scrollable)
         ThemeSelectionSection(
             selectedId = selectedThemeId ?: "classic_red",
@@ -122,5 +180,9 @@ fun ThemeSettingsScreen(
             },
             modifier = Modifier.weight(1f)
         )
+        OutlinedButton(
+            onClick = { settingsViewModel.setSelectedThemeId("classic_red") },
+            modifier = Modifier.fillMaxWidth().padding(horizontal = 16.dp, vertical = 8.dp)
+        ) { Text(stringResource(R.string.theme_restore_default)) }
     }
 }

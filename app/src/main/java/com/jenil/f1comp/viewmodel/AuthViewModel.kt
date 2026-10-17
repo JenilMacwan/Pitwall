@@ -28,6 +28,7 @@ sealed interface AuthUiState {
     object Idle : AuthUiState
     object Loading : AuthUiState
     object Success : AuthUiState
+    object PasswordResetSent : AuthUiState
 
     data class Error(
         val message: String,
@@ -167,7 +168,7 @@ class AuthViewModel @Inject constructor(
             _authUiState.value = AuthUiState.Loading
             try {
                 authRepository.sendPasswordResetEmail(trimmedEmail)
-                _authUiState.value = AuthUiState.Success
+                _authUiState.value = AuthUiState.PasswordResetSent
             } catch (e: CancellationException) {
                 throw e
             } catch (e: Exception) {

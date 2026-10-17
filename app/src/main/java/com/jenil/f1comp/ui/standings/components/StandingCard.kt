@@ -42,6 +42,7 @@ fun StandingsCard(
         ) {
 
             if (isConstructorSelected) {
+                val leaderPoints = constructorStandings.maxOfOrNull { it.points.toInt() } ?: 0
                 StandingList(standings = constructorStandings) { constructor ->
                     StandingRowItem(
                         position = constructor.position,
@@ -50,11 +51,13 @@ fun StandingsCard(
                         team = constructor.drivers.toConstructorLastNames(),
                         imageUrl = constructor.constructorLogo,
                         isConstructor = true,
+                        pointsBehindLeader = (leaderPoints - constructor.points.toInt()).coerceAtLeast(0),
                         onClick = { navController.navigate("profile/false/${constructor.name}") }
                     )
                 }
 
             } else {
+                val leaderPoints = driverStandings.maxOfOrNull { it.points.toInt() } ?: 0
                 StandingList(standings = driverStandings) { driver ->
                     StandingRowItem(
                         position = driver.position,
@@ -63,6 +66,7 @@ fun StandingsCard(
                         points = driver.points.toInt(),
                         imageUrl = driver.headshotUrl,
                         isConstructor = false,
+                        pointsBehindLeader = (leaderPoints - driver.points.toInt()).coerceAtLeast(0),
                         onClick = { navController.navigate("profile/true/${driver.name}") }
                     )
                 }

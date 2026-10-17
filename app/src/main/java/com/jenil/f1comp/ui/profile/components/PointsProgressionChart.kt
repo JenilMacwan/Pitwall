@@ -1,5 +1,6 @@
 package com.jenil.f1comp.ui.profile.components
 
+import androidx.compose.foundation.horizontalScroll
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -11,6 +12,7 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.rememberScrollState
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.outlined.ShowChart
 import androidx.compose.material3.Icon
@@ -23,11 +25,15 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.semantics.contentDescription
+import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.jenil.f1comp.R
 import com.jenil.f1comp.data.model.DriverPointsProgression
 import com.patrykandpatrick.vico.compose.cartesian.CartesianChartHost
 import com.patrykandpatrick.vico.compose.cartesian.axis.HorizontalAxis
@@ -55,12 +61,21 @@ fun PointsProgressionChart(
         return
     }
 
+    val orderedProgression = remember(pointsProgression) {
+        pointsProgression.sortedBy { it.round.toIntOrNull() ?: Int.MAX_VALUE }
+    }
+    val chartAccessibilitySummary = stringResource(
+        R.string.accessibility_chart_points_summary,
+        orderedProgression.first().round.toIntOrNull() ?: 0,
+        orderedProgression.last().round.toIntOrNull() ?: 0,
+        formatPoints(orderedProgression.last().cumulativePoints)
+    )
     val modelProducer = remember { CartesianChartModelProducer() }
 
-    LaunchedEffect(pointsProgression) {
+    LaunchedEffect(orderedProgression) {
         modelProducer.runTransaction {
             lineModel {
-                series(pointsProgression.map { it.cumulativePoints })
+                series(orderedProgression.map { it.cumulativePoints })
             }
         }
     }
@@ -112,9 +127,10 @@ fun PointsProgressionChart(
     )
 
 
-    val totalPoints = pointsProgression.last().cumulativePoints
-    val lastRoundGain = pointsProgression.last().points
-    val bestRound = pointsProgression.maxByOrNull { it.points }
+    val totalPoints = orderedProgression.last().cumulativePoints
+    val lastRoundGain = orderedProgression.last().points
+    val bestRound = orderedProgression.maxByOrNull { it.points }
+    val seasonRange = "Rounds ${orderedProgression.first().round}–${orderedProgression.last().round}"
 
     Column(modifier = modifier.fillMaxWidth()) {
 
@@ -137,6 +153,11 @@ fun PointsProgressionChart(
                     fontFamily = FontFamily.Monospace,
                     fontWeight = FontWeight.Bold,
                     color = textColor
+                )
+                Text(
+                    text = "$seasonRange · cumulative points",
+                    style = MaterialTheme.typography.bodySmall,
+                    color = MaterialTheme.colorScheme.onSurfaceVariant
                 )
             }
 
@@ -180,13 +201,36 @@ fun PointsProgressionChart(
                         tick = axisLineComponent,
                         guideline = axisGuidelineComponent,
                         valueFormatter = remember {
-                            CartesianValueFormatter { _, value: Double, _ -> "R${value.toInt() + 1}" }
+                            CartesianValueFormatter { _, value: Double, _ ->
+                                orderedProgression.getOrNull(value.toInt())?.round?.let { "R$it" } ?: ""
+                            }
                         }
                     )
                 ),
                 modelProducer = modelProducer,
-                modifier = Modifier.fillMaxSize()
+                modifier = Modifier
+                    .fillMaxSize()
+                    .semantics {
+                        contentDescription = chartAccessibilitySummary
+                    }
             )
+        }
+
+        Row(
+            modifier = Modifier
+                .fillMaxWidth()
+                .horizontalScroll(rememberScrollState()),
+            horizontalArrangement = Arrangement.spacedBy(8.dp)
+        ) {
+            orderedProgression.forEach { round ->
+                Text(
+                    text = "R${round.round}: ${formatPoints(round.cumulativePoints)} pts",
+                    style = MaterialTheme.typography.labelMedium,
+                    fontFamily = FontFamily.Monospace,
+                    color = MaterialTheme.colorScheme.onSurface,
+                    modifier = Modifier.padding(vertical = 4.dp)
+                )
+            }
         }
 
         if (bestRound != null && bestRound.points > 0.0) {

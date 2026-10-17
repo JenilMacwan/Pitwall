@@ -50,6 +50,7 @@ local.properties
 /build
 **/build/
 /captures
+/goldie/out/
 .externalNativeBuild
 .cxx
 .artifacts/

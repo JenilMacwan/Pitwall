@@ -89,7 +89,7 @@
     <string name="news_read_more">READ FULL ARTICLE</string>
 
     <!-- Profile Screen -->
-    <string name="profile_title">PADDOCK DRIVER PROFILE</string>
+    <string name="profile_title">Paddock Profile</string>
     <string name="profile_paddock_pass">PADDOCK PASS ACTIVE</string>
     <string name="profile_guest_pass">GUEST PADDOCK PASS</string>
     <string name="profile_guest_desc">Sign in or initialize your Driver Profile to sync telemetry, alerts, and custom preferences across devices.</string>
@@ -240,14 +240,14 @@
     <string name="chatbot_title">Apex AI Assistant</string>
     <string name="chatbot_subtitle">Your F1 Telemetry &amp; Strategy Specialist</string>
     <string name="chatbot_placeholder">Ask Apex anything...</string>
-    <string name="chatbot_welcome">Apex initialized. Live telemetry link active. How can I assist your race strategy?</string>
+    <string name="chatbot_welcome">Hi, I’m Apex. Ask about the F1 schedule, standings, race control, or recent news. I’ll show data sources when available.</string>
     <string name="chatbot_error">Sorry, I encountered an issue connecting to Apex.</string>
     <string name="chatbot_account_required">Apex AI is available only to registered Pitwall accounts. Sign in or create an account to use it.</string>
     <string name="chatbot_beta">BETA</string>
     <string name="chatbot_powered_by">Powered by Pitwall</string>
     <string name="chatbot_clear_chat">Clear Chat</string>
     <string name="chatbot_reset_msg">Pitwall link reset. Standby for new telemetry instructions.</string>
-    <string name="chatbot_disclaimer">Apex is in beta, response maybe slow. AI-generated answers may be inaccurate.</string>
+    <string name="chatbot_disclaimer">Apex is in beta; replies may be slow or inaccurate. Check listed sources when available.</string>
     <string name="prompt_aero_rules">🏎️ 2026 Active Aero Rules</string>
     <string name="prompt_driver_standings">📊 Driver Standings</string>
     <string name="prompt_next_race">🏁 Next Race Schedule</string>
@@ -356,4 +356,24 @@
 <string name="chatbot_open_standings">Open standings</string>
 <string name="chatbot_open_telemetry">Open telemetry</string>
 <string name="chatbot_open_news">Open news</string>
+<string name="chatbot_no_sources">No app source was attached to this answer. Verify time-sensitive details before relying on it.</string>
+<string name="signup_step_account">Step 1 of 2 · Account details</string>
+<string name="signup_step_personalize">Step 2 of 2 · Make it yours</string>
+<string name="signup_back_account">Back to account details</string>
+<string name="signup_continue">Continue</string>
+<string name="schedule_device_timezone">Race times use your device time zone (%1$s).</string>
+<string name="telemetry_feed_disconnected">Feed disconnected · last update %1$d seconds ago</string>
+<string name="telemetry_feed_unavailable">Feed unavailable · reconnect to try again</string>
+<string name="telemetry_feed_delayed">Feed delayed · last update %1$d seconds ago</string>
+<string name="telemetry_feed_updated">Feed updated %1$d seconds ago</string>
+<string name="telemetry_feed_waiting">Waiting for the first feed update</string>
+<string name="telemetry_device_timezone">Your device time · %1$s</string>
+    <string name="profile_guest_heading">Browsing as a guest</string>
+    <string name="profile_guest_body">You can browse without an account. Sign in to save favorites and sync your preferences and alerts across devices.</string>
+    <string name="profile_sign_in_or_register">Sign in or create account</string>
+    <string name="profile_favorites_header">Your favorite teams and drivers</string>
+    <string name="profile_favorite_team">Favorite team</string>
+    <string name="profile_favorite_driver">Favorite driver</string>
+    <string name="profile_favorites_required_title">Sign in to save favorites</string>
+    <string name="profile_favorites_required_body">You can keep browsing without an account. Sign in or create one to save favorite teams and drivers.</string>
 </resources>

@@ -151,7 +151,7 @@
     <string name="news_read_more">LEER ARTÍCULO COMPLETO</string>
 
     <!-- Profile Screen -->
-    <string name="profile_title">PERFIL DE PILOTO DEL PADDOCK</string>
+    <string name="profile_title">Perfil del paddock</string>
     <string name="profile_paddock_pass">PASE DE PADDOCK ACTIVO</string>
     <string name="profile_guest_pass">PASE DE PADDOCK INVITADO</string>
     <string name="profile_guest_desc">Inicia sesión o inicializa tu perfil de piloto para sincronizar telemetría, alertas y preferencias.</string>
@@ -229,14 +229,14 @@
     <string name="chatbot_title">Asistente Apex IA</string>
     <string name="chatbot_subtitle">Tu Especialista en Telemetría y Estrategia de F1</string>
     <string name="chatbot_placeholder">Pregunta a Apex lo que quieras...</string>
-    <string name="chatbot_welcome">Apex inicializado. Enlace de telemetría activo. ¿Cómo puedo ayudarte con tu estrategia?</string>
+    <string name="chatbot_welcome">Hola, soy Apex. Pregúntame sobre el calendario de F1, las clasificaciones, dirección de carrera o noticias recientes. Mostraré las fuentes de datos cuando estén disponibles.</string>
     <string name="chatbot_error">Lo siento, encontré un problema al conectar con Apex.</string>
     <string name="chatbot_account_required">Apex IA solo está disponible para cuentas registradas de Pitwall. Inicia sesión o crea una cuenta.</string>
     <string name="chatbot_beta">BETA</string>
     <string name="chatbot_powered_by">Desarrollado por Pitwall</string>
     <string name="chatbot_clear_chat">Limpiar Chat</string>
     <string name="chatbot_reset_msg">Enlace con Pitwall reiniciado. En espera de instrucciones.</string>
-    <string name="chatbot_disclaimer">Apex está en beta, las respuestas pueden tardar. La IA puede cometer errores.</string>
+    <string name="chatbot_disclaimer">Apex está en beta; las respuestas pueden tardar o ser inexactas. Consulta las fuentes indicadas cuando estén disponibles.</string>
     <string name="prompt_aero_rules">🏎️ Reglas Aerodinámicas 2026</string>
     <string name="prompt_driver_standings">📊 Clasificación de Pilotos</string>
     <string name="prompt_next_race">🏁 Próxima Carrera</string>
@@ -344,4 +344,24 @@
 <string name="chatbot_open_standings">Abrir clasificación</string>
 <string name="chatbot_open_telemetry">Abrir telemetría</string>
 <string name="chatbot_open_news">Abrir noticias</string>
+<string name="chatbot_no_sources">Esta respuesta no incluye una fuente de la app. Verifica los datos sensibles al tiempo antes de confiar en ellos.</string>
+<string name="signup_step_account">Paso 1 de 2 · Datos de la cuenta</string>
+<string name="signup_step_personalize">Paso 2 de 2 · Personaliza tu experiencia</string>
+<string name="signup_back_account">Volver a los datos de la cuenta</string>
+<string name="signup_continue">Continuar</string>
+<string name="schedule_device_timezone">Los horarios de las carreras usan la zona horaria del dispositivo (%1$s).</string>
+<string name="telemetry_feed_disconnected">Conexión interrumpida · última actualización hace %1$d s</string>
+<string name="telemetry_feed_unavailable">Fuente no disponible · vuelve a conectar</string>
+<string name="telemetry_feed_delayed">Retraso en la fuente · última actualización hace %1$d s</string>
+<string name="telemetry_feed_updated">Actualizado hace %1$d s</string>
+<string name="telemetry_feed_waiting">Esperando la primera actualización</string>
+<string name="telemetry_device_timezone">Hora del dispositivo · %1$s</string>
+    <string name="profile_guest_heading">Explora como invitado</string>
+    <string name="profile_guest_body">Puedes explorar sin una cuenta. Inicia sesión para guardar favoritos y sincronizar preferencias y alertas entre dispositivos.</string>
+    <string name="profile_sign_in_or_register">Iniciar sesión o crear cuenta</string>
+    <string name="profile_favorites_header">Tus equipos y pilotos favoritos</string>
+    <string name="profile_favorite_team">Equipo favorito</string>
+    <string name="profile_favorite_driver">Piloto favorito</string>
+    <string name="profile_favorites_required_title">Inicia sesión para guardar favoritos</string>
+    <string name="profile_favorites_required_body">Puedes seguir explorando sin una cuenta. Inicia sesión o crea una para guardar tus equipos y pilotos favoritos.</string>
 </resources>

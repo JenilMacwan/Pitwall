@@ -33,6 +33,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.stringResource
 import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavType
@@ -42,8 +43,10 @@ import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navArgument
 import androidx.navigation.navDeepLink
+import com.jenil.f1comp.R
 import com.jenil.f1comp.ui.auth.screen.LoginScreen
 import com.jenil.f1comp.ui.chatbot.screen.ChatbotScreen
+import com.jenil.f1comp.ui.favorites.screen.FavoritesScreen
 import com.jenil.f1comp.ui.home.screen.HomeScreen
 import com.jenil.f1comp.ui.news.screen.NewsScreen
 import com.jenil.f1comp.ui.profile.screen.ProfileScreen
@@ -312,12 +315,17 @@ fun AppNavigation(
                     }
                     composable(route = "telemetry") {
                         TelemetryScreen(
-                            title = "Live Telemetry",
+                            title = stringResource(R.string.title_telemetry),
                             navController = navController
                         )
                     }
                     composable(route = "telemetry_settings") {
                         TelemetrySettingsScreen(
+                            navController = navController
+                        )
+                    }
+                    composable(route = "favorites") {
+                        FavoritesScreen(
                             navController = navController
                         )
                     }

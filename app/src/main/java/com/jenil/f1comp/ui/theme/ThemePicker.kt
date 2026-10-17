@@ -22,20 +22,29 @@ import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Check
+import androidx.compose.material.icons.outlined.Search
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.saveable.rememberSaveable
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.luminance
 import androidx.compose.ui.graphics.toArgb
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.jenil.f1comp.R
 import com.jenil.f1comp.data.local.entity.ConstructorProfileEntity
 import com.jenil.f1comp.ui.home.components.TeamLogoCircle
 
@@ -142,6 +151,10 @@ fun ThemeSelectionSection(
     modifier: Modifier = Modifier,
     constructorProfiles: List<ConstructorProfileEntity> = emptyList()
 ) {
+    var teamSearchQuery by rememberSaveable { mutableStateOf("") }
+    val filteredTeamSwatches = remember(teamSearchQuery) {
+        teamSwatches.filter { it.label.contains(teamSearchQuery.trim(), ignoreCase = true) }
+    }
     Column(modifier = modifier.fillMaxWidth()) {
 
         // ── Preset swatches ──
@@ -190,6 +203,17 @@ fun ThemeSelectionSection(
 
         Spacer(modifier = Modifier.height(12.dp))
 
+        OutlinedTextField(
+            value = teamSearchQuery,
+            onValueChange = { teamSearchQuery = it },
+            modifier = Modifier.fillMaxWidth().padding(horizontal = 16.dp),
+            singleLine = true,
+            label = { Text(stringResource(R.string.theme_find_team)) },
+            leadingIcon = { Icon(Icons.Outlined.Search, contentDescription = null) }
+        )
+
+        Spacer(modifier = Modifier.height(8.dp))
+
         // ── Scrollable Constructor Team Themes Collection ──
         LazyColumn(
             modifier = Modifier
@@ -198,7 +222,7 @@ fun ThemeSelectionSection(
             contentPadding = PaddingValues(start = 16.dp, end = 16.dp, top = 4.dp, bottom = 32.dp),
             verticalArrangement = Arrangement.spacedBy(10.dp)
         ) {
-            items(teamSwatches, key = { it.id }) { option ->
+            items(filteredTeamSwatches, key = { it.id }) { option ->
                 val resolvedLogoUrl = resolveLogoUrl(option, constructorProfiles)
                 TeamThemeCard(
                     option = option,
@@ -206,6 +230,9 @@ fun ThemeSelectionSection(
                     isSelected = option.id == selectedId,
                     onClick = { onSelect(option) }
                 )
+            }
+            if (filteredTeamSwatches.isEmpty()) {
+                item { Text(stringResource(R.string.theme_no_team_match), color = MaterialTheme.colorScheme.onSurfaceVariant) }
             }
         }
     }
@@ -242,7 +269,7 @@ private fun PresetSwatch(
                 ) {
                     Icon(
                         imageVector = Icons.Default.Check,
-                        contentDescription = "Selected",
+                        contentDescription = stringResource(R.string.common_selected),
                         tint = option.color,
                         modifier = Modifier.size(14.dp)
                     )
@@ -378,7 +405,7 @@ private fun TeamThemeCard(
                 ) {
                     Icon(
                         imageVector = Icons.Default.Check,
-                        contentDescription = "Selected",
+                        contentDescription = stringResource(R.string.common_selected),
                         tint = checkTint,
                         modifier = Modifier.size(14.dp)
                     )

@@ -260,8 +260,8 @@ private fun PodiumColumnItem(
             fontWeight = FontWeight.Bold,
             fontFamily = FontFamily.Monospace,
             textAlign = TextAlign.Center,
-            maxLines = 1,
-            overflow = TextOverflow.Ellipsis,
+            maxLines = 2,
+            overflow = TextOverflow.Clip,
             color = MaterialTheme.colorScheme.onSurface
         )
 
@@ -280,8 +280,8 @@ private fun PodiumColumnItem(
                 fontFamily = FontFamily.Monospace,
                 fontWeight = FontWeight.SemiBold,
                 color = teamColor,
-                maxLines = 1,
-                overflow = TextOverflow.Ellipsis,
+                maxLines = 2,
+                overflow = TextOverflow.Clip,
                 textAlign = TextAlign.Center
             )
         }

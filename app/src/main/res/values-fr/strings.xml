@@ -151,7 +151,7 @@
     <string name="news_read_more">LIRE L\'ARTICLE COMPLET</string>
 
     <!-- Profile Screen -->
-    <string name="profile_title">PROFIL DU PILOTE PADDOCK</string>
+    <string name="profile_title">Profil Paddock</string>
     <string name="profile_paddock_pass">PASS PADDOCK ACTIF</string>
     <string name="profile_guest_pass">PASS PADDOCK INVITÉ</string>
     <string name="profile_guest_desc">Connectez-vous ou initialisez votre profil pilote pour synchroniser la télémétrie et les alertes.</string>
@@ -229,14 +229,14 @@
     <string name="chatbot_title">Assistant Apex IA</string>
     <string name="chatbot_subtitle">Votre Spécialiste Télémétrie et Stratégie F1</string>
     <string name="chatbot_placeholder">Posez une question à Apex...</string>
-    <string name="chatbot_welcome">Apex initialisé. Lien de télémétrie actif. Comment puis-je vous aider pour votre stratégie ?</string>
+    <string name="chatbot_welcome">Bonjour, je suis Apex. Posez vos questions sur le calendrier F1, les classements, la direction de course ou l’actualité. Les sources sont affichées lorsqu’elles sont disponibles.</string>
     <string name="chatbot_error">Désolé, j\'ai rencontré un problème de connexion à Apex.</string>
     <string name="chatbot_account_required">Apex IA est réservé aux comptes Pitwall enregistrés. Connectez-vous ou créez un compte.</string>
     <string name="chatbot_beta">BÊTA</string>
     <string name="chatbot_powered_by">Alimenté par Pitwall</string>
     <string name="chatbot_clear_chat">Effacer la Discussion</string>
     <string name="chatbot_reset_msg">Lien Pitwall réinitialisé. En attente de nouvelles instructions.</string>
-    <string name="chatbot_disclaimer">Apex est en bêta. Les réponses générées par l\'IA peuvent être imprécises.</string>
+    <string name="chatbot_disclaimer">Apex est en bêta ; les réponses peuvent être lentes ou imprécises. Vérifiez les sources indiquées lorsqu’elles sont disponibles.</string>
     <string name="prompt_aero_rules">🏎️ Règlements Aéro 2026</string>
     <string name="prompt_driver_standings">📊 Classement Pilotes</string>
     <string name="prompt_next_race">🏁 Prochaine Course</string>
@@ -344,4 +344,24 @@
 <string name="chatbot_open_standings">Ouvrir le classement</string>
 <string name="chatbot_open_telemetry">Ouvrir la télémétrie</string>
 <string name="chatbot_open_news">Ouvrir les actualités</string>
+<string name="chatbot_no_sources">Aucune source de l’application n’est associée à cette réponse. Vérifiez les informations sensibles au temps avant de vous y fier.</string>
+<string name="signup_step_account">Étape 1 sur 2 · Compte</string>
+<string name="signup_step_personalize">Étape 2 sur 2 · Personnalisez votre expérience</string>
+<string name="signup_back_account">Retour aux informations du compte</string>
+<string name="signup_continue">Continuer</string>
+<string name="schedule_device_timezone">Les horaires utilisent le fuseau horaire de votre appareil (%1$s).</string>
+<string name="telemetry_feed_disconnected">Flux déconnecté · dernière mise à jour il y a %1$d s</string>
+<string name="telemetry_feed_unavailable">Flux indisponible · reconnectez-vous pour réessayer</string>
+<string name="telemetry_feed_delayed">Flux retardé · dernière mise à jour il y a %1$d s</string>
+<string name="telemetry_feed_updated">Mis à jour il y a %1$d s</string>
+<string name="telemetry_feed_waiting">En attente de la première mise à jour</string>
+<string name="telemetry_device_timezone">Heure de votre appareil · %1$s</string>
+    <string name="profile_guest_heading">Navigation en mode invité</string>
+    <string name="profile_guest_body">Vous pouvez parcourir l’application sans compte. Connectez-vous pour enregistrer vos favoris et synchroniser vos préférences et alertes entre appareils.</string>
+    <string name="profile_sign_in_or_register">Se connecter ou créer un compte</string>
+    <string name="profile_favorites_header">Vos équipes et pilotes favoris</string>
+    <string name="profile_favorite_team">Équipe favorite</string>
+    <string name="profile_favorite_driver">Pilote favori</string>
+    <string name="profile_favorites_required_title">Connectez-vous pour enregistrer vos favoris</string>
+    <string name="profile_favorites_required_body">Vous pouvez continuer sans compte. Connectez-vous ou créez un compte pour enregistrer vos équipes et pilotes favoris.</string>
 </resources>

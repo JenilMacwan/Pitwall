@@ -34,11 +34,13 @@ import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import coil.compose.AsyncImage
 import coil.request.ImageRequest
+import com.jenil.f1comp.R
 import com.jenil.f1comp.data.local.entity.DriverStandingsEntity
 import com.jenil.f1comp.data.local.entity.TeammateHeadtoHeadEntity
 import com.jenil.f1comp.data.model.DriverPointsProgression
@@ -73,8 +75,8 @@ fun DriverProfileCard(
     val currentStanding = remember(position, driverId) {
         position.find { it.driverId.equals(driverId, ignoreCase = true) }
     }
-    val positionText = currentStanding?.let { "P${it.position} 2026 Championship" } ?: "N/A"
     val year = LocalDate.now().year
+    val positionText = currentStanding?.let { "P${it.position} · $year Championship" } ?: "Standing unavailable"
 
     Column(
         modifier = modifier
@@ -180,7 +182,7 @@ fun DriverProfileCard(
                             )
                             Spacer(modifier = Modifier.height(2.dp))
                             Text(
-                                text = "CAR NO.",
+                                text = stringResource(R.string.profile_car_number).uppercase(),
                                 fontFamily = FontFamily.Monospace,
                                 style = MaterialTheme.typography.labelSmall,
                                 fontWeight = FontWeight.Bold,
@@ -206,7 +208,7 @@ fun DriverProfileCard(
                 )
                 Spacer(modifier = Modifier.width(8.dp))
                 Text(
-                    text = "SEASON OVERVIEW",
+                    text = "$year ${stringResource(R.string.profile_season_overview).uppercase()}",
                     style = MaterialTheme.typography.titleSmall,
                     fontWeight = FontWeight.SemiBold,
                     color = MaterialTheme.colorScheme.onSurface
@@ -225,20 +227,18 @@ fun DriverProfileCard(
         Spacer(modifier = Modifier.height(8.dp))
 
         // 3. POINTS PROGRESSION CHART
-        if (pointsProgression.isNotEmpty()) {
-            Column(verticalArrangement = Arrangement.spacedBy(8.dp)) {
-                Card(
-                    modifier = Modifier.fillMaxWidth(),
-                    shape = RoundedCornerShape(14.dp),
-                    colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surfaceVariant.copy(alpha = 0.35f)),
-                    border = BorderStroke(1.dp, MaterialTheme.colorScheme.outlineVariant.copy(alpha = 0.5f))
-                ) {
-                    PointsProgressionChart(
-                        pointsProgression = pointsProgression,
-                        modifier = Modifier.padding(12.dp)
-                    )
+        Column(verticalArrangement = Arrangement.spacedBy(8.dp)) {
+            Card(
+                modifier = Modifier.fillMaxWidth(),
+                shape = RoundedCornerShape(14.dp),
+                colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surfaceVariant.copy(alpha = 0.35f)),
+                border = BorderStroke(1.dp, MaterialTheme.colorScheme.outlineVariant.copy(alpha = 0.5f))
+            ) {
+                PointsProgressionChart(
+                    pointsProgression = pointsProgression,
+                    modifier = Modifier.padding(12.dp)
+                )
                 }
-            }
         }
 
         Spacer(modifier = Modifier.height(8.dp))
@@ -261,14 +261,14 @@ fun DriverProfileCard(
                     )
                     Spacer(modifier = Modifier.width(8.dp))
                     Text(
-                        text = "TEAMMATE COMPARISON",
+                        text = stringResource(R.string.profile_teammate_comparison).uppercase(),
                         style = MaterialTheme.typography.titleSmall,
                         fontWeight = FontWeight.SemiBold,
                         color = MaterialTheme.colorScheme.onSurface
                     )
                     Spacer(modifier = Modifier.weight(1f))
                     Text(
-                        text = "$year Head-to-Head",
+                        text = "${data.season} season",
                         style = MaterialTheme.typography.titleSmall,
                         fontWeight = FontWeight.SemiBold,
                         color = MaterialTheme.colorScheme.onSurfaceVariant
@@ -301,7 +301,7 @@ fun DriverProfileCard(
                                 )
                                 Spacer(modifier = Modifier.height(4.dp))
                                 Text(
-                                    text = "Teammate Battle",
+                                text = stringResource(R.string.profile_teammate_battle),
                                     style = MaterialTheme.typography.labelSmall,
                                     color = MaterialTheme.colorScheme.onSurfaceVariant
                                 )
@@ -313,30 +313,41 @@ fun DriverProfileCard(
                             DividerDefaults.Thickness,
                             color = MaterialTheme.colorScheme.outlineVariant.copy(alpha = 0.4f)
                         )
+                        Text(
+                            text = stringResource(R.string.profile_completed_sessions_note),
+                            style = MaterialTheme.typography.bodySmall,
+                            color = MaterialTheme.colorScheme.onSurfaceVariant
+                        )
 
                         if (data.qualifying.totalCompleted > 0) {
                             ComparisonRow(
-                                label = "Qualifying",
+                                label = stringResource(R.string.profile_qualifying),
                                 driverWins = if (isDriverA) data.qualifying.driverAWins else data.qualifying.driverBWins,
                                 teammateWins = if (isDriverA) data.qualifying.driverBWins else data.qualifying.driverAWins,
+                                completedSessions = data.qualifying.totalCompleted,
+                                ties = data.qualifying.ties,
                                 accentColor = teamColor
                             )
                         }
 
                         if (data.race.totalCompleted > 0) {
                             ComparisonRow(
-                                label = "Races Ahead",
+                                label = stringResource(R.string.profile_races_ahead),
                                 driverWins = if (isDriverA) data.race.driverAWins else data.race.driverBWins,
                                 teammateWins = if (isDriverA) data.race.driverBWins else data.race.driverAWins,
+                                completedSessions = data.race.totalCompleted,
+                                ties = data.race.ties,
                                 accentColor = teamColor
                             )
                         }
                         data.sprintQualifying?.totalCompleted?.let {
                             if (it > 0){
                                 ComparisonRow(
-                                    label = "Sprint Qualifying",
+                                    label = stringResource(R.string.profile_sprint_qualifying),
                                     driverWins = if (isDriverA) data.sprintQualifying.driverAWins else data.sprintQualifying.driverBWins,
                                     teammateWins = if (isDriverA) data.sprintQualifying.driverBWins else data.sprintQualifying.driverAWins,
+                                    completedSessions = data.sprintQualifying.totalCompleted,
+                                    ties = data.sprintQualifying.ties,
                                     accentColor = teamColor
                                 )
                             }
@@ -344,9 +355,11 @@ fun DriverProfileCard(
                         data.sprintRace?.totalCompleted?.let {
                             if (it > 0){
                                 ComparisonRow(
-                                    label = "Sprint Race",
+                                    label = stringResource(R.string.profile_sprint_race),
                                     driverWins = if (isDriverA) data.sprintRace.driverAWins else data.sprintRace.driverBWins,
                                     teammateWins = if (isDriverA) data.sprintRace.driverBWins else data.sprintRace.driverAWins,
+                                    completedSessions = data.sprintRace.totalCompleted,
+                                    ties = data.sprintRace.ties,
                                     accentColor = teamColor
                                 )
                             }
@@ -372,7 +385,7 @@ fun DriverProfileCard(
                 )
                 Spacer(modifier = Modifier.width(8.dp))
                 Text(
-                    text = "BIOGRAPHY",
+                    text = stringResource(R.string.profile_biography).uppercase(),
                     style = MaterialTheme.typography.titleSmall,
                     fontWeight = FontWeight.SemiBold,
                     color = MaterialTheme.colorScheme.onSurface
@@ -449,7 +462,7 @@ fun DriverProfileCard(
                                 horizontalArrangement = Arrangement.SpaceBetween
                             ) {
                                 Text(
-                                    text = "Born:",
+                                    text = stringResource(R.string.profile_born),
                                     style = MaterialTheme.typography.labelMedium,
                                     fontFamily = FontFamily.Monospace,
                                     color = MaterialTheme.colorScheme.onSurfaceVariant
@@ -484,7 +497,7 @@ fun DriverProfileCard(
                                 horizontalArrangement = Arrangement.SpaceBetween
                             ) {
                                 Text(
-                                    text = "Debut:",
+                                    text = stringResource(R.string.profile_debut),
                                     style = MaterialTheme.typography.labelMedium,
                                     fontFamily = FontFamily.Monospace,
                                     color = MaterialTheme.colorScheme.onSurfaceVariant

@@ -50,7 +50,7 @@ fun CollapsedNewsContent(news: NewsEntity) {
         ) {
             AsyncImage(
                 model = news.image,
-                contentDescription = "News Image",
+                contentDescription = null,
                 modifier = Modifier.fillMaxWidth(),
                 contentScale = ContentScale.Crop,
                 placeholder = painterResource(R.drawable.ic_news_placeholder),
@@ -68,7 +68,7 @@ fun CollapsedNewsContent(news: NewsEntity) {
                 color = MaterialTheme.colorScheme.onSurface,
                 fontSize = 16.sp,
                 fontWeight = FontWeight.Medium,
-                maxLines = 2,
+                maxLines = 3,
                 overflow = TextOverflow.Ellipsis
             )
 

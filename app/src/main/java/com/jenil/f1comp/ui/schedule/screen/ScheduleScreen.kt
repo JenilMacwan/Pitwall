@@ -1,5 +1,9 @@
 package com.jenil.f1comp.ui.schedule.screen
 
+import android.Manifest
+import android.content.pm.PackageManager
+import androidx.activity.compose.rememberLauncherForActivityResult
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -26,17 +30,21 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableIntStateOf
+import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
+import androidx.core.content.ContextCompat
 import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavController
@@ -47,8 +55,11 @@ import com.jenil.f1comp.ui.schedule.components.ScheduleCard
 import com.jenil.f1comp.ui.schedule.components.SectionLabel
 import com.jenil.f1comp.ui.schedule.components.TabPill
 import com.jenil.f1comp.ui.schedule.components.UpcomingRaceCard
+import com.jenil.f1comp.util.syncRacesToCalendar
 import com.jenil.f1comp.viewmodel.ScheduleViewModel
+import kotlinx.coroutines.launch
 import java.time.LocalDate
+import java.time.ZoneId
 
 @Composable
 fun ScheduleScreen(
@@ -59,8 +70,11 @@ fun ScheduleScreen(
 ) {
     val raceSchedule by viewModel.schedule.collectAsStateWithLifecycle()
     val circuitsMap by viewModel.circuitsMap.collectAsStateWithLifecycle()
+    val context = LocalContext.current
+    val scope = rememberCoroutineScope()
 
-    var selectedTabIndex by remember { mutableIntStateOf(0) }
+    // Most visits are for the next event; keep the all-races tab one tap away.
+    var selectedTabIndex by remember { mutableIntStateOf(1) }
 
     val scrollState = rememberScrollState()
 
@@ -84,6 +98,36 @@ fun ScheduleScreen(
     }
 
     val snackbarHostState = remember { SnackbarHostState() }
+    var pendingCalendarRace by remember { mutableStateOf<ScheduleEntity?>(null) }
+
+    fun addRaceToCalendar(race: ScheduleEntity) {
+        syncRacesToCalendar(context, listOf(race)) { message ->
+            scope.launch { snackbarHostState.showSnackbar(message) }
+        }
+    }
+
+    val calendarPermissionLauncher = rememberLauncherForActivityResult(
+        ActivityResultContracts.RequestMultiplePermissions()
+    ) { permissions ->
+        val race = pendingCalendarRace
+        pendingCalendarRace = null
+        if (permissions[Manifest.permission.READ_CALENDAR] == true &&
+            permissions[Manifest.permission.WRITE_CALENDAR] == true && race != null
+        ) {
+            addRaceToCalendar(race)
+        } else {
+            scope.launch { snackbarHostState.showSnackbar("Calendar access is needed to add this race weekend.") }
+        }
+    }
+
+    fun requestAddToCalendar(race: ScheduleEntity) {
+        val canRead = ContextCompat.checkSelfPermission(context, Manifest.permission.READ_CALENDAR) == PackageManager.PERMISSION_GRANTED
+        val canWrite = ContextCompat.checkSelfPermission(context, Manifest.permission.WRITE_CALENDAR) == PackageManager.PERMISSION_GRANTED
+        if (canRead && canWrite) addRaceToCalendar(race) else {
+            pendingCalendarRace = race
+            calendarPermissionLauncher.launch(arrayOf(Manifest.permission.READ_CALENDAR, Manifest.permission.WRITE_CALENDAR))
+        }
+    }
 
     Scaffold(
         snackbarHost = { SnackbarHost(snackbarHostState) },
@@ -118,7 +162,7 @@ fun ScheduleScreen(
                         IconButton(onClick = onDrawerClick) {
                             Icon(
                                 painter = painterResource(R.drawable.ic_menu),
-                                contentDescription = "Menu",
+                                contentDescription = stringResource(R.string.accessibility_menu),
                                 tint = MaterialTheme.colorScheme.onSurface
                             )
                         }
@@ -137,6 +181,12 @@ fun ScheduleScreen(
                 onTabSelected = { selectedTabIndex = it },
                 modifier = Modifier.padding(top = 20.dp, start = 16.dp, end = 16.dp)
             )
+            Text(
+                text = stringResource(R.string.schedule_device_timezone, ZoneId.systemDefault().id),
+                style = MaterialTheme.typography.bodySmall,
+                color = MaterialTheme.colorScheme.onSurfaceVariant,
+                modifier = Modifier.padding(horizontal = 20.dp, vertical = 8.dp)
+            )
             Spacer(modifier = Modifier.height(20.dp))
 
             Column(
@@ -152,7 +202,8 @@ fun ScheduleScreen(
                             ScheduleCard(
                                 schedule = race, circuit = circuitsMap[race.circuitId],
                                 isNextRace = false,
-                                onResultsClick = { navigateToResults(race) }
+                                onResultsClick = { navigateToResults(race) },
+                                onCalendarClick = { requestAddToCalendar(race) }
                             )
                         }
                     }
@@ -164,7 +215,8 @@ fun ScheduleScreen(
                                 ScheduleCard(
                                     schedule = race,
                                     circuit = circuitsMap[race.circuitId],
-                                    isNextRace = true
+                                    isNextRace = true,
+                                    onCalendarClick = { requestAddToCalendar(race) }
                                 )
                             } else {
                                 if (index == 1) {

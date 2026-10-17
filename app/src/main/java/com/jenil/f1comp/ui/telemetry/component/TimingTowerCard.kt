@@ -24,11 +24,13 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.jenil.f1comp.R
 import com.jenil.f1comp.data.model.AppDataLine
 import com.jenil.f1comp.data.model.DriverInfo
 import com.jenil.f1comp.data.model.TimingLine
@@ -78,13 +80,13 @@ fun TimingTowerCard(
                 Row(verticalAlignment = Alignment.CenterVertically) {
                     Icon(
                         imageVector = Icons.Outlined.Equalizer,
-                        contentDescription = "Timing Tower",
+                        contentDescription = stringResource(R.string.accessibility_timing_tower),
                         tint = PodiumGold,
                         modifier = Modifier.size(18.dp)
                     )
                     Spacer(modifier = Modifier.width(8.dp))
                     Text(
-                        text = "TIMING TOWER",
+                        text = stringResource(R.string.telemetry_timing_tower).uppercase(),
                         style = MaterialTheme.typography.titleMedium.copy(
                             fontFamily = FontFamily.Monospace,
                             fontWeight = FontWeight.Bold,
@@ -104,7 +106,7 @@ fun TimingTowerCard(
                     )
                 ) {
                     Text(
-                        text = "${sessionType.uppercase()} · ${sortedDrivers.size} CARS",
+                        text = stringResource(R.string.telemetry_cars_count, sessionType.uppercase(), sortedDrivers.size).uppercase(),
                         modifier = Modifier.padding(horizontal = 8.dp, vertical = 4.dp),
                         style = MaterialTheme.typography.labelSmall.copy(
                             fontFamily = FontFamily.Monospace,
@@ -131,7 +133,7 @@ fun TimingTowerCard(
                     contentAlignment = Alignment.Center
                 ) {
                     Text(
-                        text = "NO TIMING DATA AVAILABLE",
+                        text = stringResource(R.string.telemetry_no_timing_data).uppercase(),
                         style = MaterialTheme.typography.bodyMedium.copy(
                             fontFamily = FontFamily.Monospace,
                             fontWeight = FontWeight.Bold,
@@ -150,7 +152,7 @@ fun TimingTowerCard(
                     verticalAlignment = Alignment.CenterVertically
                 ) {
                     Text(
-                        text = "POS",
+                        text = stringResource(R.string.telemetry_position).uppercase(),
                         style = MaterialTheme.typography.labelSmall.copy(
                             fontFamily = FontFamily.Monospace,
                             color = MaterialTheme.colorScheme.onSurfaceVariant,
@@ -160,7 +162,7 @@ fun TimingTowerCard(
                         modifier = Modifier.width(30.dp)
                     )
                     Text(
-                        text = "DRIVER",
+                        text = stringResource(R.string.telemetry_driver).uppercase(),
                         style = MaterialTheme.typography.labelSmall.copy(
                             fontFamily = FontFamily.Monospace,
                             color = MaterialTheme.colorScheme.onSurfaceVariant,
@@ -181,7 +183,7 @@ fun TimingTowerCard(
                     )
                     if (showGaps && showSectors) Spacer(modifier = Modifier.width(6.dp))
                     if (showSectors) Text(
-                        text = "SECTORS",
+                        text = stringResource(R.string.telemetry_sectors).uppercase(),
                         style = MaterialTheme.typography.labelSmall.copy(
                             fontFamily = FontFamily.Monospace,
                             color = MaterialTheme.colorScheme.onSurfaceVariant,
@@ -192,7 +194,7 @@ fun TimingTowerCard(
                     )
                     if (showSectors && showTyres) Spacer(modifier = Modifier.width(6.dp))
                     if (showTyres) Text(
-                        text = "TYRE",
+                        text = stringResource(R.string.telemetry_tyre).uppercase(),
                         style = MaterialTheme.typography.labelSmall.copy(
                             fontFamily = FontFamily.Monospace,
                             color = MaterialTheme.colorScheme.onSurfaceVariant,

@@ -44,6 +44,9 @@ class LiveTelemetryViewModel @Inject constructor(
     private val _telemetryUiState = MutableStateFlow<TelemetryUiState>(TelemetryUiState.Idle)
     val telemetryUiState: StateFlow<TelemetryUiState> = _telemetryUiState.asStateFlow()
 
+    private val _lastUpdateAtMillis = MutableStateFlow<Long?>(null)
+    val lastUpdateAtMillis: StateFlow<Long?> = _lastUpdateAtMillis.asStateFlow()
+
     private val _syncDelayMs = MutableStateFlow(0L)
     val syncDelayMs = _syncDelayMs.asStateFlow()
 
@@ -83,6 +86,7 @@ class LiveTelemetryViewModel @Inject constructor(
                                 }
                             }
                             .onEach {
+                                _lastUpdateAtMillis.value = System.currentTimeMillis()
                                 _telemetryUiState.value = TelemetryUiState.Success
                             }
                             .catch { e ->

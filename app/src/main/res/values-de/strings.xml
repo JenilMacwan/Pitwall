@@ -151,7 +151,7 @@
     <string name="news_read_more">GANZEN ARTIKEL LESEN</string>
 
     <!-- Profile Screen -->
-    <string name="profile_title">PADDOCK FAHRERPROFIL</string>
+    <string name="profile_title">Paddock-Profil</string>
     <string name="profile_paddock_pass">PADDOCK PASS AKTIV</string>
     <string name="profile_guest_pass">GAST PADDOCK PASS</string>
     <string name="profile_guest_desc">Melden Sie sich an oder aktivieren Sie Ihr Profil, um Telemetrie und Benachrichtigungen zu synchronisieren.</string>
@@ -229,14 +229,14 @@
     <string name="chatbot_title">Apex KI-Assistent</string>
     <string name="chatbot_subtitle">Ihr F1-Telemetrie &amp; Strategie-Spezialist</string>
     <string name="chatbot_placeholder">Fragen Sie Apex etwas...</string>
-    <string name="chatbot_welcome">Apex initialisiert. Live-Telemetrie aktiv. Wie kann ich Ihre Rennstrategie unterstützen?</string>
+    <string name="chatbot_welcome">Hallo, ich bin Apex. Fragen Sie nach dem F1-Kalender, den Meisterständen, der Rennleitung oder aktuellen Nachrichten. Datenquellen zeige ich an, wenn verfügbar.</string>
     <string name="chatbot_error">Entschuldigung, beim Verbinden mit Apex ist ein Fehler aufgetreten.</string>
     <string name="chatbot_account_required">Apex KI ist nur für registrierte Pitwall-Konten verfügbar. Melden Sie sich an oder erstellen Sie ein Konto.</string>
     <string name="chatbot_beta">BETA</string>
     <string name="chatbot_powered_by">Unterstützt von Pitwall</string>
     <string name="chatbot_clear_chat">Chat löschen</string>
     <string name="chatbot_reset_msg">Pitwall-Verbindung zurückgesetzt. Bereitschaft für neue Anweisungen.</string>
-    <string name="chatbot_disclaimer">Apex ist in der Beta. KI-generierte Antworten können ungenau sein.</string>
+    <string name="chatbot_disclaimer">Apex befindet sich in der Beta. Antworten können langsam oder ungenau sein. Prüfen Sie angezeigte Quellen, sofern vorhanden.</string>
     <string name="prompt_aero_rules">🏎️ Aero-Regeln 2026</string>
     <string name="prompt_driver_standings">📊 Fahrer-Wertung</string>
     <string name="prompt_next_race">🏁 Nächstes Rennen</string>
@@ -344,4 +344,24 @@
 <string name="chatbot_open_standings">Wertung öffnen</string>
 <string name="chatbot_open_telemetry">Telemetrie öffnen</string>
 <string name="chatbot_open_news">Nachrichten öffnen</string>
+<string name="chatbot_no_sources">Für diese Antwort wurde keine App-Quelle angegeben. Prüfen Sie zeitkritische Angaben, bevor Sie sich darauf verlassen.</string>
+<string name="signup_step_account">Schritt 1 von 2 · Kontodaten</string>
+<string name="signup_step_personalize">Schritt 2 von 2 · Persönlich gestalten</string>
+<string name="signup_back_account">Zurück zu den Kontodaten</string>
+<string name="signup_continue">Weiter</string>
+<string name="schedule_device_timezone">Rennzeiten in Ihrer Gerätezeitzone (%1$s).</string>
+<string name="telemetry_feed_disconnected">Feed getrennt · letzte Aktualisierung vor %1$d Sekunden</string>
+<string name="telemetry_feed_unavailable">Feed nicht verfügbar · erneut verbinden</string>
+<string name="telemetry_feed_delayed">Feed verzögert · letzte Aktualisierung vor %1$d Sekunden</string>
+<string name="telemetry_feed_updated">Feed vor %1$d Sekunden aktualisiert</string>
+<string name="telemetry_feed_waiting">Warten auf die erste Feed-Aktualisierung</string>
+<string name="telemetry_device_timezone">Gerätezeit · %1$s</string>
+    <string name="profile_guest_heading">Als Gast stöbern</string>
+    <string name="profile_guest_body">Du kannst ohne Konto stöbern. Melde dich an, um Favoriten zu speichern und Einstellungen sowie Benachrichtigungen geräteübergreifend zu synchronisieren.</string>
+    <string name="profile_sign_in_or_register">Anmelden oder Konto erstellen</string>
+    <string name="profile_favorites_header">Deine Lieblingsteams und -fahrer</string>
+    <string name="profile_favorite_team">Lieblingsteam</string>
+    <string name="profile_favorite_driver">Lieblingsfahrer</string>
+    <string name="profile_favorites_required_title">Zum Speichern anmelden</string>
+    <string name="profile_favorites_required_body">Du kannst ohne Konto weiter stöbern. Melde dich an oder erstelle ein Konto, um Teams und Fahrer als Favoriten zu speichern.</string>
 </resources>

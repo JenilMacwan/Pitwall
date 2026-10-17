@@ -239,7 +239,7 @@ fun ChatbotScreen(
                 IconButton(onClick = { navController.popBackStack() }) {
                     Icon(
                         imageVector = Icons.AutoMirrored.Rounded.ArrowBack,
-                        contentDescription = "Back",
+                        contentDescription = stringResource(R.string.common_back),
                         tint = MaterialTheme.colorScheme.onSurface
                     )
                 }

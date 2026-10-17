@@ -41,10 +41,12 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.graphicsLayer
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.jenil.f1comp.R
 import com.jenil.f1comp.ui.theme.F1Red
 
 @Composable
@@ -318,7 +320,7 @@ fun TelemetryHeader(
                             verticalAlignment = Alignment.CenterVertically
                         ) {
                             Text(
-                                text = "LAP: ",
+                                text = stringResource(R.string.telemetry_lap).uppercase() + ": ",
                                 style = MaterialTheme.typography.bodyMedium.copy(
                                     fontFamily = FontFamily.Monospace,
                                     fontWeight = FontWeight.Normal,
@@ -343,7 +345,7 @@ fun TelemetryHeader(
                 ) {
                     Icon(
                         imageVector = Icons.Outlined.Schedule,
-                        contentDescription = "Clock",
+                        contentDescription = stringResource(R.string.accessibility_clock),
                         tint = F1Red,
                         modifier = Modifier.size(22.dp)
                     )
@@ -359,7 +361,7 @@ fun TelemetryHeader(
                     Spacer(modifier = Modifier.width(8.dp))
                     Column {
                         Text(
-                            text = "EST",
+                            text = stringResource(R.string.telemetry_estimated).uppercase(),
                             style = MaterialTheme.typography.labelSmall.copy(
                                 fontFamily = FontFamily.Monospace,
                                 fontWeight = FontWeight.Normal,
@@ -369,7 +371,7 @@ fun TelemetryHeader(
                             )
                         )
                         Text(
-                            text = "REMAINING",
+                            text = stringResource(R.string.telemetry_remaining).uppercase(),
                             style = MaterialTheme.typography.labelSmall.copy(
                                 fontFamily = FontFamily.Monospace,
                                 fontWeight = FontWeight.Normal,
@@ -396,7 +398,7 @@ fun TelemetryHeader(
                     modifier = Modifier.weight(1f),
                     icon = Icons.Outlined.Thermostat,
                     iconTint = MaterialTheme.colorScheme.onSurfaceVariant,
-                    label = "AIR",
+                    label = stringResource(R.string.telemetry_air).uppercase(),
                     labelColor = MaterialTheme.colorScheme.onSurfaceVariant,
                     value = formattedAirTemp,
                     valueColor = MaterialTheme.colorScheme.onSurface
@@ -405,7 +407,7 @@ fun TelemetryHeader(
                     modifier = Modifier.weight(1f),
                     icon = Icons.Outlined.Whatshot,
                     iconTint = F1Red,
-                    label = "TRACK",
+                    label = stringResource(R.string.telemetry_track).uppercase(),
                     labelColor = F1Red,
                     value = formattedTrackTemp,
                     valueColor = F1Red
@@ -414,7 +416,7 @@ fun TelemetryHeader(
                     modifier = Modifier.weight(1f),
                     icon = Icons.Outlined.WaterDrop,
                     iconTint = Color(0xFF00E5FF),
-                    label = "HUM",
+                    label = stringResource(R.string.telemetry_humidity).uppercase(),
                     labelColor = MaterialTheme.colorScheme.onSurfaceVariant,
                     value = formattedHumidity,
                     valueColor = MaterialTheme.colorScheme.onSurface
@@ -423,7 +425,7 @@ fun TelemetryHeader(
                     modifier = Modifier.weight(1f),
                     icon = Icons.Outlined.Air,
                     iconTint = MaterialTheme.colorScheme.onSurfaceVariant,
-                    label = "WIND",
+                    label = stringResource(R.string.telemetry_wind).uppercase(),
                     labelColor = MaterialTheme.colorScheme.onSurfaceVariant,
                     value = formattedWind,
                     valueColor = MaterialTheme.colorScheme.onSurface

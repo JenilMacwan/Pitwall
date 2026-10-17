@@ -6,7 +6,6 @@ import com.jenil.f1comp.data.local.entity.NewsEntity
 import com.jenil.f1comp.data.repository.NewsRepository
 import com.jenil.f1comp.util.DateParserUtil
 import dagger.hilt.android.lifecycle.HiltViewModel
-import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
@@ -21,7 +20,8 @@ class NewsViewModel @Inject constructor(
     private val repository: NewsRepository
 ) : ViewModel() {
 
-    private val _isLoading = MutableStateFlow(false)
+    // Start in loading so the first frame is not mistaken for a successful empty feed.
+    private val _isLoading = MutableStateFlow(true)
     val isLoading = _isLoading.asStateFlow()
 
     private val _error = MutableStateFlow<String?>(null)

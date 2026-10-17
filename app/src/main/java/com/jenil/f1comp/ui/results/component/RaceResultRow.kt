@@ -32,11 +32,13 @@ import androidx.compose.ui.draw.drawBehind
 import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.geometry.Size
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.jenil.f1comp.R
 import com.jenil.f1comp.data.local.entity.RaceResultEntity
 import com.jenil.f1comp.data.local.entity.SprintResultEntity
 import com.jenil.f1comp.ui.home.components.DriverHeadshotCircle
@@ -208,9 +210,9 @@ private fun RaceResultRowContent(
                         fontWeight = FontWeight.Bold,
                         style = MaterialTheme.typography.bodyMedium,
                         color = MaterialTheme.colorScheme.onSurface,
-                        maxLines = 1,
-                        overflow = TextOverflow.Ellipsis,
-                        modifier = Modifier.weight(1f, fill = false)
+                        maxLines = 2,
+                        overflow = TextOverflow.Clip,
+                        modifier = Modifier.weight(1f)
                     )
 
                     // Grid Delta Badge (+2 gain, -3 loss, = no change)
@@ -303,7 +305,7 @@ private fun GridDeltaBadge(
             isGain -> {
                 Icon(
                     imageVector = Icons.Rounded.ArrowUpward,
-                    contentDescription = "Gained",
+                    contentDescription = stringResource(R.string.accessibility_gained),
                     tint = badgeColor,
                     modifier = Modifier.size(10.dp)
                 )
@@ -321,7 +323,7 @@ private fun GridDeltaBadge(
             isLoss -> {
                 Icon(
                     imageVector = Icons.Rounded.ArrowDownward,
-                    contentDescription = "Lost",
+                    contentDescription = stringResource(R.string.accessibility_lost),
                     tint = badgeColor,
                     modifier = Modifier.size(10.dp)
                 )
@@ -365,7 +367,7 @@ private fun FastestLapBadge(lapTime: String?) {
     ) {
         Icon(
             imageVector = Icons.Rounded.Speed,
-            contentDescription = "Fastest Lap",
+            contentDescription = stringResource(R.string.accessibility_fastest_lap),
             tint = FatestLap,
             modifier = Modifier.size(10.dp)
         )

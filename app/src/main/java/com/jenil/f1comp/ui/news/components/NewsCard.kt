@@ -21,6 +21,8 @@ import com.jenil.f1comp.data.local.entity.NewsEntity
 fun NewsCard(
     news: NewsEntity,
     isFirstItem: Boolean,
+    isSaved: Boolean = false,
+    onSaveToggle: () -> Unit = {},
     modifier: Modifier = Modifier
 ) {
     // The first item starts expanded. Others start collapsed.
@@ -42,7 +44,7 @@ fun NewsCard(
         border = BorderStroke(1.dp, MaterialTheme.colorScheme.outlineVariant)
     ) {
         if (isExpanded) {
-            ExpandedNewsContent(news, isFirstItem)
+            ExpandedNewsContent(news, isFirstItem, isSaved, onSaveToggle)
         } else {
             CollapsedNewsContent(news)
         }

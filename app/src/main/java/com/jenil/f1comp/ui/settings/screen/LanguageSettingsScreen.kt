@@ -111,13 +111,12 @@ fun LanguageSettingsScreen(
 
     val scope = rememberCoroutineScope()
 
-    val suggestedLanguages = remember(selectedLanguageCode) {
-        listOf(
+    val suggestedLanguages = listOf(
             LanguageOption(
                 code = "en",
                 displayName = "English",
                 nativeName = "English (UK)",
-                subtitle = "App Default • Primary",
+                subtitle = stringResource(R.string.language_app_default_primary),
                 flagEmoji = "🇬🇧",
                 isSuggested = true,
                 isActive = selectedLanguageCode.startsWith("en") && !selectedLanguageCode.contains("US")
@@ -126,13 +125,12 @@ fun LanguageSettingsScreen(
                 code = "en-US",
                 displayName = "English",
                 nativeName = "English (US)",
-                subtitle = "English (United States)",
+                subtitle = stringResource(R.string.language_english_us),
                 flagEmoji = "🇺🇸",
                 isSuggested = true,
                 isActive = selectedLanguageCode == "en-US"
             )
-        )
-    }
+    )
 
     val allLanguages = remember(selectedLanguageCode) {
         listOf(
@@ -240,7 +238,7 @@ fun LanguageSettingsScreen(
                     ) {
                         Icon(
                             imageVector = Icons.Rounded.Check,
-                            contentDescription = "Save Changes",
+                            contentDescription = stringResource(R.string.profile_save_changes),
                             tint = MaterialTheme.colorScheme.surface,
                             modifier = Modifier.size(20.dp)
                         )
@@ -273,7 +271,7 @@ fun LanguageSettingsScreen(
                 ) {
                     Icon(
                         imageVector = Icons.AutoMirrored.Rounded.ArrowBack,
-                        contentDescription = "Back",
+                        contentDescription = stringResource(R.string.common_back),
                         tint = MaterialTheme.colorScheme.onSurface
                     )
                 }
@@ -312,7 +310,7 @@ fun LanguageSettingsScreen(
                         leadingIcon = {
                             Icon(
                                 imageVector = Icons.Outlined.Search,
-                                contentDescription = "Search",
+                                contentDescription = stringResource(R.string.accessibility_search),
                                 tint = MaterialTheme.colorScheme.onSurfaceVariant
                             )
                         },
@@ -331,18 +329,25 @@ fun LanguageSettingsScreen(
                 // --- Region & Local Format Card ---
                 item {
                     SectionHeader(
-                        title = "REGION & LOCAL FORMAT",
+                        title = stringResource(R.string.language_region_local_format).uppercase(),
                         badgeText = "ACTIVE"
                     )
                     Spacer(modifier = Modifier.height(8.dp))
                     RegionFormatCard(regionFormat = activeRegionFormat)
+                    Spacer(modifier = Modifier.height(8.dp))
+                    Text(
+                        text = "This preview shows common date and number formatting for the selected language. Race and session times use your device time zone. Translated app text is available in English, German, Spanish, French, Italian, and Dutch.",
+                        style = MaterialTheme.typography.bodySmall,
+                        color = MaterialTheme.colorScheme.onSurfaceVariant,
+                        modifier = Modifier.padding(horizontal = 4.dp)
+                    )
                 }
 
                 // --- Suggested Languages ---
                 if (searchQuery.isBlank()) {
                     item {
                         SectionHeader(
-                            title = "SUGGESTED LANGUAGES",
+                        title = stringResource(R.string.language_suggested).uppercase(),
                             badgeText = "${suggestedLanguages.size} Available"
                         )
                     }
@@ -360,7 +365,7 @@ fun LanguageSettingsScreen(
                 // --- All Languages ---
                 item {
                     SectionHeader(
-                        title = "ALL LANGUAGES",
+                        title = stringResource(R.string.language_all).uppercase(),
                         badgeText = "Alphabetical Directory"
                     )
                 }
@@ -487,12 +492,12 @@ private fun RegionFormatCard(
                 horizontalArrangement = Arrangement.spacedBy(10.dp)
             ) {
                 FormatSubCard(
-                    title = "DATE FORMAT",
+                    title = stringResource(R.string.language_date_format).uppercase(),
                     value = regionFormat.dateFormat,
                     modifier = Modifier.weight(1f)
                 )
                 FormatSubCard(
-                    title = "NUMBER FORMAT",
+                    title = stringResource(R.string.language_number_format).uppercase(),
                     value = regionFormat.numberFormat,
                     modifier = Modifier.weight(1f)
                 )
@@ -616,7 +621,7 @@ private fun LanguageSelectionCard(
                 ) {
                     Icon(
                         imageVector = Icons.Rounded.Check,
-                        contentDescription = "Selected",
+                        contentDescription = stringResource(R.string.common_selected),
                         tint = Color.White,
                         modifier = Modifier.padding(4.dp)
                     )

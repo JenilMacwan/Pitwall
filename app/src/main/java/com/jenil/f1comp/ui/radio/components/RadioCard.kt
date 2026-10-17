@@ -125,7 +125,7 @@ fun RadioCard(
                 Row(verticalAlignment = Alignment.CenterVertically) {
                     IconButton(
                         onClick = onPlayClick,
-                        modifier = Modifier.size(30.dp),
+                        modifier = Modifier.size(48.dp),
                         colors = IconButtonDefaults.iconButtonColors(
                             containerColor = if (isPlaying || isBuffering) clip.teamColor else MaterialTheme.colorScheme.surfaceVariant,
                             contentColor = if (isPlaying || isBuffering) Color.White else MaterialTheme.colorScheme.onSurfaceVariant

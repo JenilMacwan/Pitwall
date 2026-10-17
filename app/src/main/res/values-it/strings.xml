@@ -151,7 +151,7 @@
     <string name="news_read_more">LEGGI ARTICOLO COMPLETO</string>
 
     <!-- Profile Screen -->
-    <string name="profile_title">PROFILO PILOTA PADDOCK</string>
+    <string name="profile_title">Profilo Paddock</string>
     <string name="profile_paddock_pass">PASS PADDOCK ATTIVO</string>
     <string name="profile_guest_pass">PASS PADDOCK OSPITE</string>
     <string name="profile_guest_desc">Accedi o inizializza il tuo profilo pilota per sincronizzare telemetria e avvisi.</string>
@@ -229,14 +229,14 @@
     <string name="chatbot_title">Assistente Apex IA</string>
     <string name="chatbot_subtitle">Il tuo Specialista di Telemetria e Strategia F1</string>
     <string name="chatbot_placeholder">Chiedi qualsiasi cosa ad Apex...</string>
-    <string name="chatbot_welcome">Apex inizializzato. Link telemetria attivo. Come posso aiutarti con la tua strategia di gara?</string>
+    <string name="chatbot_welcome">Ciao, sono Apex. Chiedimi del calendario F1, delle classifiche, della direzione gara o delle notizie recenti. Mostrerò le fonti disponibili.</string>
     <string name="chatbot_error">Spiacente, si è verificato un problema di connessione ad Apex.</string>
     <string name="chatbot_account_required">Apex IA è disponibile solo per gli account Pitwall registrati. Accedi o crea un account.</string>
     <string name="chatbot_beta">BETA</string>
     <string name="chatbot_powered_by">Sviluppato da Pitwall</string>
     <string name="chatbot_clear_chat">Cancella Chat</string>
     <string name="chatbot_reset_msg">Link Pitwall ripristinato. In attesa di nuove istruzioni.</string>
-    <string name="chatbot_disclaimer">Apex è in versione beta. Le risposte dell\'IA potrebbero essere imprecise.</string>
+    <string name="chatbot_disclaimer">Apex è in versione beta; le risposte potrebbero essere lente o imprecise. Controlla le fonti indicate, quando disponibili.</string>
     <string name="prompt_aero_rules">🏎️ Regole Aerodinamiche 2026</string>
     <string name="prompt_driver_standings">📊 Classifica Piloti</string>
     <string name="prompt_next_race">🏁 Prossima Gara</string>
@@ -344,4 +344,24 @@
 <string name="chatbot_open_standings">Apri classifica</string>
 <string name="chatbot_open_telemetry">Apri telemetria</string>
 <string name="chatbot_open_news">Apri notizie</string>
+<string name="chatbot_no_sources">A nessuna fonte dell’app è associata questa risposta. Verifica le informazioni sensibili al tempo prima di farvi affidamento.</string>
+<string name="signup_step_account">Passaggio 1 di 2 · Dati account</string>
+<string name="signup_step_personalize">Passaggio 2 di 2 · Personalizza</string>
+<string name="signup_back_account">Torna ai dati account</string>
+<string name="signup_continue">Continua</string>
+<string name="schedule_device_timezone">Gli orari delle gare usano il fuso orario del dispositivo (%1$s).</string>
+<string name="telemetry_feed_disconnected">Feed disconnesso · ultimo aggiornamento %1$d s fa</string>
+<string name="telemetry_feed_unavailable">Feed non disponibile · riconnettiti per riprovare</string>
+<string name="telemetry_feed_delayed">Feed in ritardo · ultimo aggiornamento %1$d s fa</string>
+<string name="telemetry_feed_updated">Aggiornato %1$d s fa</string>
+<string name="telemetry_feed_waiting">In attesa del primo aggiornamento</string>
+<string name="telemetry_device_timezone">Ora del dispositivo · %1$s</string>
+    <string name="profile_guest_heading">Esplora come ospite</string>
+    <string name="profile_guest_body">Puoi esplorare senza un account. Accedi per salvare i preferiti e sincronizzare preferenze e avvisi tra dispositivi.</string>
+    <string name="profile_sign_in_or_register">Accedi o crea un account</string>
+    <string name="profile_favorites_header">I tuoi team e piloti preferiti</string>
+    <string name="profile_favorite_team">Team preferito</string>
+    <string name="profile_favorite_driver">Pilota preferito</string>
+    <string name="profile_favorites_required_title">Accedi per salvare i preferiti</string>
+    <string name="profile_favorites_required_body">Puoi continuare a esplorare senza un account. Accedi o creane uno per salvare team e piloti preferiti.</string>
 </resources>

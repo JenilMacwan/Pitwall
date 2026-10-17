@@ -1,5 +1,6 @@
 package com.jenil.f1comp.ui.results.screen
 
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -17,15 +18,17 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.lazy.rememberLazyListState
+import androidx.compose.foundation.shape.CircleShape
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.rounded.ArrowBack
 import androidx.compose.material.icons.rounded.ChevronLeft
 import androidx.compose.material.icons.rounded.ChevronRight
 import androidx.compose.material.icons.rounded.ErrorOutline
-import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.OutlinedButton
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
@@ -36,6 +39,7 @@ import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
@@ -201,7 +205,7 @@ fun RaceResultScreen(
             IconButton(onClick = { navController.popBackStack() }) {
                 Icon(
                     imageVector = Icons.AutoMirrored.Rounded.ArrowBack,
-                    contentDescription = "Back",
+                    contentDescription = stringResource(R.string.common_back),
                     tint = MaterialTheme.colorScheme.onSurface
                 )
             }
@@ -244,7 +248,7 @@ fun RaceResultScreen(
             ) {
                 Icon(
                     imageVector = Icons.Rounded.ChevronLeft,
-                    contentDescription = "Previous race",
+                    contentDescription = stringResource(R.string.accessibility_previous_race),
                     tint = if (currentIndex > 0)
                         MaterialTheme.colorScheme.onSurface
                     else
@@ -259,7 +263,7 @@ fun RaceResultScreen(
             ) {
                 Icon(
                     imageVector = Icons.Rounded.ChevronRight,
-                    contentDescription = "Next race",
+                    contentDescription = stringResource(R.string.accessibility_next_race),
                     tint = if (currentIndex in 0 until completedRaces.lastIndex)
                         MaterialTheme.colorScheme.onSurface
                     else
@@ -329,6 +333,15 @@ fun RaceResultScreen(
 
         Spacer(modifier = Modifier.height(10.dp))
 
+        if (selectedSession == ResultSessionType.RACE || selectedSession == ResultSessionType.SPRINT) {
+            Text(
+                text = "Grid change: ↑ positions gained · ↓ positions lost · = unchanged",
+                style = MaterialTheme.typography.bodySmall,
+                color = MaterialTheme.colorScheme.onSurfaceVariant,
+                modifier = Modifier.fillMaxWidth().padding(horizontal = 16.dp, vertical = 2.dp)
+            )
+        }
+
         val isCurrentSessionLoading = when (selectedSession) {
             ResultSessionType.RACE -> isRaceLoading
             ResultSessionType.QUALIFYING -> isQualiLoading
@@ -363,24 +376,47 @@ fun RaceResultScreen(
             ResultSessionType.SPRINT_QUALIFYING -> sortedSprintQualiResults.isEmpty()
         }
 
+        val retryCurrentSession = {
+            when (selectedSession) {
+                ResultSessionType.RACE -> viewModel.refreshRaceResult(currentRound, currentYear)
+                ResultSessionType.QUALIFYING -> qualifyingViewModel.refreshQualifyingResults(currentRound, currentYear)
+                ResultSessionType.SPRINT -> sprintResultViewModel.refreshSprintResults(currentRound, currentYear)
+                ResultSessionType.SPRINT_QUALIFYING -> sprintQualifyingViewModel.refreshSprintQualifyingResults(currentRound, currentYear)
+            }
+        }
+
         when {
             isCurrentSessionLoading && isCurrentResultsEmpty -> {
-                Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
-                    Column(horizontalAlignment = Alignment.CenterHorizontally) {
-                        CircularProgressIndicator(color = MaterialTheme.colorScheme.primary)
-                        Spacer(modifier = Modifier.height(12.dp))
-                        Text(
-                            text = "${selectedSession.getLocalizedLabel()}...",
-                            style = MaterialTheme.typography.bodySmall,
-                            color = MaterialTheme.colorScheme.onSurfaceVariant
-                        )
+                Column(modifier = Modifier.fillMaxSize().padding(horizontal = 16.dp)) {
+                    Text(
+                        text = "Loading ${selectedSession.getLocalizedLabel().lowercase()} results…",
+                        style = MaterialTheme.typography.bodyMedium,
+                        color = MaterialTheme.colorScheme.onSurfaceVariant,
+                        modifier = Modifier.padding(vertical = 12.dp)
+                    )
+                    repeat(7) { index ->
+                        Row(
+                            modifier = Modifier.fillMaxWidth().padding(vertical = 10.dp),
+                            verticalAlignment = Alignment.CenterVertically
+                        ) {
+                            Box(Modifier.size(34.dp).clip(CircleShape).background(MaterialTheme.colorScheme.surfaceVariant))
+                            Spacer(Modifier.width(12.dp))
+                            Column(modifier = Modifier.weight(1f), verticalArrangement = Arrangement.spacedBy(7.dp)) {
+                                Box(Modifier.fillMaxWidth(if (index % 2 == 0) 0.62f else 0.48f).height(15.dp).clip(RoundedCornerShape(8.dp)).background(MaterialTheme.colorScheme.surfaceVariant))
+                                Box(Modifier.fillMaxWidth(0.35f).height(11.dp).clip(RoundedCornerShape(8.dp)).background(MaterialTheme.colorScheme.surfaceVariant.copy(alpha = 0.7f)))
+                            }
+                            Box(Modifier.width(54.dp).height(16.dp).clip(RoundedCornerShape(8.dp)).background(MaterialTheme.colorScheme.surfaceVariant))
+                        }
                     }
                 }
             }
 
             currentSessionError != null && isCurrentResultsEmpty -> {
                 Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
-                    Column(horizontalAlignment = Alignment.CenterHorizontally) {
+                    Column(
+                        horizontalAlignment = Alignment.CenterHorizontally,
+                        modifier = Modifier.padding(horizontal = 24.dp)
+                    ) {
                         Icon(
                             imageVector = Icons.Rounded.ErrorOutline,
                             contentDescription = null,
@@ -389,23 +425,43 @@ fun RaceResultScreen(
                         )
                         Spacer(modifier = Modifier.height(8.dp))
                         Text(
-                            text = currentSessionError,
+                            text = "We couldn't load ${selectedSession.getLocalizedLabel().lowercase()} for this round. Check your connection and try again.",
                             style = MaterialTheme.typography.bodyMedium,
                             color = MaterialTheme.colorScheme.onSurfaceVariant,
                             textAlign = TextAlign.Center,
                             modifier = Modifier.padding(horizontal = 32.dp)
                         )
+                        Spacer(modifier = Modifier.height(12.dp))
+                        OutlinedButton(onClick = retryCurrentSession) {
+                            Text(stringResource(R.string.results_try_again))
+                        }
                     }
                 }
             }
 
             isCurrentResultsEmpty -> {
                 Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
-                    Text(
-                        text = "No ${selectedSession.label.lowercase()} available",
-                        style = MaterialTheme.typography.bodyMedium,
-                        color = MaterialTheme.colorScheme.onSurfaceVariant
-                    )
+                    Column(
+                        horizontalAlignment = Alignment.CenterHorizontally,
+                        modifier = Modifier.padding(horizontal = 24.dp)
+                    ) {
+                        Text(
+                            text = "No ${selectedSession.getLocalizedLabel().lowercase()} data is available yet",
+                            style = MaterialTheme.typography.titleMedium,
+                            color = MaterialTheme.colorScheme.onSurface
+                        )
+                        Spacer(modifier = Modifier.height(6.dp))
+                        Text(
+                            text = "$displayRaceName · Round $currentRound, $currentYear. Results may not have been published yet.",
+                            style = MaterialTheme.typography.bodySmall,
+                            color = MaterialTheme.colorScheme.onSurfaceVariant,
+                            textAlign = TextAlign.Center
+                        )
+                        Spacer(modifier = Modifier.height(12.dp))
+                        OutlinedButton(onClick = retryCurrentSession) {
+                            Text(stringResource(R.string.results_check_again))
+                        }
+                    }
                 }
             }
 

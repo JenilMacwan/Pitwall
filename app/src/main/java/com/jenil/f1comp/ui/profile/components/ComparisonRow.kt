@@ -33,6 +33,8 @@ fun ComparisonRow(
     label: String,
     driverWins: Int,
     teammateWins: Int,
+    completedSessions: Int = driverWins + teammateWins,
+    ties: Int = 0,
     accentColor: Color = MaterialTheme.colorScheme.primary
 ) {
     val total = (driverWins + teammateWins).coerceAtLeast(1)
@@ -68,6 +70,12 @@ fun ComparisonRow(
                 color = if (teammateWins > driverWins) accentColor else MaterialTheme.colorScheme.onSurface
             )
         }
+
+        Text(
+            text = "$completedSessions completed${if (ties > 0) " · $ties tied" else ""}",
+            style = MaterialTheme.typography.bodySmall,
+            color = MaterialTheme.colorScheme.onSurfaceVariant
+        )
 
         // Head-to-Head Ratio Progress Bar
         Row(

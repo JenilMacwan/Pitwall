@@ -34,6 +34,7 @@ import androidx.compose.material.icons.outlined.DarkMode
 import androidx.compose.material.icons.outlined.Description
 import androidx.compose.material.icons.outlined.EmojiEvents
 import androidx.compose.material.icons.outlined.Equalizer
+import androidx.compose.material.icons.outlined.FavoriteBorder
 import androidx.compose.material.icons.outlined.LightMode
 import androidx.compose.material.icons.outlined.Person
 import androidx.compose.material.icons.outlined.Radio
@@ -382,6 +383,13 @@ fun PitwallDrawerContent(
                 )
 
                 DrawerNavItem(
+                    icon = Icons.Outlined.FavoriteBorder,
+                    label = stringResource(R.string.drawer_favorites),
+                    selected = currentRoute == "favorites",
+                    onClick = { onNavigate("favorites") }
+                )
+
+                DrawerNavItem(
                     icon = Icons.Outlined.Settings,
                     label = stringResource(R.string.title_settings),
                     selected = currentRoute == "settings",
@@ -472,7 +480,7 @@ fun PitwallDrawerContent(
                         ) {
                             Icon(
                                 imageVector = Icons.AutoMirrored.Outlined.Chat,
-                                contentDescription = "Feedback",
+                                contentDescription = stringResource(R.string.drawer_feedback),
                                 tint = MaterialTheme.colorScheme.onSurfaceVariant,
                                 modifier = Modifier.size(16.dp)
                             )
@@ -522,7 +530,7 @@ fun PitwallDrawerContent(
                                     ) {
                                         Icon(
                                             imageVector = Icons.Outlined.DarkMode,
-                                            contentDescription = "Dark Mode",
+                                            contentDescription = stringResource(R.string.settings_dark_mode),
                                             tint = if (isDarkMode) MaterialTheme.colorScheme.onPrimary else MaterialTheme.colorScheme.onSurfaceVariant,
                                             modifier = Modifier.size(18.dp)
                                         )
@@ -552,7 +560,7 @@ fun PitwallDrawerContent(
                                     ) {
                                         Icon(
                                             imageVector = Icons.Outlined.LightMode,
-                                            contentDescription = "Light Mode",
+                                            contentDescription = stringResource(R.string.accessibility_light_mode),
                                             tint = if (!isDarkMode) MaterialTheme.colorScheme.onPrimary else MaterialTheme.colorScheme.onSurfaceVariant,
                                             modifier = Modifier.size(18.dp)
                                         )

@@ -1133,6 +1133,17 @@ fun UserProfileScreen(
                                 }
                             )
                             SocialButton(
+                                label = "Facebook",
+                                onClick = {
+                                    try {
+                                        openUrl(context, "https://facebook.com/pitwall.app")
+                                    } catch (_: Exception) {
+                                        Toast.makeText(context, "No Data found", Toast.LENGTH_SHORT).show()
+                                    }
+                                }
+                            )
+
+                            SocialButton(
                                 label = stringResource(R.string.profile_share_app),
                                 onClick = {
                                     val sendIntent = Intent().apply {

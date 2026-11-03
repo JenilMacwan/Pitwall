@@ -15,7 +15,6 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
-import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.CircleShape
@@ -182,7 +181,7 @@ fun ThemeSelectionSection(
         ) {
             Text(
                 text = "CONSTRUCTOR TEAM THEMES",
-                style = MaterialTheme.typography.labelSmall.copy(letterSpacing = 1.sp),
+                style = MaterialTheme.typography.labelSmall.copy(letterSpacing = 0.3.sp),
                 fontWeight = FontWeight.Bold,
                 color = MaterialTheme.colorScheme.onSurfaceVariant
             )
@@ -214,15 +213,14 @@ fun ThemeSelectionSection(
 
         Spacer(modifier = Modifier.height(8.dp))
 
-        // ── Scrollable Constructor Team Themes Collection ──
-        LazyColumn(
+        // ── Constructor Team Themes Collection ──
+        Column(
             modifier = Modifier
                 .fillMaxWidth()
-                .weight(1f),
-            contentPadding = PaddingValues(start = 16.dp, end = 16.dp, top = 4.dp, bottom = 32.dp),
+                .padding(start = 16.dp, end = 16.dp, top = 4.dp, bottom = 16.dp),
             verticalArrangement = Arrangement.spacedBy(10.dp)
         ) {
-            items(filteredTeamSwatches, key = { it.id }) { option ->
+            filteredTeamSwatches.forEach { option ->
                 val resolvedLogoUrl = resolveLogoUrl(option, constructorProfiles)
                 TeamThemeCard(
                     option = option,
@@ -232,7 +230,7 @@ fun ThemeSelectionSection(
                 )
             }
             if (filteredTeamSwatches.isEmpty()) {
-                item { Text(stringResource(R.string.theme_no_team_match), color = MaterialTheme.colorScheme.onSurfaceVariant) }
+                Text(stringResource(R.string.theme_no_team_match), color = MaterialTheme.colorScheme.onSurfaceVariant)
             }
         }
     }

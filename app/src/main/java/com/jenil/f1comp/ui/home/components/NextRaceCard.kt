@@ -176,14 +176,18 @@ fun NextRaceCard(
             Row(
                 modifier = Modifier.fillMaxWidth()
                     .padding(top = 8.dp),
-                horizontalArrangement = Arrangement.SpaceBetween
+                horizontalArrangement = Arrangement.SpaceBetween,
+                verticalAlignment = Alignment.CenterVertically
             ) {
                 Text(
                     text = "${stringResource(R.string.home_next_race)} • ROUND $round",
                     fontFamily = FontFamily.Monospace,
                     style = MaterialTheme.typography.labelSmall,
-                    color = MaterialTheme.colorScheme.onSurfaceVariant
+                    color = MaterialTheme.colorScheme.onSurfaceVariant,
+                    maxLines = 1,
+                    modifier = Modifier.weight(1f, fill = false)
                 )
+                Spacer(modifier = Modifier.width(8.dp))
                 if (isLive) {
                     LiveSessionPill(text = cleanOngoing)
                 } else {

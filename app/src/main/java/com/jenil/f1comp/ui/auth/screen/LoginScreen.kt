@@ -25,9 +25,11 @@ import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.automirrored.rounded.ArrowBack
 import androidx.compose.material.icons.outlined.Shield
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.SnackbarDuration
 import androidx.compose.material3.SnackbarHost
@@ -41,6 +43,7 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -134,7 +137,7 @@ fun LoginScreen(
                 val googleIdTokenCredential = GoogleIdTokenCredential.createFrom(result.credential.data)
                 onTokenReceived(googleIdTokenCredential.idToken)
             } catch (_: GetCredentialCancellationException) {
-                // User intentionally cancelled Google Sign-In flow; ignore gracefully.
+
             } catch (e: Exception) {
                 snackbarHostState.showSnackbar(
                     message = "Google Sign-In failed: ${e.localizedMessage ?: "Unknown error"}",
@@ -144,12 +147,25 @@ fun LoginScreen(
         }
     }
 
-    LaunchedEffect(user) {
-        if (user != null) {
+    var hasNavigated by rememberSaveable { mutableStateOf(false) }
+
+    fun navigateToHome() {
+        if (!hasNavigated) {
+            hasNavigated = true
             settingsViewModel.setFirstLaunchCompleted()
             navController.navigate("home") {
                 popUpTo("login") { inclusive = true }
             }
+        }
+    }
+
+    LaunchedEffect(Unit) {
+        viewModel.resetAuthUiState()
+    }
+
+    LaunchedEffect(user) {
+        if (user != null && !user!!.isAnonymous) {
+            navigateToHome()
         }
     }
 
@@ -172,6 +188,7 @@ fun LoginScreen(
                         duration = SnackbarDuration.Short
                     )
                 }
+                navigateToHome()
             }
             AuthUiState.PasswordResetSent -> {
                 coroutineScope.launch {
@@ -206,6 +223,32 @@ fun LoginScreen(
                 .verticalScroll(rememberScrollState()),
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
+            if (navController.previousBackStackEntry != null) {
+                Row(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(horizontal = 12.dp, vertical = 6.dp),
+                    verticalAlignment = Alignment.CenterVertically
+                ) {
+                    IconButton(
+                        onClick = { navController.popBackStack() }
+                    ) {
+                        Icon(
+                            imageVector = Icons.AutoMirrored.Rounded.ArrowBack,
+                            contentDescription = stringResource(R.string.common_back),
+                            tint = Color.White
+                        )
+                    }
+                    Spacer(modifier = Modifier.width(4.dp))
+                    Text(
+                        text = stringResource(R.string.common_back),
+                        style = MaterialTheme.typography.titleSmall,
+                        color = Color.White.copy(alpha = 0.9f),
+                        fontWeight = FontWeight.SemiBold
+                    )
+                }
+            }
+
             if (selectedTab == "Sign-In") {
                 Row(
                     modifier = Modifier
@@ -356,7 +399,15 @@ fun LoginScreen(
                         viewModel.forgotPassword(email)
                     },
                     onGuestClick = {
-                        viewModel.signInAnonymously()
+                        if (user != null && user?.isAnonymous == true) {
+                            if (navController.previousBackStackEntry != null) {
+                                navController.popBackStack()
+                            } else {
+                                navigateToHome()
+                            }
+                        } else {
+                            viewModel.signInAnonymously()
+                        }
                     }
                 )
             } else {

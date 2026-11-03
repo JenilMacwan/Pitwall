@@ -176,6 +176,7 @@ fun TeamLogoCircle(
                 modifier = Modifier
                     .fillMaxSize()
                     .padding(size * 0.16f)
+                    .clip(CircleShape)
             )
         } else if (!logoUrl.isNullOrBlank()) {
             AsyncImage(
@@ -189,6 +190,7 @@ fun TeamLogoCircle(
                 modifier = Modifier
                     .fillMaxSize()
                     .padding(size * 0.16f)
+                    .clip(CircleShape)
             )
         } else {
             Text(
@@ -233,6 +235,7 @@ fun TeamLogoCircleTheme(
                 modifier = Modifier
                     .fillMaxSize()
                     .padding(size * 0.16f)
+                    .clip(CircleShape)
             )
         } else if (!logoUrl.isNullOrBlank()) {
             AsyncImage(
@@ -246,6 +249,7 @@ fun TeamLogoCircleTheme(
                 modifier = Modifier
                     .fillMaxSize()
                     .padding(size * 0.16f)
+                    .clip(CircleShape)
             )
         } else {
             Text(

@@ -30,6 +30,7 @@ import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 
 @Composable
 fun SprintPill(
@@ -54,8 +55,10 @@ fun SprintPill(
     ) {
         Text(
             text = text,
-            style = MaterialTheme.typography.labelSmall,
-            color = MaterialTheme.colorScheme.onPrimary
+            style = MaterialTheme.typography.labelSmall.copy(letterSpacing = 0.2.sp),
+            color = MaterialTheme.colorScheme.onPrimary,
+            maxLines = 1,
+            softWrap = false
         )
     }
 }
@@ -119,10 +122,12 @@ fun LiveSessionPill(
             Spacer(modifier = Modifier.width(6.dp))
             Text(
                 text = "LIVE: $text".uppercase(),
-                style = MaterialTheme.typography.labelSmall,
+                style = MaterialTheme.typography.labelSmall.copy(letterSpacing = 0.2.sp),
                 fontFamily = FontFamily.Monospace,
                 fontWeight = FontWeight.Bold,
-                color = liveColor
+                color = liveColor,
+                maxLines = 1,
+                softWrap = false
             )
         }
     }

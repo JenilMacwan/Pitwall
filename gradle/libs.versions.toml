@@ -1,8 +1,11 @@
 [versions]
-agp = "9.4.1"
+agp = "9.5.0"
 appcompat = "1.8.0"
 coilCompose = "2.7.0"
+core = "4.6.2"
 coreKtx = "1.19.0"
+extTables = "4.6.2"
+extStrikethrough = "4.6.2"
 firebaseBom = "34.18.0"
 glanceAppwidget = "1.1.0"
 glanceMaterial3 = "1.1.0"
@@ -39,6 +42,9 @@ androidx-glance-material3 = { module = "androidx.glance:glance-material3", versi
 androidx-hilt-navigation-compose = { group = "androidx.hilt", name = "hilt-navigation-compose", version.ref = "hiltNavigationCompose" }
 androidx-lifecycle-runtime-compose = { group = "androidx.lifecycle", name = "lifecycle-runtime-compose", version.ref = "lifecycleRuntimeCompose" }
 coil-compose = { module = "io.coil-kt:coil-compose", version.ref = "coilCompose" }
+ext-strikethrough = { module = "io.noties.markwon:ext-strikethrough", version.ref = "extStrikethrough" }
+ext-tables = { module = "io.noties.markwon:ext-tables", version.ref = "extTables" }
+core = { module = "io.noties.markwon:core", version.ref = "core" }
 firebase-analytics = { module = "com.google.firebase:firebase-analytics" }
 firebase-auth = { module = "com.google.firebase:firebase-auth" }
 firebase-bom = { module = "com.google.firebase:firebase-bom", version.ref = "firebaseBom" }

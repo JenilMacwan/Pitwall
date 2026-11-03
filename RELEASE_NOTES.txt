@@ -1,3 +1,18 @@
+<en-GB>
+PitWall Update 1.0.1 is here! 🏎️🏁
+
+What’s improved:
+• 🔤 Fixed font spacing and rendering on some OEM devices
+• 🏎️ Fixed driver and team logo backgrounds on some OEM devices
+• 🔐 Improved authentication fields and error handling
+• 🤖 Improved Apex AI response formatting and speed
+• 🛡️ Optimised the release build with code shrinking and obfuscation
+
+Thanks for being part of the PitWall closed test! Found a bug or have feedback? Post in our Google Group.
+</en-GB>
+
+--------------------------------------------------------------------------------
+
 PitWall v1.2.2 Release Notes 🏎️🏁
 
 This major update introduces Cloud Authentication, Google OAuth, custom Password Security Spectrum validation, Cloud Firestore synchronization, a redesigned Paddock User Profile, interactive Favorite Constructor & Driver selection, and Navigation Drawer improvements.

@@ -37,6 +37,7 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import coil.compose.AsyncImage
 import coil.request.ImageRequest
@@ -134,12 +135,19 @@ fun DriverProfileCard(
                             Spacer(modifier = Modifier.height(2.dp))
                             Row(verticalAlignment = Alignment.CenterVertically) {
                                 Text(
-                                    text = "$teamName • $nationality ",
+                                    text = "$teamName • $nationality",
                                     style = MaterialTheme.typography.bodyMedium,
-                                    color = MaterialTheme.colorScheme.onSurfaceVariant
+                                    color = MaterialTheme.colorScheme.onSurfaceVariant,
+                                    maxLines = 1,
+                                    overflow = TextOverflow.Ellipsis,
+                                    modifier = Modifier.weight(1f, fill = false)
                                 )
-                                Spacer(modifier = Modifier.width(4.dp))
-                                FlagImage(flagUrl = ProfileUtils.getFlagUrl(nationality = nationality))
+                                Spacer(modifier = Modifier.width(6.dp))
+                                FlagImage(
+                                    flagUrl = ProfileUtils.getFlagUrl(nationality = nationality),
+                                    width = 22.dp,
+                                    height = 15.dp
+                                )
                             }
                             Spacer(modifier = Modifier.height(4.dp))
                             Surface(

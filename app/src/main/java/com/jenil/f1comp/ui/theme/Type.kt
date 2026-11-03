@@ -12,6 +12,7 @@ val Typography = Typography(
         fontWeight = FontWeight.Bold,
         fontFamily = FontFamily.Monospace,
         fontSize = 32.sp,
+        lineHeight = 38.sp,
         letterSpacing = 0.sp
     ),
 
@@ -19,6 +20,7 @@ val Typography = Typography(
         fontWeight = FontWeight.SemiBold,
         fontFamily = FontFamily.Monospace,
         fontSize = 22.sp,
+        lineHeight = 28.sp,
         letterSpacing = 0.sp
     ),
 
@@ -26,6 +28,7 @@ val Typography = Typography(
         fontWeight = FontWeight.Medium,
         fontSize = 18.sp,
         fontFamily = FontFamily.Monospace,
+        lineHeight = 24.sp,
         letterSpacing = 0.15.sp
     ),
 
@@ -33,6 +36,7 @@ val Typography = Typography(
         fontWeight = FontWeight.Normal,
         fontSize = 14.sp,
         fontFamily = FontFamily.Monospace,
+        lineHeight = 20.sp,
         letterSpacing = 0.25.sp
     ),
 
@@ -40,6 +44,7 @@ val Typography = Typography(
         fontWeight = FontWeight.Medium,
         fontSize = 11.sp,
         fontFamily = FontFamily.Monospace,
-        letterSpacing = 1.5.sp
+        lineHeight = 14.sp,
+        letterSpacing = 0.3.sp
     )
 )

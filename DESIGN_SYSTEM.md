@@ -122,7 +122,7 @@ Typography Hierarchy
 | `titleLarge` | `FontFamily.Monospace` | `22.sp` | `FontWeight.SemiBold` | `0.sp` | Top bar title, Next Race title. |
 | `titleMedium` | `FontFamily.Monospace` | `18.sp` | `FontWeight.Medium` | `0.15.sp` | Card titles, leader driver names. |
 | `bodyMedium` | `FontFamily.Monospace` | `14.sp` | `FontWeight.Normal` | `0.25.sp` | Body text, circuit locations, list items. |
-| `labelSmall` | `FontFamily.Monospace` | `11.sp` | `FontWeight.Medium` | `1.5.sp` | Upper-case section tags, metadata labels. |
+| `labelSmall` | `FontFamily.Monospace` | `11.sp` | `FontWeight.Medium` | `0.3.sp` | Upper-case section tags, metadata labels. |
 | *Micro Tag* | `FontFamily.Monospace` | `10.sp` | `FontWeight.Bold` | `0.5.sp` | Pill button text, status badges, gap PTS. |
 | *Nano Tag* | `FontFamily.Monospace` | `9.sp` | `FontWeight.Bold` | `0.sp` | Circuit type badge lines, selected labels. |
 

@@ -105,19 +105,23 @@ fun SessionTimelineBar(
 
                     Text(
                         text = displayTitle,
-                        style = MaterialTheme.typography.labelSmall.copy(fontSize = 11.sp),
+                        style = MaterialTheme.typography.labelSmall.copy(fontSize = 11.sp, letterSpacing = 0.2.sp),
                         fontFamily = FontFamily.Monospace,
                         fontWeight = if (session.isMainRace || session.isCurrentTarget || session.isLive) FontWeight.Bold else FontWeight.Medium,
-                        color = textColor
+                        color = textColor,
+                        maxLines = 1,
+                        softWrap = false
                     )
 
                     if (session.timeStr.isNotBlank() && (session.isCurrentTarget || session.isLive)) {
                         Text(
                             text = session.timeStr,
-                            style = MaterialTheme.typography.labelSmall.copy(fontSize = 10.sp),
+                            style = MaterialTheme.typography.labelSmall.copy(fontSize = 10.sp, letterSpacing = 0.2.sp),
                             fontFamily = FontFamily.Monospace,
                             fontWeight = FontWeight.Bold,
-                            color = textColor
+                            color = textColor,
+                            maxLines = 1,
+                            softWrap = false
                         )
                     }
                 }

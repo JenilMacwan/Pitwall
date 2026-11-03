@@ -56,6 +56,20 @@ local.properties
 .artifacts/
 *.hprof
 *.log
+.scratch
+.argent
+
+# Generated release packages and visual QA renders
+/app/release/
+/assets/video_render/
+/ui_review_render/
+/brag-output/work/
+/brag-output/composition/.hyperframes/
+/brag-output/composition/test.mp4
+/brag-output/brag.mp4
+/brag-output/brag.jpg
+/car_crop_test.png
+/test_grid.png
 
 # =========================================================================
 # System & OS Files

@@ -1,0 +1,920 @@
+<!doctype html>
+<html lang="en" data-resolution="portrait">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=1080, height=1920" />
+    <title>PitWall Launch Reel</title>
+    <script src="https://cdn.jsdelivr.net/npm/gsap@3.14.2/dist/gsap.min.js"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;600;700;800;900&family=Space+Grotesk:wght@500;700&display=swap" rel="stylesheet">
+    <style>
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      }
+      html, body {
+        margin: 0;
+        width: 1080px;
+        height: 1920px;
+        overflow: hidden;
+        background: #08090C;
+        color: #FFFFFF;
+        font-family: 'Outfit', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+        -webkit-font-smoothing: antialiased;
+      }
+
+      /* Global Stage & Ambient Background */
+      #root {
+        position: relative;
+        width: 1080px;
+        height: 1920px;
+        background: radial-gradient(circle at 50% 30%, #151821 0%, #090A0E 75%, #050608 100%);
+        overflow: hidden;
+      }
+
+      /* Carbon Texture & Grid */
+      .bg-grid {
+        position: absolute;
+        inset: 0;
+        background-size: 60px 60px;
+        background-image:
+          linear-gradient(to right, rgba(255, 255, 255, 0.03) 1px, transparent 1px),
+          linear-gradient(to bottom, rgba(255, 255, 255, 0.03) 1px, transparent 1px);
+        mask-image: radial-gradient(circle at 50% 50%, black 40%, transparent 85%);
+        pointer-events: none;
+        z-index: 1;
+      }
+
+      /* Ambient Neon Red Glow */
+      .ambient-glow {
+        position: absolute;
+        width: 900px;
+        height: 900px;
+        border-radius: 50%;
+        background: radial-gradient(circle, rgba(225, 6, 0, 0.28) 0%, rgba(225, 6, 0, 0.06) 50%, transparent 70%);
+        top: 25%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        filter: blur(70px);
+        pointer-events: none;
+        z-index: 1;
+      }
+
+      /* Top Cockpit Telemetry HUD Header */
+      .hud-header {
+        position: absolute;
+        top: 50px;
+        left: 60px;
+        right: 60px;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        font-family: 'Space Grotesk', monospace;
+        font-size: 20px;
+        letter-spacing: 2px;
+        color: rgba(255, 255, 255, 0.5);
+        z-index: 50;
+        border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+        padding-bottom: 20px;
+      }
+      .hud-header .brand {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        color: #FFFFFF;
+        font-weight: 700;
+      }
+      .hud-header .brand-dot {
+        width: 10px;
+        height: 10px;
+        background: #E10600;
+        border-radius: 50%;
+        box-shadow: 0 0 12px #E10600;
+      }
+      .hud-header .telemetry-tag {
+        color: #00F5D4;
+        font-weight: 600;
+      }
+
+      /* Scene Containers */
+      .scene {
+        position: absolute;
+        inset: 0;
+        width: 1080px;
+        height: 1920px;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        padding: 80px 60px;
+        z-index: 10;
+        opacity: 0;
+        pointer-events: none;
+      }
+
+      /* Tag Pills */
+      .tag-pill {
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+        padding: 10px 24px;
+        background: rgba(225, 6, 0, 0.15);
+        border: 1px solid rgba(225, 6, 0, 0.4);
+        border-radius: 100px;
+        color: #FF4D4D;
+        font-family: 'Space Grotesk', monospace;
+        font-size: 19px;
+        font-weight: 700;
+        letter-spacing: 2px;
+        text-transform: uppercase;
+        margin-bottom: 24px;
+        box-shadow: 0 0 24px rgba(225, 6, 0, 0.2);
+      }
+      .tag-pill.cyan {
+        background: rgba(0, 245, 212, 0.12);
+        border-color: rgba(0, 245, 212, 0.4);
+        color: #00F5D4;
+        box-shadow: 0 0 24px rgba(0, 245, 212, 0.15);
+      }
+      .tag-pill.green {
+        background: rgba(0, 230, 118, 0.12);
+        border-color: rgba(0, 230, 118, 0.4);
+        color: #00E676;
+        box-shadow: 0 0 24px rgba(0, 230, 118, 0.15);
+      }
+
+      /* Kinetic Typography */
+      .hero-title {
+        font-size: 80px;
+        line-height: 1.05;
+        font-weight: 900;
+        text-align: center;
+        letter-spacing: -2px;
+        text-transform: uppercase;
+        margin-bottom: 24px;
+      }
+      .accent-red {
+        color: #E10600;
+        text-shadow: 0 0 40px rgba(225, 6, 0, 0.5);
+      }
+      .hero-sub {
+        font-size: 32px;
+        line-height: 1.35;
+        color: rgba(255, 255, 255, 0.7);
+        text-align: center;
+        max-width: 860px;
+        font-weight: 400;
+      }
+
+      /* F1 Starting Lights Gantry */
+      .lights-container {
+        display: flex;
+        gap: 20px;
+        background: rgba(18, 20, 28, 0.9);
+        border: 2px solid rgba(255, 255, 255, 0.15);
+        border-radius: 24px;
+        padding: 24px 36px;
+        box-shadow: 0 20px 60px rgba(0, 0, 0, 0.8);
+        margin-bottom: 60px;
+      }
+      .light-post {
+        display: flex;
+        flex-direction: column;
+        gap: 12px;
+        background: #0E0F14;
+        padding: 10px;
+        border-radius: 16px;
+        border: 1px solid rgba(255, 255, 255, 0.08);
+      }
+      .f1-light {
+        width: 44px;
+        height: 44px;
+        border-radius: 50%;
+        background: #1A1C24;
+        box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.8);
+      }
+
+      /* 3D Phone Mockup */
+      .phone-stage {
+        position: relative;
+        perspective: 1400px;
+        transform-style: preserve-3d;
+        width: 520px;
+        height: 1060px;
+        margin-top: 20px;
+      }
+      .phone-chassis {
+        width: 100%;
+        height: 100%;
+        background: #111319;
+        border-radius: 58px;
+        padding: 14px;
+        position: relative;
+        transform-style: preserve-3d;
+        box-shadow:
+          0 50px 100px -20px rgba(0, 0, 0, 0.95),
+          0 20px 40px -15px rgba(225, 6, 0, 0.35),
+          inset 0 0 0 2px rgba(255, 255, 255, 0.15),
+          inset 0 0 0 8px #1A1C24;
+      }
+      .phone-screen {
+        width: 100%;
+        height: 100%;
+        border-radius: 46px;
+        overflow: hidden;
+        position: relative;
+        background: #000000;
+      }
+      .phone-screen img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        display: block;
+      }
+      .dynamic-island {
+        position: absolute;
+        top: 24px;
+        left: 50%;
+        transform: translateX(-50%);
+        width: 130px;
+        height: 32px;
+        background: #000000;
+        border-radius: 20px;
+        z-index: 30;
+      }
+      .phone-glare {
+        position: absolute;
+        inset: 0;
+        border-radius: 46px;
+        background: linear-gradient(135deg, rgba(255, 255, 255, 0.15) 0%, rgba(255, 255, 255, 0.02) 40%, transparent 60%);
+        pointer-events: none;
+        z-index: 20;
+      }
+
+      /* Floating HUD Cards */
+      .hud-card {
+        position: absolute;
+        background: rgba(18, 21, 30, 0.92);
+        backdrop-filter: blur(20px);
+        -webkit-backdrop-filter: blur(20px);
+        border: 1px solid rgba(255, 255, 255, 0.16);
+        border-radius: 24px;
+        padding: 22px 32px;
+        box-shadow: 0 30px 60px rgba(0, 0, 0, 0.8), 0 0 30px rgba(225, 6, 0, 0.2);
+        z-index: 35;
+        white-space: nowrap;
+      }
+      .hud-card .card-label {
+        font-family: 'Space Grotesk', monospace;
+        font-size: 16px;
+        letter-spacing: 1.5px;
+        color: rgba(255, 255, 255, 0.6);
+        text-transform: uppercase;
+        margin-bottom: 6px;
+        display: flex;
+        align-items: center;
+        gap: 8px;
+      }
+      .hud-card .card-value {
+        font-size: 28px;
+        font-weight: 800;
+        color: #FFFFFF;
+        white-space: nowrap;
+      }
+      .hud-card .card-value.highlight {
+        color: #00F5D4;
+        text-shadow: 0 0 20px rgba(0, 245, 212, 0.4);
+      }
+
+      /* Team Radio Panel */
+      .radio-panel {
+        width: 840px;
+        background: rgba(15, 18, 26, 0.92);
+        border: 1px solid rgba(255, 255, 255, 0.15);
+        border-radius: 28px;
+        padding: 34px 40px;
+        box-shadow: 0 30px 70px rgba(0, 0, 0, 0.8), 0 0 40px rgba(225, 6, 0, 0.2);
+        margin-top: 36px;
+      }
+      .radio-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 24px;
+      }
+      .driver-badge {
+        display: flex;
+        align-items: center;
+        gap: 16px;
+      }
+      .driver-num {
+        background: #E10600;
+        color: #FFF;
+        font-weight: 900;
+        font-size: 24px;
+        padding: 6px 16px;
+        border-radius: 10px;
+      }
+      .driver-name {
+        font-size: 30px;
+        font-weight: 800;
+        letter-spacing: 0.5px;
+      }
+      .driver-team {
+        font-size: 18px;
+        color: rgba(255, 255, 255, 0.6);
+        font-family: 'Space Grotesk', monospace;
+      }
+      .live-rec {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        font-family: 'Space Grotesk', monospace;
+        font-size: 18px;
+        color: #E10600;
+        font-weight: 700;
+      }
+      .rec-dot {
+        width: 14px;
+        height: 14px;
+        background: #E10600;
+        border-radius: 50%;
+        box-shadow: 0 0 16px #E10600;
+      }
+
+      /* Audio Visualizer Waveform */
+      .waveform-container {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 8px;
+        height: 80px;
+        padding: 10px 0;
+        margin-bottom: 24px;
+      }
+      .wave-bar {
+        flex: 1;
+        background: linear-gradient(to top, #E10600, #FF6B6B);
+        border-radius: 6px;
+        min-height: 8px;
+        height: 16px;
+        transform-origin: bottom;
+      }
+
+      .transcript-box {
+        background: rgba(255, 255, 255, 0.05);
+        border: 1px solid rgba(255, 255, 255, 0.08);
+        border-radius: 18px;
+        padding: 20px 24px;
+        font-size: 24px;
+        color: rgba(255, 255, 255, 0.95);
+        font-style: italic;
+      }
+
+      .ai-bot-pill {
+        display: flex;
+        align-items: center;
+        gap: 14px;
+        background: rgba(0, 245, 212, 0.1);
+        border: 1px solid rgba(0, 245, 212, 0.3);
+        border-radius: 16px;
+        padding: 16px 24px;
+        margin-top: 18px;
+        color: #00F5D4;
+        font-size: 22px;
+        font-weight: 600;
+      }
+
+      /* Telemetry Timing Tower */
+      .telemetry-board {
+        width: 860px;
+        display: flex;
+        flex-direction: column;
+        gap: 16px;
+        margin-top: 40px;
+      }
+      .driver-row {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        background: rgba(18, 22, 31, 0.88);
+        border: 1px solid rgba(255, 255, 255, 0.1);
+        border-radius: 20px;
+        padding: 20px 30px;
+        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+      }
+      .driver-row.p1 {
+        border-color: rgba(255, 215, 0, 0.4);
+        background: rgba(255, 215, 0, 0.06);
+      }
+      .driver-left {
+        display: flex;
+        align-items: center;
+        gap: 20px;
+      }
+      .pos-pill {
+        font-size: 28px;
+        font-weight: 900;
+        width: 50px;
+      }
+      .pos-pill.gold { color: #FFD700; }
+      .row-driver-name {
+        font-size: 28px;
+        font-weight: 800;
+      }
+      .row-sectors {
+        display: flex;
+        gap: 14px;
+      }
+      .sector-chip {
+        padding: 8px 16px;
+        border-radius: 10px;
+        font-family: 'Space Grotesk', monospace;
+        font-size: 20px;
+        font-weight: 700;
+      }
+      .sector-chip.purple {
+        background: rgba(155, 81, 224, 0.25);
+        color: #D154FF;
+        border: 1px solid #9B51E0;
+        box-shadow: 0 0 15px rgba(155, 81, 224, 0.4);
+      }
+      .sector-chip.green {
+        background: rgba(0, 230, 118, 0.2);
+        color: #00E676;
+        border: 1px solid #00E676;
+      }
+      .sector-chip.yellow {
+        background: rgba(255, 215, 0, 0.15);
+        color: #FFD700;
+        border: 1px solid rgba(255, 215, 0, 0.5);
+      }
+
+      /* Finale Scene Elements */
+      .app-icon-badge {
+        width: 220px;
+        height: 220px;
+        border-radius: 50px;
+        overflow: hidden;
+        box-shadow:
+          0 20px 60px rgba(0, 0, 0, 0.8),
+          0 0 80px rgba(225, 6, 0, 0.5);
+        border: 2px solid rgba(255, 255, 255, 0.2);
+        margin-bottom: 36px;
+      }
+      .app-icon-badge img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+      }
+      .cta-button {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        background: linear-gradient(135deg, #E10600 0%, #B30000 100%);
+        padding: 26px 64px;
+        border-radius: 28px;
+        box-shadow: 0 20px 50px rgba(225, 6, 0, 0.5), inset 0 1px 0 rgba(255, 255, 255, 0.4);
+        margin-top: 36px;
+        border: 1px solid rgba(255, 255, 255, 0.2);
+      }
+      .cta-main {
+        font-size: 36px;
+        font-weight: 900;
+        letter-spacing: 1px;
+        text-transform: uppercase;
+      }
+      .cta-link {
+        font-family: 'Space Grotesk', monospace;
+        font-size: 26px;
+        color: rgba(255, 255, 255, 0.95);
+        font-weight: 700;
+        margin-top: 6px;
+      }
+      .bio-tag {
+        font-family: 'Space Grotesk', monospace;
+        font-size: 24px;
+        color: rgba(255, 255, 255, 0.7);
+        margin-top: 24px;
+        display: flex;
+        align-items: center;
+        gap: 10px;
+      }
+
+      /* Progress Bar at bottom */
+      .progress-bar-container {
+        position: absolute;
+        bottom: 0;
+        left: 0;
+        width: 100%;
+        height: 8px;
+        background: rgba(255, 255, 255, 0.1);
+        z-index: 99;
+      }
+      .progress-bar {
+        width: 0%;
+        height: 100%;
+        background: linear-gradient(90deg, #E10600, #00F5D4);
+      }
+    </style>
+  </head>
+  <body>
+    <!-- Root Composition Wrapper -->
+    <div
+      id="root"
+      data-composition-id="main"
+      data-start="0"
+      data-duration="20"
+      data-width="1080"
+      data-height="1920"
+    >
+      <!-- Background Visuals -->
+      <div class="bg-grid"></div>
+      <div class="ambient-glow" id="ambientGlow"></div>
+
+      <!-- Top Cockpit HUD -->
+      <div class="hud-header">
+        <div class="brand">
+          <div class="brand-dot"></div>
+          <span>PITWALL // OS</span>
+        </div>
+        <div class="telemetry-tag">GP TELEMETRY LIVE</div>
+      </div>
+
+      <!-- Audio Layer -->
+      <audio
+        id="f1EngineAudio"
+        src="./assets/audio/f1_car.mp3"
+        data-start="0"
+        data-duration="5"
+        data-volume="0.8"
+        data-fade-out="0.5"
+      ></audio>
+      <audio
+        id="bgmAudio"
+        src="./assets/audio/bgm.mp3"
+        data-start="3.5"
+        data-duration="16.5"
+        data-volume="0.6"
+        data-fade-in="0.6"
+        data-fade-out="1.0"
+      ></audio>
+
+      <!-- ================= SCENE 1: THE HOOK (0 - 3.8s) ================= -->
+      <div id="scene1" class="scene clip" data-start="0" data-duration="4.0" data-track-index="0">
+        <!-- 5 F1 Starting Lights -->
+        <div class="lights-container" id="f1Lights">
+          <div class="light-post">
+            <div class="f1-light l1"></div>
+            <div class="f1-light l1"></div>
+            <div class="f1-light l1"></div>
+            <div class="f1-light l1"></div>
+          </div>
+          <div class="light-post">
+            <div class="f1-light l2"></div>
+            <div class="f1-light l2"></div>
+            <div class="f1-light l2"></div>
+            <div class="f1-light l2"></div>
+          </div>
+          <div class="light-post">
+            <div class="f1-light l3"></div>
+            <div class="f1-light l3"></div>
+            <div class="f1-light l3"></div>
+            <div class="f1-light l3"></div>
+          </div>
+          <div class="light-post">
+            <div class="f1-light l4"></div>
+            <div class="f1-light l4"></div>
+            <div class="f1-light l4"></div>
+            <div class="f1-light l4"></div>
+          </div>
+          <div class="light-post">
+            <div class="f1-light l5"></div>
+            <div class="f1-light l5"></div>
+            <div class="f1-light l5"></div>
+            <div class="f1-light l5"></div>
+          </div>
+        </div>
+
+        <div class="tag-pill" id="s1Tag">TIRED OF JUGGLING 5 APPS?</div>
+        <h1 class="hero-title" id="s1Title">
+          RACE WEEKENDS<br>
+          <span class="accent-red">RE-ENGINEERED.</span>
+        </h1>
+        <p class="hero-sub" id="s1Sub">
+          One unified screen. Zero lag. Built for true Formula 1 purists.
+        </p>
+      </div>
+
+      <!-- ================= SCENE 2: REVEAL & 3D PHONE (3.8 - 8.2s) ================= -->
+      <div id="scene2" class="scene clip" data-start="3.8" data-duration="4.6" data-track-index="1">
+        <div class="tag-pill cyan" id="s2Tag">THE PITWALL COCKPIT</div>
+        <h1 class="hero-title" id="s2Title" style="font-size: 68px; margin-bottom: 16px;">
+          EVERY RACE. EVERY SPLIT.<br>
+          <span class="accent-red">100% OFFLINE-READY.</span>
+        </h1>
+
+        <!-- 3D Phone with Home Screen -->
+        <div class="phone-stage" id="phoneStage2">
+          <div class="phone-chassis" id="phoneChassis2">
+            <div class="dynamic-island"></div>
+            <div class="phone-glare"></div>
+            <div class="phone-screen">
+              <img src="./assets/images/screenshot-01-home.png" alt="Home Dashboard" />
+            </div>
+          </div>
+        </div>
+
+        <!-- Floating Badges Framing the Phone -->
+        <div class="hud-card" id="hudCard1" style="top: 500px; right: 60px;">
+          <div class="card-label">⚡ ARCHITECTURE</div>
+          <div class="card-value highlight">OFFLINE-FIRST</div>
+        </div>
+        <div class="hud-card" id="hudCard2" style="bottom: 120px; left: 60px;">
+          <div class="card-label">🏁 SEASON CALENDAR</div>
+          <div class="card-value">24 RACES SYNCED</div>
+        </div>
+      </div>
+
+      <!-- ================= SCENE 3: TEAM RADIO & APEX AI (8.2 - 12.4s) ================= -->
+      <div id="scene3" class="scene clip" data-start="8.2" data-duration="4.4" data-track-index="2">
+        <div class="tag-pill" id="s3Tag">KILLER FEATURE // STRATEGY</div>
+        <h1 class="hero-title" id="s3Title" style="font-size: 64px; margin-bottom: 12px;">
+          LIVE TEAM RADIO<br>
+          <span class="accent-red">+ APEX AI CHATBOT</span>
+        </h1>
+        <p class="hero-sub" id="s3Sub" style="font-size: 28px; margin-bottom: 24px;">
+          Listen to raw onboard communications with real-time AI strategic breakdown.
+        </p>
+
+        <!-- Glass Team Radio Card -->
+        <div class="radio-panel" id="radioPanel">
+          <div class="radio-header">
+            <div class="driver-badge">
+              <div class="driver-num">#1</div>
+              <div>
+                <div class="driver-name">MAX VERSTAPPEN</div>
+                <div class="driver-team">ORACLE RED BULL RACING</div>
+              </div>
+            </div>
+            <div class="live-rec">
+              <div class="rec-dot"></div>
+              <span>ON-AIR</span>
+            </div>
+          </div>
+
+          <!-- Audio Equalizer Bars -->
+          <div class="waveform-container" id="waveform">
+            <div class="wave-bar"></div>
+            <div class="wave-bar"></div>
+            <div class="wave-bar"></div>
+            <div class="wave-bar"></div>
+            <div class="wave-bar"></div>
+            <div class="wave-bar"></div>
+            <div class="wave-bar"></div>
+            <div class="wave-bar"></div>
+            <div class="wave-bar"></div>
+            <div class="wave-bar"></div>
+            <div class="wave-bar"></div>
+            <div class="wave-bar"></div>
+            <div class="wave-bar"></div>
+            <div class="wave-bar"></div>
+            <div class="wave-bar"></div>
+            <div class="wave-bar"></div>
+          </div>
+
+          <div class="transcript-box">
+            “Box this lap, box for hards. Confirm tires.”
+          </div>
+
+          <div class="ai-bot-pill">
+            <span style="font-size: 26px;">🤖</span>
+            <span><strong>Apex AI:</strong> Pit window optimal. Projected undercut delta: -1.84s</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- ================= SCENE 4: TELEMETRY & TIMING TOWER (12.4 - 16.4s) ================= -->
+      <div id="scene4" class="scene clip" data-start="12.4" data-duration="4.2" data-track-index="3">
+        <div class="tag-pill cyan" id="s4Tag">PRECISION TELEMETRY</div>
+        <h1 class="hero-title" id="s4Title" style="font-size: 66px; margin-bottom: 12px;">
+          REAL-TIME TIMING TOWER<br>
+          <span style="color: #D154FF;">EVERY MILLISECOND COUNTS</span>
+        </h1>
+        <p class="hero-sub" id="s4Sub" style="font-size: 28px;">
+          Live sector splits, purple lap deltas, and tyre compound tracking.
+        </p>
+
+        <!-- Live Telemetry Board -->
+        <div class="telemetry-board" id="telemetryBoard">
+          <div class="driver-row p1" id="row1">
+            <div class="driver-left">
+              <div class="pos-pill gold">P1</div>
+              <div class="row-driver-name">VERSTAPPEN</div>
+            </div>
+            <div class="row-sectors">
+              <div class="sector-chip yellow">28.412</div>
+              <div class="sector-chip purple">26.190</div>
+              <div class="sector-chip green">18.905</div>
+            </div>
+          </div>
+
+          <div class="driver-row" id="row2">
+            <div class="driver-left">
+              <div class="pos-pill">P2</div>
+              <div class="row-driver-name">NORRIS</div>
+            </div>
+            <div class="row-sectors">
+              <div class="sector-chip green">+0.142</div>
+              <div class="sector-chip yellow">26.401</div>
+              <div class="sector-chip green">19.011</div>
+            </div>
+          </div>
+
+          <div class="driver-row" id="row3">
+            <div class="driver-left">
+              <div class="pos-pill">P3</div>
+              <div class="row-driver-name">LECLERC</div>
+            </div>
+            <div class="row-sectors">
+              <div class="sector-chip green">+0.288</div>
+              <div class="sector-chip yellow">26.510</div>
+              <div class="sector-chip yellow">19.145</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- ================= SCENE 5: FINALE & CALL TO ACTION (16.4 - 20.0s) ================= -->
+      <div id="scene5" class="scene clip" data-start="16.4" data-duration="3.6" data-track-index="4">
+        <!-- App Icon Glowing -->
+        <div class="app-icon-badge" id="s5Icon">
+          <img src="./assets/images/app_icon.png" alt="PitWall App Icon" />
+        </div>
+
+        <div class="tag-pill green" id="s5Status">● CLOSED BETA IS LIVE</div>
+
+        <h1 class="hero-title" id="s5Title" style="font-size: 72px; margin-bottom: 12px;">
+          YOUR PIT WALL.<br>
+          <span class="accent-red">YOUR STRATEGY.</span>
+        </h1>
+        <p class="hero-sub" id="s5Sub" style="font-size: 30px;">
+          Join the exclusive early access on Android.
+        </p>
+
+        <!-- Big CTA Card -->
+        <div class="cta-button" id="s5Cta">
+          <div class="cta-main">JOIN CLOSED BETA NOW</div>
+          <div class="cta-link">taplink.cc/pitwall_app</div>
+        </div>
+
+        <div class="bio-tag" id="s5Bio">
+          <span>👇</span>
+          <span>Tap link in bio to register directly</span>
+        </div>
+      </div>
+
+      <!-- Bottom Progress Bar -->
+      <div class="progress-bar-container">
+        <div class="progress-bar" id="progressBar"></div>
+      </div>
+    </div>
+
+    <!-- GSAP Master Animation Script -->
+    <script>
+      // Root timeline definition (MUST be paused for Hyperframes)
+      const tl = gsap.timeline({ paused: true });
+
+      // Bottom progress bar sync
+      tl.fromTo("#progressBar", { width: "0%" }, { width: "100%", duration: 20, ease: "none" }, 0);
+
+      // Ambient glow subtle pulse (finite repeat)
+      tl.to("#ambientGlow", { scale: 1.25, opacity: 0.8, duration: 4, repeat: 4, yoyo: true, ease: "sine.inOut" }, 0);
+
+      // ================= TIMELINE: SCENE 1 (0.0s - 3.8s) =================
+      tl.set("#scene1", { opacity: 1 }, 0);
+      tl.fromTo("#f1Lights", { y: -60, opacity: 0 }, { y: 0, opacity: 1, duration: 0.5, ease: "power3.out" }, 0.2);
+
+      // 5 Lights turning red sequentially with GSAP properties for deterministic seek
+      const lightOnStyle = { backgroundColor: "#FF1801", boxShadow: "0 0 30px #FF1801, 0 0 60px #FF1801" };
+      const lightOffStyle = { backgroundColor: "#1A1C24", boxShadow: "inset 0 2px 4px rgba(0, 0, 0, 0.8)" };
+
+      tl.to(".l1", lightOnStyle, 0.4);
+      tl.to(".l2", lightOnStyle, 0.8);
+      tl.to(".l3", lightOnStyle, 1.2);
+      tl.to(".l4", lightOnStyle, 1.6);
+      tl.to(".l5", lightOnStyle, 2.0);
+
+      // Lights OUT at t = 2.6s!
+      tl.to(".f1-light", lightOffStyle, 2.6);
+
+      // Kinetic Typography In
+      tl.fromTo("#s1Tag", { opacity: 0, scale: 0.8 }, { opacity: 1, scale: 1, duration: 0.4, ease: "back.out(2)" }, 0.8);
+      tl.fromTo("#s1Title", { opacity: 0, y: 40 }, { opacity: 1, y: 0, duration: 0.6, ease: "power4.out" }, 1.4);
+      tl.fromTo("#s1Sub", { opacity: 0, y: 30 }, { opacity: 1, y: 0, duration: 0.5, ease: "power3.out" }, 2.0);
+
+      // Scene 1 Out
+      tl.to("#scene1", { opacity: 0, scale: 0.94, duration: 0.35, ease: "power2.in" }, 3.5);
+
+      // ================= TIMELINE: SCENE 2 (3.8s - 8.2s) =================
+      tl.set("#scene2", { opacity: 1 }, 3.8);
+      tl.fromTo("#s2Tag", { opacity: 0, y: -20 }, { opacity: 1, y: 0, duration: 0.4, ease: "power3.out" }, 3.9);
+      tl.fromTo("#s2Title", { opacity: 0, y: 30 }, { opacity: 1, y: 0, duration: 0.5, ease: "power3.out" }, 4.1);
+
+      // 3D Phone Motion
+      tl.fromTo("#phoneChassis2",
+        { rotateY: -25, rotateX: 18, rotateZ: -6, y: 120, opacity: 0 },
+        { rotateY: -12, rotateX: 8, rotateZ: -3, y: 0, opacity: 1, duration: 1.0, ease: "power3.out" },
+        4.1
+      );
+      // Gentle drift
+      tl.to("#phoneChassis2", { rotateY: -6, rotateX: 4, duration: 2.5, ease: "sine.inOut" }, 5.1);
+
+      // Floating Badges Stagger
+      tl.fromTo("#hudCard1", { opacity: 0, x: 60, scale: 0.8 }, { opacity: 1, x: 0, scale: 1, duration: 0.6, ease: "back.out(1.5)" }, 4.6);
+      tl.fromTo("#hudCard2", { opacity: 0, x: -60, scale: 0.8 }, { opacity: 1, x: 0, scale: 1, duration: 0.6, ease: "back.out(1.5)" }, 5.0);
+
+      // Scene 2 Out
+      tl.to("#scene2", { opacity: 0, y: -40, duration: 0.35, ease: "power2.in" }, 7.8);
+
+      // ================= TIMELINE: SCENE 3 (8.2s - 12.4s) =================
+      tl.set("#scene3", { opacity: 1 }, 8.2);
+      tl.fromTo("#s3Tag", { opacity: 0, y: -20 }, { opacity: 1, y: 0, duration: 0.4, ease: "power3.out" }, 8.3);
+      tl.fromTo("#s3Title", { opacity: 0, y: 30 }, { opacity: 1, y: 0, duration: 0.5, ease: "power3.out" }, 8.5);
+      tl.fromTo("#s3Sub", { opacity: 0, y: 20 }, { opacity: 1, y: 0, duration: 0.5, ease: "power3.out" }, 8.7);
+
+      // Radio Panel Entry
+      tl.fromTo("#radioPanel",
+        { opacity: 0, y: 80, scale: 0.9 },
+        { opacity: 1, y: 0, scale: 1, duration: 0.7, ease: "power4.out" },
+        8.8
+      );
+
+      // Animate Waveform Bars with randomized natural audio energy
+      const bars = document.querySelectorAll(".wave-bar");
+      const heights = [35, 60, 25, 75, 45, 90, 65, 80, 50, 85, 30, 70, 40, 60, 30, 50];
+      bars.forEach((bar, idx) => {
+        tl.fromTo(bar,
+          { height: 12 },
+          {
+            height: heights[idx % heights.length],
+            duration: 0.25 + (idx % 4) * 0.08,
+            repeat: 7,
+            yoyo: true,
+            ease: "sine.inOut"
+          },
+          9.0 + (idx * 0.02)
+        );
+      });
+
+      // Scene 3 Out
+      tl.to("#scene3", { opacity: 0, scale: 0.95, duration: 0.35, ease: "power2.in" }, 12.0);
+
+      // ================= TIMELINE: SCENE 4 (12.4s - 16.4s) =================
+      tl.set("#scene4", { opacity: 1 }, 12.4);
+      tl.fromTo("#s4Tag", { opacity: 0, y: -20 }, { opacity: 1, y: 0, duration: 0.4, ease: "power3.out" }, 12.5);
+      tl.fromTo("#s4Title", { opacity: 0, y: 30 }, { opacity: 1, y: 0, duration: 0.5, ease: "power3.out" }, 12.7);
+      tl.fromTo("#s4Sub", { opacity: 0, y: 20 }, { opacity: 1, y: 0, duration: 0.5, ease: "power3.out" }, 12.9);
+
+      // Driver Telemetry Rows Stagger In
+      tl.fromTo("#row1", { opacity: 0, x: -60 }, { opacity: 1, x: 0, duration: 0.5, ease: "power3.out" }, 13.1);
+      tl.fromTo("#row2", { opacity: 0, x: -60 }, { opacity: 1, x: 0, duration: 0.5, ease: "power3.out" }, 13.4);
+      tl.fromTo("#row3", { opacity: 0, x: -60 }, { opacity: 1, x: 0, duration: 0.5, ease: "power3.out" }, 13.7);
+
+      // Subtle pulse on Purple Sector
+      tl.to(".sector-chip.purple", { scale: 1.1, duration: 0.3, repeat: 3, yoyo: true, ease: "sine.inOut" }, 14.0);
+
+      // Scene 4 Out
+      tl.to("#scene4", { opacity: 0, y: -40, duration: 0.35, ease: "power2.in" }, 16.0);
+
+      // ================= TIMELINE: SCENE 5 (16.4s - 20.0s) =================
+      tl.set("#scene5", { opacity: 1 }, 16.4);
+
+      // App Icon Pop In
+      tl.fromTo("#s5Icon",
+        { opacity: 0, scale: 0.6, rotateZ: -10 },
+        { opacity: 1, scale: 1, rotateZ: 0, duration: 0.7, ease: "back.out(2)" },
+        16.5
+      );
+      tl.fromTo("#s5Status", { opacity: 0, y: 20 }, { opacity: 1, y: 0, duration: 0.4, ease: "power3.out" }, 16.9);
+      tl.fromTo("#s5Title", { opacity: 0, y: 30 }, { opacity: 1, y: 0, duration: 0.5, ease: "power3.out" }, 17.1);
+      tl.fromTo("#s5Sub", { opacity: 0, y: 20 }, { opacity: 1, y: 0, duration: 0.4, ease: "power3.out" }, 17.4);
+
+      // High-impact CTA pop
+      tl.fromTo("#s5Cta",
+        { opacity: 0, scale: 0.85, y: 40 },
+        { opacity: 1, scale: 1, y: 0, duration: 0.6, ease: "back.out(1.8)" },
+        17.6
+      );
+      tl.fromTo("#s5Bio", { opacity: 0 }, { opacity: 1, duration: 0.4 }, 18.0);
+
+      // Register master timeline with Hyperframes
+      window.__timelines = window.__timelines || {};
+      window.__timelines["main"] = tl;
+      tl.seek(0);
+    </script>
+  </body>
+</html>

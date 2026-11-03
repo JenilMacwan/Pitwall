@@ -35,10 +35,12 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.StrokeCap
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import com.jenil.f1comp.R
+import com.jenil.f1comp.util.TeamUtils
 
 data class RadioClip(
     val id: String,
@@ -86,8 +88,14 @@ fun RadioCard(
                     modifier = Modifier.fillMaxWidth(),
                     verticalAlignment = Alignment.CenterVertically
                 ) {
+                    val context = LocalContext.current
+
+                    val driverDrawableRes = clip.driverImage
+                        ?: TeamUtils.getDriverDrawableRes(clip.driverName, context)
+                        ?: R.drawable.ic_app_icon
+
                     Image(
-                        painter = painterResource(id = clip.driverImage ?: R.drawable.ic_app_icon),
+                        painter = painterResource(id = driverDrawableRes),
                         contentDescription = "${clip.driverName} radio clip",
                         modifier = Modifier
                             .size(36.dp)

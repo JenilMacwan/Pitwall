@@ -28,14 +28,15 @@ android {
         applicationId = "com.jenil.f1comp"
         minSdk = 26
         targetSdk = 37
-        versionCode = 1
-        versionName = "1.0.0"
+        versionCode = 5
+        versionName = "1.0.1"
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"    }
 
     buildTypes {
         release {
-            isMinifyEnabled = false
+            isMinifyEnabled = true
+            isShrinkResources = true
             proguardFiles(
                 getDefaultProguardFile("proguard-android-optimize.txt"),
                 "proguard-rules.pro"
@@ -128,8 +129,12 @@ dependencies {
     implementation(libs.androidx.glance.appwidget)
     implementation(libs.androidx.glance.material3)
 
+    // Markdown renderer
+    implementation(libs.core)
+    implementation(libs.ext.tables)
+    implementation(libs.ext.strikethrough)
 
-    //Haze
+    // Haze
     implementation(libs.haze)
     implementation(libs.haze.materials)
 

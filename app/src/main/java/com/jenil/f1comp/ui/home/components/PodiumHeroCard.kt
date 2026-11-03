@@ -119,7 +119,7 @@ fun PodiumHeroCard(
                     fontWeight = FontWeight.Bold,
                     fontFamily = FontFamily.Monospace,
                     color = MaterialTheme.colorScheme.onSurfaceVariant,
-                    letterSpacing = 1.2.sp
+                    letterSpacing = 0.3.sp
                 )
             }
 

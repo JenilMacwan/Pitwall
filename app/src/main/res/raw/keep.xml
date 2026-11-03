@@ -1,0 +1,3 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources xmlns:tools="http://schemas.android.com/tools"
+    tools:keep="@drawable/albon,@drawable/alonso,@drawable/arvid,@drawable/bearman,@drawable/bortoleto,@drawable/bottas,@drawable/carlos,@drawable/charles,@drawable/franco,@drawable/gasly,@drawable/hadjar,@drawable/hamilton,@drawable/kimi,@drawable/leclerc,@drawable/liam,@drawable/nico,@drawable/norris,@drawable/ocon,@drawable/oscar,@drawable/perez,@drawable/russell,@drawable/stroll,@drawable/verstappen" />

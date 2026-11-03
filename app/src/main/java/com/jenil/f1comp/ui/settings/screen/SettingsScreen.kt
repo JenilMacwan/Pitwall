@@ -710,7 +710,7 @@ fun SettingsScreen(
                     }
 
                     // Account & Privacy (Delete Account)
-                    if (currentUser != null) {
+                    if (currentUser != null && currentUser?.isAnonymous == false) {
                         Spacer(modifier = Modifier.height(24.dp))
 
                         SettingsSection(title = stringResource(R.string.settings_account_section)) {

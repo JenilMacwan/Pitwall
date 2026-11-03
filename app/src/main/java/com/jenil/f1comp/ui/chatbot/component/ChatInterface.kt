@@ -119,12 +119,21 @@ fun ChatBubble(
             ) {
                 Column {
                     SelectionContainer {
-                        Text(
-                            text = message.text,
-                            modifier = Modifier.padding(12.dp),
-                            color = if (isUser) MaterialTheme.colorScheme.onPrimary else MaterialTheme.colorScheme.onSurface,
-                            style = MaterialTheme.typography.bodyMedium
-                        )
+                        if (isUser) {
+                            Text(
+                                text = message.text,
+                                modifier = Modifier.padding(12.dp),
+                                color = MaterialTheme.colorScheme.onPrimary,
+                                style = MaterialTheme.typography.bodyMedium
+                            )
+                        } else {
+                            MarkdownText(
+                                markdown = message.text,
+                                modifier = Modifier.padding(12.dp),
+                                color = MaterialTheme.colorScheme.onSurface,
+                                style = MaterialTheme.typography.bodyMedium
+                            )
+                        }
                     }
                     if (!isUser && message.dataSources.isNotEmpty()) {
                         Text(

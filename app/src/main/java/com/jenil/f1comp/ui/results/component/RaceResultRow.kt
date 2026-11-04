@@ -13,6 +13,7 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.layout.widthIn
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
@@ -211,7 +212,7 @@ private fun RaceResultRowContent(
                         style = MaterialTheme.typography.bodyMedium,
                         color = MaterialTheme.colorScheme.onSurface,
                         maxLines = 2,
-                        overflow = TextOverflow.Clip,
+                        overflow = TextOverflow.Ellipsis,
                         modifier = Modifier.weight(1f)
                     )
 
@@ -226,7 +227,9 @@ private fun RaceResultRowContent(
 
                 Row(
                     verticalAlignment = Alignment.CenterVertically,
-                    modifier = Modifier.padding(top = 2.dp)
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(top = 2.dp)
                 ) {
                     Text(
                         text = constructor,
@@ -234,7 +237,12 @@ private fun RaceResultRowContent(
                         style = MaterialTheme.typography.bodySmall,
                         color = teamColor,
                         fontWeight = FontWeight.SemiBold,
-                        modifier = Modifier.clickable { onConstructorClick() }
+                        maxLines = 1,
+                        softWrap = false,
+                        overflow = TextOverflow.Ellipsis,
+                        modifier = Modifier
+                            .weight(1f)
+                            .clickable { onConstructorClick() }
                     )
                 }
 
@@ -247,7 +255,10 @@ private fun RaceResultRowContent(
             Spacer(modifier = Modifier.width(8.dp))
 
             // Points & Time / Status Column
-            Column(horizontalAlignment = Alignment.End) {
+            Column(
+                modifier = Modifier.widthIn(min = 60.dp),
+                horizontalAlignment = Alignment.End
+            ) {
                 val pointsVal = points.toDoubleOrNull() ?: 0.0
                 val pointsDisplay = if (pointsVal > 0) {
                     if (pointsVal % 1.0 == 0.0) "${pointsVal.toInt()} pts" else "$points pts"
@@ -258,7 +269,9 @@ private fun RaceResultRowContent(
                     fontFamily = FontFamily.Monospace,
                     fontWeight = FontWeight.Bold,
                     style = MaterialTheme.typography.bodyMedium,
-                    color = if (pointsVal > 0) MaterialTheme.colorScheme.primary else MaterialTheme.colorScheme.onSurfaceVariant.copy(alpha = 0.5f)
+                    color = if (pointsVal > 0) MaterialTheme.colorScheme.primary else MaterialTheme.colorScheme.onSurfaceVariant.copy(alpha = 0.5f),
+                    maxLines = 1,
+                    softWrap = false
                 )
 
                 val secondaryLabel = if (time.isNotBlank()) time else status
@@ -272,7 +285,10 @@ private fun RaceResultRowContent(
                         text = secondaryLabel,
                         fontFamily = FontFamily.Monospace,
                         style = MaterialTheme.typography.labelSmall.copy(fontSize = 11.sp),
-                        color = if (isDnf) MaterialTheme.colorScheme.error else MaterialTheme.colorScheme.onSurfaceVariant
+                        color = if (isDnf) MaterialTheme.colorScheme.error else MaterialTheme.colorScheme.onSurfaceVariant,
+                        maxLines = 1,
+                        softWrap = false,
+                        overflow = TextOverflow.Ellipsis
                     )
                 }
             }

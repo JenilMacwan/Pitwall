@@ -183,7 +183,9 @@ fun TeamLogoCircle(
                 model = ImageRequest.Builder(context)
                     .data(logoUrl)
                     .crossfade(true)
-                    .allowHardware(true)
+                    // Software bitmaps avoid device-specific hardware bitmap rendering
+                    // differences seen with transparent WebP team logos on some OEMs.
+                    .allowHardware(false)
                     .build(),
                 contentDescription = teamName,
                 contentScale = ContentScale.Fit,
@@ -242,7 +244,7 @@ fun TeamLogoCircleTheme(
                 model = ImageRequest.Builder(context)
                     .data(logoUrl)
                     .crossfade(true)
-                    .allowHardware(true)
+                    .allowHardware(false)
                     .build(),
                 contentDescription = teamName,
                 contentScale = ContentScale.Fit,

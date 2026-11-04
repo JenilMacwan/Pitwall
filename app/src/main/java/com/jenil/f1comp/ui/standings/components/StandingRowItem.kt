@@ -13,6 +13,7 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.layout.widthIn
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.MaterialTheme
@@ -143,6 +144,7 @@ fun StandingRowItem(
         // Middle Column
         Column(modifier = Modifier.weight(1f)) {
             Row(
+                modifier = Modifier.fillMaxWidth(),
                 verticalAlignment = Alignment.CenterVertically
             ) {
                 Text(
@@ -151,8 +153,9 @@ fun StandingRowItem(
                     fontFamily = FontFamily.Monospace,
                     color = MaterialTheme.colorScheme.onSurface,
                     maxLines = 1,
+                    softWrap = false,
                     overflow = TextOverflow.Ellipsis,
-                    modifier = Modifier.weight(1f, fill = false)
+                    modifier = Modifier.weight(1f)
                 )
                 if (isLeader && !isConstructor) {
                     Spacer(modifier = Modifier.width(6.dp))
@@ -178,6 +181,7 @@ fun StandingRowItem(
                 }
             }
             Row(
+                modifier = Modifier.fillMaxWidth(),
                 verticalAlignment = Alignment.CenterVertically
             ) {
                 if( !isConstructor ) {
@@ -194,18 +198,27 @@ fun StandingRowItem(
                     text = team ?: "N/A",
                     style = MaterialTheme.typography.bodySmall,
                     fontFamily = FontFamily.Monospace,
-                    color = MaterialTheme.colorScheme.onSurfaceVariant
+                    color = MaterialTheme.colorScheme.onSurfaceVariant,
+                    maxLines = 1,
+                    softWrap = false,
+                    overflow = TextOverflow.Ellipsis,
+                    modifier = Modifier.weight(1f)
                 )
             }
         }
 
         // Right Column (Points)
-        Column(horizontalAlignment = Alignment.End) {
+        Column(
+            modifier = Modifier.widthIn(min = 72.dp),
+            horizontalAlignment = Alignment.End
+        ) {
             Text(
                 text = points.toString(),
                 style = MaterialTheme.typography.titleMedium,
                 fontFamily = FontFamily.Monospace,
-                color = MaterialTheme.colorScheme.onSurface
+                color = MaterialTheme.colorScheme.onSurface,
+                maxLines = 1,
+                softWrap = false
             )
             Text(
                 text = if (pointsBehindLeader == null) {
@@ -217,7 +230,10 @@ fun StandingRowItem(
                 },
                 style = MaterialTheme.typography.labelSmall,
                 fontFamily = FontFamily.Monospace,
-                color = MaterialTheme.colorScheme.onSurfaceVariant
+                color = MaterialTheme.colorScheme.onSurfaceVariant,
+                maxLines = 1,
+                softWrap = false,
+                overflow = TextOverflow.Ellipsis
             )
         }
     }

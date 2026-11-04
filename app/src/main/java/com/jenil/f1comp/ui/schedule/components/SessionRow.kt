@@ -64,6 +64,10 @@ fun SessionCard(
                     title,
                     fontWeight = FontWeight.Bold,
                     fontFamily = FontFamily.Monospace,
+                    maxLines = 1,
+                    softWrap = false,
+                    overflow = androidx.compose.ui.text.style.TextOverflow.Ellipsis,
+                    modifier = Modifier.weight(1f)
                 )
             }
 
@@ -73,7 +77,9 @@ fun SessionCard(
                 text = "$date • $time",
                 style = MaterialTheme.typography.bodySmall,
                 fontFamily = FontFamily.Monospace,
-                color = MaterialTheme.colorScheme.onSurfaceVariant
+                color = MaterialTheme.colorScheme.onSurfaceVariant,
+                maxLines = 2,
+                overflow = androidx.compose.ui.text.style.TextOverflow.Ellipsis
             )
         }
     }

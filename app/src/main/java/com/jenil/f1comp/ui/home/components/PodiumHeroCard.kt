@@ -119,7 +119,12 @@ fun PodiumHeroCard(
                     fontWeight = FontWeight.Bold,
                     fontFamily = FontFamily.Monospace,
                     color = MaterialTheme.colorScheme.onSurfaceVariant,
-                    letterSpacing = 0.3.sp
+                    letterSpacing = 0.3.sp,
+                    maxLines = 1,
+                    softWrap = false,
+                    overflow = TextOverflow.Ellipsis,
+                    textAlign = TextAlign.Center,
+                    modifier = Modifier.weight(1f)
                 )
             }
 
@@ -184,6 +189,9 @@ fun PodiumHeroCard(
                 fontWeight = FontWeight.Bold,
                 fontFamily = FontFamily.Monospace,
                 color = MaterialTheme.colorScheme.primary,
+                maxLines = 1,
+                softWrap = false,
+                overflow = TextOverflow.Ellipsis,
                 modifier = Modifier.clickable {
                     onResultClick()
                 }
@@ -261,7 +269,7 @@ private fun PodiumColumnItem(
             fontFamily = FontFamily.Monospace,
             textAlign = TextAlign.Center,
             maxLines = 2,
-            overflow = TextOverflow.Clip,
+            overflow = TextOverflow.Ellipsis,
             color = MaterialTheme.colorScheme.onSurface
         )
 
@@ -281,7 +289,7 @@ private fun PodiumColumnItem(
                 fontWeight = FontWeight.SemiBold,
                 color = teamColor,
                 maxLines = 2,
-                overflow = TextOverflow.Clip,
+                overflow = TextOverflow.Ellipsis,
                 textAlign = TextAlign.Center
             )
         }
@@ -294,7 +302,10 @@ private fun PodiumColumnItem(
             style = MaterialTheme.typography.labelSmall,
             fontFamily = FontFamily.Monospace,
             fontWeight = FontWeight.Bold,
-            color = if (isWinner) MaterialTheme.colorScheme.primary else MaterialTheme.colorScheme.onSurfaceVariant
+            color = if (isWinner) MaterialTheme.colorScheme.primary else MaterialTheme.colorScheme.onSurfaceVariant,
+            maxLines = 1,
+            softWrap = false,
+            overflow = TextOverflow.Ellipsis
         )
     }
 }

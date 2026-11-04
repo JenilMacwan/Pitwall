@@ -40,6 +40,14 @@ Reviewed the app running in the Android Studio Pixel 10a emulator (API 37.1), in
 
 Make Apex useful throughout the app, not only on its dedicated chat screen. Keep the chat experience, and add concise, screen-aware insights and clear ways to ask follow-up questions where users are already viewing F1 information.
 
+### Speech playback improvements
+
+- Let users stop an Apex response while it is being spoken. The playback control should clearly switch between **Speak** and **Stop**, and leaving the Apex screen should stop playback and release the text-to-speech resources.
+- Clean response text before sending it to text-to-speech: remove or safely normalize emojis, Markdown decoration, and other non-spoken formatting so the engine does not read emoji code points or symbols aloud (for example, as “number” sequences).
+- Keep the visible response unchanged; only prepare a speech-friendly version for playback.
+
+**Acceptance criteria:** users can start and stop speech at any point; playback stops when they leave Apex; and responses containing emojis or Markdown are spoken naturally without announcing their Unicode/code-point values.
+
 ### Planned experiences
 
 - **Home weekend briefing** — Summarize the next session and relevant storylines, with optional personalization for the user's favorite driver or team.

@@ -26,6 +26,8 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.StrokeCap
 import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 
 @Composable
@@ -54,20 +56,29 @@ fun ComparisonRow(
                 fontFamily = FontFamily.Monospace,
                 style = MaterialTheme.typography.titleMedium,
                 fontWeight = FontWeight.Bold,
-                color = if (driverWins > teammateWins) accentColor else MaterialTheme.colorScheme.onSurface
+                color = if (driverWins > teammateWins) accentColor else MaterialTheme.colorScheme.onSurface,
+                maxLines = 1,
+                softWrap = false
             )
             Text(
                 text = label,
                 fontFamily = FontFamily.Monospace,
                 style = MaterialTheme.typography.bodySmall,
-                color = MaterialTheme.colorScheme.onSurfaceVariant
+                color = MaterialTheme.colorScheme.onSurfaceVariant,
+                modifier = Modifier.weight(1f),
+                maxLines = 1,
+                softWrap = false,
+                overflow = TextOverflow.Ellipsis,
+                textAlign = TextAlign.Center
             )
             Text(
                 text = "$teammateWins",
                 fontFamily = FontFamily.Monospace,
                 style = MaterialTheme.typography.titleMedium,
                 fontWeight = FontWeight.Bold,
-                color = if (teammateWins > driverWins) accentColor else MaterialTheme.colorScheme.onSurface
+                color = if (teammateWins > driverWins) accentColor else MaterialTheme.colorScheme.onSurface,
+                maxLines = 1,
+                softWrap = false
             )
         }
 
@@ -136,13 +147,20 @@ fun GapToP1Card(
                     text = if (pointsGap == 0) "Championship Leader" else "-$pointsGap PTS to Leader",
                     style = MaterialTheme.typography.bodyMedium,
                     fontWeight = FontWeight.Bold,
-                    color = if (pointsGap == 0) MaterialTheme.colorScheme.primary else MaterialTheme.colorScheme.onSurface
+                    color = if (pointsGap == 0) MaterialTheme.colorScheme.primary else MaterialTheme.colorScheme.onSurface,
+                    modifier = Modifier.weight(1f),
+                    maxLines = 2,
+                    overflow = TextOverflow.Ellipsis
                 )
                 Text(
                     text = "$currentPoints / $leaderPoints PTS",
                     style = MaterialTheme.typography.labelMedium,
                     fontFamily = FontFamily.Monospace,
-                    color = MaterialTheme.colorScheme.onSurfaceVariant
+                    color = MaterialTheme.colorScheme.onSurfaceVariant,
+                    maxLines = 1,
+                    softWrap = false,
+                    overflow = TextOverflow.Ellipsis,
+                    textAlign = TextAlign.End
                 )
             }
 

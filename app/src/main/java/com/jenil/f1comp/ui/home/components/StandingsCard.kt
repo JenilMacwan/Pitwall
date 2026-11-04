@@ -534,6 +534,10 @@ fun LeaderCard(
     teamColor: Color = MaterialTheme.colorScheme.primary,
     onClick: () -> Unit = {}
 ) {
+    val driverNames = listOf(driver1, driver2)
+        .filter { it.isNotBlank() }
+        .joinToString(" · ")
+
     Surface(
         modifier = modifier
             .fillMaxWidth()
@@ -578,29 +582,20 @@ fun LeaderCard(
                         fontWeight = FontWeight.Bold,
                         fontFamily = FontFamily.Monospace,
                         color = MaterialTheme.colorScheme.onSurface,
-                        lineHeight = 18.sp
+                        lineHeight = 18.sp,
+                        maxLines = 1,
+                        softWrap = false,
+                        overflow = TextOverflow.Ellipsis
                     )
                     Spacer(modifier = Modifier.height(4.dp))
-                    Row(
-                        verticalAlignment = Alignment.CenterVertically,
-                        horizontalArrangement = Arrangement.spacedBy(4.dp)
-                    ) {
-                        Text(
-                            text = driver1,
-                            fontSize = 11.sp,
-                            color = MaterialTheme.colorScheme.onSurfaceVariant,
-                            fontFamily = FontFamily.Monospace
-                        )
-                        if (driver2.isNotBlank()) {
-                            Box(modifier = Modifier.size(3.dp).clip(CircleShape).background(MaterialTheme.colorScheme.onSurfaceVariant))
-                            Text(
-                                text = driver2,
-                                fontSize = 11.sp,
-                                color = MaterialTheme.colorScheme.onSurfaceVariant,
-                                fontFamily = FontFamily.Monospace
-                            )
-                        }
-                    }
+                    Text(
+                        text = driverNames,
+                        fontSize = 11.sp,
+                        color = MaterialTheme.colorScheme.onSurfaceVariant,
+                        fontFamily = FontFamily.Monospace,
+                        maxLines = 2,
+                        overflow = TextOverflow.Ellipsis
+                    )
                 }
 
                 // Right: Points & Gap
@@ -728,10 +723,13 @@ fun ContenderCard(
                 ) {
                     Text(
                         text = gapText,
-                        fontSize = 10.sp,
+                        fontSize = 9.sp,
                         fontWeight = FontWeight.Bold,
                         color = teamColor,
                         fontFamily = FontFamily.Monospace,
+                        maxLines = 1,
+                        softWrap = false,
+                        overflow = TextOverflow.Ellipsis,
                         modifier = Modifier.padding(horizontal = 8.dp, vertical = 4.dp)
                     )
                 }
@@ -754,7 +752,9 @@ fun ContenderCard(
                     fontSize = 14.sp,
                     fontFamily = FontFamily.Monospace,
                     color = MaterialTheme.colorScheme.onSurface,
-                    maxLines = 1
+                    maxLines = 1,
+                    softWrap = false,
+                    overflow = TextOverflow.Ellipsis
                 )
             }
 

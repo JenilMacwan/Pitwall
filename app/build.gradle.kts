@@ -28,8 +28,8 @@ android {
         applicationId = "com.jenil.f1comp"
         minSdk = 26
         targetSdk = 37
-        versionCode = 5
-        versionName = "1.0.1"
+        versionCode = 8
+        versionName = "1.0.3"
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"    }
 

@@ -2,6 +2,7 @@ package com.jenil.f1comp.util
 
 import android.content.Context
 import androidx.compose.ui.graphics.Color
+import com.jenil.f1comp.R
 import com.jenil.f1comp.data.local.entity.ConstructorProfileEntity
 import com.jenil.f1comp.data.local.entity.DriverProfileEntity
 import com.jenil.f1comp.ui.theme.F1Red
@@ -357,7 +358,8 @@ object TeamUtils {
     }
 
     /**
-     * Resolves team logo drawable resource ID if added in res/drawable (e.g. ferrari, mclaren, redbull, etc.).
+     * Resolves a bundled team logo. Keep these as direct R references so release resource
+     * shrinking can see and retain the PNGs (runtime getIdentifier calls are not reliable here).
      */
     fun getTeamLogoDrawableRes(
         teamName: String?,
@@ -366,27 +368,19 @@ object TeamUtils {
         if (teamName.isNullOrBlank()) return null
         val cleanName = teamName.lowercase().trim()
 
-        val candidates = when {
-            cleanName.contains("ferrari") -> listOf("ferrari", "scuderia_ferrari", "ic_ferrari")
-            cleanName.contains("red bull") || cleanName.contains("redbull") -> listOf("redbull", "red_bull", "oracle_red_bull", "ic_redbull")
-            cleanName.contains("mercedes") -> listOf("mercedes", "mercedes_amg", "ic_mercedes")
-            cleanName.contains("mclaren") -> listOf("mclaren", "ic_mclaren")
-            cleanName.contains("aston") || cleanName.contains("martin") -> listOf("aston_martin", "astonmartin", "ic_aston")
-            cleanName.contains("alpine") -> listOf("alpine", "ic_alpine")
-            cleanName.contains("williams") -> listOf("williams", "ic_williams")
-            cleanName.contains("racing bulls") || cleanName.contains("vcarb") || cleanName.contains("visa") || cleanName.contains("rb") -> listOf("rb", "racing_bulls", "vcarb", "ic_rb")
-            cleanName.contains("audi") || cleanName.contains("sauber") || cleanName.contains("kick") || cleanName.contains("stake") -> listOf("audi", "sauber", "kick_sauber", "stake", "ic_sauber")
-            cleanName.contains("haas") || cleanName.contains("tgr") -> listOf("haas", "moneygram_haas", "ic_haas")
-            cleanName.contains("cadillac") || cleanName.contains("gm") -> listOf("cadillac", "ic_cadillac")
-            else -> emptyList()
+        return when {
+            cleanName.contains("ferrari") -> R.drawable.ferrari
+            cleanName.contains("red bull") || cleanName.contains("redbull") -> R.drawable.red_bull
+            cleanName.contains("mercedes") -> R.drawable.mercedes
+            cleanName.contains("mclaren") -> R.drawable.mclaren
+            cleanName.contains("aston") || cleanName.contains("martin") -> R.drawable.aston_martin
+            cleanName.contains("alpine") -> R.drawable.alpine
+            cleanName.contains("williams") -> R.drawable.williams
+            cleanName.contains("racing bulls") || cleanName.contains("vcarb") || cleanName.contains("visa") || cleanName == "rb" || cleanName.startsWith("rb ") -> R.drawable.rb
+            cleanName.contains("audi") || cleanName.contains("sauber") || cleanName.contains("kick") || cleanName.contains("stake") -> R.drawable.audi
+            cleanName.contains("haas") || cleanName.contains("tgr") -> R.drawable.haas
+            cleanName.contains("cadillac") || cleanName == "gm" -> R.drawable.cadillac
+            else -> null
         }
-
-        for (candidate in candidates) {
-            val resId = context.resources.getIdentifier(candidate, "drawable", context.packageName)
-            if (resId != 0) {
-                return resId
-            }
-        }
-        return null
     }
 }
